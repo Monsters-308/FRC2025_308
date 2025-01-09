@@ -30,7 +30,7 @@ public class RobotFacePoint extends Command {
                                                                   HeadingConstants.kHeadingI, 
                                                                   HeadingConstants.kHeadingD);
     
-    //If you want to contoll whether or not the command has ended, you should store it in some sort of variable:
+    //If you want to control whether or not the command has ended, you should store it in some sort of variable:
     private boolean m_complete = false;
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_ySpeed;
