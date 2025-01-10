@@ -18,10 +18,10 @@ import java.util.Map;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
@@ -62,7 +62,7 @@ public class DriveSubsystem extends SubsystemBase {
       ModuleConstants.kRightRearInverted);
 
   // The gyro sensor
-  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
   
   // Note: the NavX takes a second to configure before it can be used. I have seen some teams create the gyro in a separate thread, which might be worth considering.
 
@@ -143,12 +143,13 @@ public class DriveSubsystem extends SubsystemBase {
     // swerveTab.addDouble("gyro roll", () -> m_gyro.getRoll());
     
     // Configure the AutoBuilder
-    AutoBuilder.configureHolonomic(
+    AutoBuilder.configure(
         () -> FieldUtils.flipGlobalBlue(getPose()), // Robot pose supplier
         (Pose2d newPose) -> resetOdometry(FieldUtils.flipGlobalBlue(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
         this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        AutoConstants.kPathPlannerConfig, // Path planner configuration for holonomic drive.
+        AutoConstants.kPathPlannerController, // Path planner controller for holonomic drive.
+        AutoConstants.kPathPlannerRobotConfig, // Path planner config for robot constants
         () -> FieldUtils.isRedAlliance(), // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
         this // Reference to this subsystem to set requirements
     );

@@ -4,13 +4,15 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.CANSparkBase.IdleMode;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -68,7 +70,10 @@ public final class Constants {
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
+    public static final double kWheelRadiusMeters = kWheelDiameterMeters / 2;
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
+
+    public static final double kWheelCOF = 0;
 
     // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
     public static final double kDrivingMotorReduction = 8.14;
@@ -120,6 +125,24 @@ public final class Constants {
 
     public static final int kDrivingMotorCurrentLimit = 35; // amps
     public static final int kTurningMotorCurrentLimit = 35; // amps
+
+    /** Voltage at which the motor constants were measured. **/
+    public static final double kNominalVoltageVolts = 35;
+
+    /** Torque when stalled. **/
+    public static final double kStallTorqueNewtonMeters = 35;
+
+    /** Current draw when stalled. **/
+    public static final double kStallCurrentAmps = 35;
+
+    /** Current draw under no load. **/
+    public static final double kFreeCurrentAmps = 35;
+
+    /** Angular velocity under no load. **/
+    public static final double kFreeSpeedRadPerSec = 35;
+
+    /** Number of motors in a gearbox. **/
+    public static final int kMotorsPerGearbox = 35;
   }
 
   public static final class HeadingConstants {
@@ -176,14 +199,34 @@ public final class Constants {
       0
     );
 
-    public static final HolonomicPathFollowerConfig kPathPlannerConfig = new HolonomicPathFollowerConfig( 
+    public static final double kRobotMassKG = 68;
+    public static final double kRobotMOI = 20;
+
+    public static final PPHolonomicDriveController kPathPlannerController = new PPHolonomicDriveController( 
       kAutoTranslationPID, // Translation PID constants
-      kAutoAngularPID, // Rotation PID constants
-      kAutoMaxSpeedMetersPerSecond, // Max module speed, in m/s
+      kAutoAngularPID // Rotation PID constants
+      // kAutoMaxSpeedMetersPerSecond // Max module speed, in m/s
       // Using pythagoras's theorem to find distance from robot center to module
-      Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
-      new ReplanningConfig() // Default path replanning config. See the API for the options here
+      // Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
+      // new ReplanningConfig() // Default path replanning config. See the API for the options here
     );
+
+    public static final RobotConfig kPathPlannerRobotConfig =  new RobotConfig(
+      kRobotMassKG, kRobotMOI,
+      new ModuleConfig(ModuleConstants.kWheelRadiusMeters,
+        kAutoMaxSpeedMetersPerSecond, ModuleConstants.kWheelCOF,
+        new DCMotor(
+          ModuleConstants.kNominalVoltageVolts,
+          ModuleConstants.kStallTorqueNewtonMeters,
+          ModuleConstants.kStallCurrentAmps,
+          ModuleConstants.kFreeCurrentAmps,
+          ModuleConstants.kFreeSpeedRadPerSec,
+          ModuleConstants.kMotorsPerGearbox
+        ),
+        ModuleConstants.kDrivingMotorReduction,
+        ModuleConstants.kDrivingMotorCurrentLimit,
+        1
+      ));
   }
 
   public static final class NeoMotorConstants {
@@ -201,9 +244,4 @@ public final class Constants {
      */
     public static final int kDefaultPipeline = kAprilTagPipeline;
   }
-
-  public static final class ElevatorConstants{
-    //put elevator things here :3 
-  }
-
 }
