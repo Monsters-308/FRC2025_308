@@ -7,47 +7,47 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class TurningMotorsTest extends Command {
 
-  private final DriveSubsystem m_driveSubsystem;
-  private double m_moduleAngle = 0;
+    private final DriveSubsystem m_driveSubsystem;
+    private double m_moduleAngle = 0;
 
-  /** 
-   * Makes all of the wheels on the drivetrain spin around.
-   * Useful for testing if any of the turning motors are broken.
-   * @param subsystem
-   */
-  public TurningMotorsTest(DriveSubsystem driveSubsystem) {
-    m_driveSubsystem = driveSubsystem;
-    
-    addRequirements(driveSubsystem);
-  }
+    /** 
+     * Makes all of the wheels on the drivetrain spin around.
+     * Useful for testing if any of the turning motors are broken.
+     * @param subsystem
+     */
+    public TurningMotorsTest(DriveSubsystem driveSubsystem) {
+        m_driveSubsystem = driveSubsystem;
+        
+        addRequirements(driveSubsystem);
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
 
-    m_driveSubsystem.setModuleStates(new SwerveModuleState[]{
-        new SwerveModuleState(0, Rotation2d.fromDegrees(m_moduleAngle)), 
-        new SwerveModuleState(0, Rotation2d.fromDegrees(m_moduleAngle)), 
-        new SwerveModuleState(0, Rotation2d.fromDegrees(m_moduleAngle)), 
-        new SwerveModuleState(0, Rotation2d.fromDegrees(m_moduleAngle))
-    });
+        m_driveSubsystem.setModuleStates(new SwerveModuleState[]{
+            new SwerveModuleState(0, Rotation2d.fromDegrees(m_moduleAngle)), 
+            new SwerveModuleState(0, Rotation2d.fromDegrees(m_moduleAngle)), 
+            new SwerveModuleState(0, Rotation2d.fromDegrees(m_moduleAngle)), 
+            new SwerveModuleState(0, Rotation2d.fromDegrees(m_moduleAngle))
+        });
 
-    // Change angle by small amount
-    m_moduleAngle += 2;
+        // Change angle by small amount
+        m_moduleAngle += 2;
 
-  }
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        
+    }
 
 }
 
