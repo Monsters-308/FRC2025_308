@@ -125,7 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
         swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
 
         // Gyro widget
-        swerveTab.addDouble("Robot Heading", () -> getHeading())
+        swerveTab.addDouble("Robot Heading", this::getHeading)
             .withWidget(BuiltInWidgets.kGyro)
             .withSize(2, 2)
             .withProperties(Map.of(

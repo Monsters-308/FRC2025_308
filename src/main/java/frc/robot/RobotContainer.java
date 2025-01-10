@@ -150,13 +150,13 @@ public class RobotContainer {
         // Right bumper: puts drive into x mode
         new JoystickButton(m_driverController, Button.kRightBumper.value)
             .whileTrue(new RunCommand(
-                () -> m_driveSubsystem.setX(),
+                m_driveSubsystem::setX,
                 m_driveSubsystem));
         
         // Left bumper: sets gyro to 0 degrees
         new JoystickButton(m_driverController, Button.kLeftBumper.value)
             .onTrue(new InstantCommand(
-                () -> m_driveSubsystem.zeroHeading()));
+                m_driveSubsystem::zeroHeading));
 
         // A button: makes robot face a point in space
         new JoystickButton(m_driverController, Button.kA.value)
@@ -164,8 +164,8 @@ public class RobotContainer {
                 new RobotFacePoint(
                     m_visionSubsystem, 
                     m_driveSubsystem, 
-                    () -> m_driverController.getLeftY(),
-                    () -> m_driverController.getLeftX(),
+                    m_driverController::getLeftY,
+                    m_driverController::getLeftX,
                     FieldConstants.kRandomPosition)
                 );
         
@@ -176,9 +176,9 @@ public class RobotContainer {
                     m_driveSubsystem,
                     0,
                     false,
-                    () -> m_driverController.getLeftY(),
-                    () -> m_driverController.getLeftX(),
-                    () -> m_driverController.getRightX()));
+                    m_driverController::getLeftY,
+                    m_driverController::getLeftX,
+                    m_driverController::getRightX));
 
         // Dpad right: makes robot face 90 degrees to the right
         new POVButton(m_driverController, 90)
@@ -187,9 +187,9 @@ public class RobotContainer {
                     m_driveSubsystem,
                     -90,
                     false,
-                    () -> m_driverController.getLeftY(),
-                    () -> m_driverController.getLeftX(),
-                    () -> m_driverController.getRightX()));
+                    m_driverController::getLeftY,
+                    m_driverController::getLeftX,
+                    m_driverController::getRightX));
 
         // Dpad down: makes robot face 180 degrees
         new POVButton(m_driverController, 180)
@@ -198,9 +198,9 @@ public class RobotContainer {
                     m_driveSubsystem,
                     180,
                     false,
-                    () -> m_driverController.getLeftY(),
-                    () -> m_driverController.getLeftX(),
-                    () -> m_driverController.getRightX()));
+                    m_driverController::getLeftY,
+                    m_driverController::getLeftX,
+                    m_driverController::getRightX));
                                 
         // Dpad left: makes robot face 90 degrees to the left
         new POVButton(m_driverController, 270)
@@ -209,9 +209,9 @@ public class RobotContainer {
                     m_driveSubsystem,
                     90,
                     false,
-                    () -> m_driverController.getLeftY(),
-                    () -> m_driverController.getLeftX(),
-                    () -> m_driverController.getRightX()));
+                    m_driverController::getLeftY,
+                    m_driverController::getLeftX,
+                    m_driverController::getRightX));
 
 
         //------------------------------------------- coDriver buttons -------------------------------------------
