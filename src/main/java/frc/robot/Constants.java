@@ -28,6 +28,14 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final class RobotConstants {
+        // Mass of the robot in kilograms
+        public static final double kRobotMassKG = 68;
+
+        // Robot's moment of inertia
+        public static final double kRobotMOI = 20;
+    }
+
     public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
@@ -73,7 +81,11 @@ public final class Constants {
         public static final double kWheelRadiusMeters = kWheelDiameterMeters / 2;
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
-        public static final double kWheelCOF = 0;
+        // The coefficient of friction between the drive wheel and the carpet
+        public static final double kWheelCOF = 1;
+
+        // The max speed a module can run at with full power
+        public static final double kTrueMaxSpeedMetersPerSecond = 3;
 
         // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
         public static final double kDrivingMotorReduction = 8.14;
@@ -125,24 +137,6 @@ public final class Constants {
 
         public static final int kDrivingMotorCurrentLimit = 35; // amps
         public static final int kTurningMotorCurrentLimit = 35; // amps
-
-        /** Voltage at which the motor constants were measured. **/
-        public static final double kNominalVoltageVolts = 35;
-
-        /** Torque when stalled. **/
-        public static final double kStallTorqueNewtonMeters = 35;
-
-        /** Current draw when stalled. **/
-        public static final double kStallCurrentAmps = 35;
-
-        /** Current draw under no load. **/
-        public static final double kFreeCurrentAmps = 35;
-
-        /** Angular velocity under no load. **/
-        public static final double kFreeSpeedRadPerSec = 35;
-
-        /** Number of motors in a gearbox. **/
-        public static final int kMotorsPerGearbox = 35;
     }
 
     public static final class HeadingConstants {
@@ -199,30 +193,18 @@ public final class Constants {
             0
         );
 
-        public static final double kRobotMassKG = 68;
-        public static final double kRobotMOI = 20;
+        public static final DCMotor kMotorGearbox = DCMotor.getAndymark9015(1);
 
         public static final PPHolonomicDriveController kPathPlannerController = new PPHolonomicDriveController( 
             kAutoTranslationPID, // Translation PID constants
             kAutoAngularPID // Rotation PID constants
-            // kAutoMaxSpeedMetersPerSecond // Max module speed, in m/s
-            // Using pythagoras's theorem to find distance from robot center to module
-            // Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
-            // new ReplanningConfig() // Default path replanning config. See the API for the options here
         );
 
-        public static final RobotConfig kPathPlannerRobotConfig =    new RobotConfig(
-            kRobotMassKG, kRobotMOI,
+        public static final RobotConfig kPathPlannerRobotConfig = new RobotConfig(
+            RobotConstants.kRobotMassKG, RobotConstants.kRobotMOI,
             new ModuleConfig(ModuleConstants.kWheelRadiusMeters,
-                kAutoMaxSpeedMetersPerSecond, ModuleConstants.kWheelCOF,
-                new DCMotor(
-                    ModuleConstants.kNominalVoltageVolts,
-                    ModuleConstants.kStallTorqueNewtonMeters,
-                    ModuleConstants.kStallCurrentAmps,
-                    ModuleConstants.kFreeCurrentAmps,
-                    ModuleConstants.kFreeSpeedRadPerSec,
-                    ModuleConstants.kMotorsPerGearbox
-                ),
+                ModuleConstants.kTrueMaxSpeedMetersPerSecond, ModuleConstants.kWheelCOF,
+                kMotorGearbox,
                 ModuleConstants.kDrivingMotorReduction,
                 ModuleConstants.kDrivingMotorCurrentLimit,
                 1
