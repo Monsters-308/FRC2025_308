@@ -150,7 +150,7 @@ public class DriveSubsystem extends SubsystemBase {
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             AutoConstants.kPathPlannerController, // Path planner controller for holonomic drive.
             AutoConstants.kPathPlannerRobotConfig, // Path planner config for robot constants
-            () -> FieldUtils.isRedAlliance(), // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
+            FieldUtils::isRedAlliance, // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
             this // Reference to this subsystem to set requirements
         );
 

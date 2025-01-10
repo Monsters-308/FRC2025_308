@@ -208,7 +208,8 @@ public final class Constants {
                 ModuleConstants.kDrivingMotorReduction,
                 ModuleConstants.kDrivingMotorCurrentLimit,
                 1
-            ));
+            ),
+            DriveConstants.kDriveKinematics.getModules());
     }
 
     public static final class NeoMotorConstants {
