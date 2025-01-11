@@ -300,4 +300,8 @@ public final class Constants {
         /** The speed the elavtor motors should move at. */
         public static final double elevatorSpeedMetersPerSecond = 0.1;
     }
+
+    public static final class IntakeConstaints {
+        
+    }
 }
