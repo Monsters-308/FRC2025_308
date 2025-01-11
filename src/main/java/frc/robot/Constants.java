@@ -302,6 +302,6 @@ public final class Constants {
     }
 
     public static final class IntakeConstaints {
-        
+        public static final int kIntakeMotorId = 0;
     }
 }
