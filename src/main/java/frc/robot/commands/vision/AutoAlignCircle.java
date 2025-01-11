@@ -6,8 +6,6 @@ import frc.robot.subsystems.DriveSubsystem;
 
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.Constants.FieldConstants;
 
 //Import this so you can make this class a command
 import edu.wpi.first.wpilibj2.command.Command;
@@ -66,12 +64,12 @@ public class AutoAlignCircle extends Command {
     @Override
     public void execute() {
         double x = m_visionSubsystem.getX();
-        double y = m_visionSubsystem.getY();
+        // double y = m_visionSubsystem.getY();
         double targets = m_visionSubsystem.getTargets();
         double rotate = 0;
         double orbitSpeed = 0.2; // Adjust this value to control the orbit speed
-        Translation2d pos1 = m_driveSubsystem.getPose().getTranslation();
-        Translation2d pos2 = FieldConstants.kRandomPosition;
+        // Translation2d pos1 = m_driveSubsystem.getPose().getTranslation();
+        // Translation2d pos2 = FieldConstants.kRandomPosition;
        // Rotation2d distanceFromTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2);
 
         if (targets > 0) {

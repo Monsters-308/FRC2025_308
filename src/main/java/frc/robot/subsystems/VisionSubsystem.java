@@ -33,7 +33,7 @@ public class VisionSubsystem extends SubsystemBase {
         tv = limelightTable.getEntry("tv");
         setPipeline(VisionConstants.kDefaultPipeline);
 
-        visionTab.addInteger("Pipeline", () -> getPipeline());
+        visionTab.addInteger("Pipeline", this::getPipeline);
         visionTab.add("Vision Estimates", m_field)
             .withSize(7, 4);
     }
