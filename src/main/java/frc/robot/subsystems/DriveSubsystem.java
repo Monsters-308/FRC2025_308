@@ -52,13 +52,13 @@ public class DriveSubsystem extends SubsystemBase {
     private final SwerveModule m_rearLeft = new SwerveModule(
         DriveConstants.kRearLeftDrivingCanId,
         DriveConstants.kRearLeftTurningCanId,
-        DriveConstants.kBackLeftChassisAngularOffset,
+        DriveConstants.kRearLeftChassisAngularOffset,
         ModuleConstants.kLeftRearInverted);
 
     private final SwerveModule m_rearRight = new SwerveModule(
         DriveConstants.kRearRightDrivingCanId,
         DriveConstants.kRearRightTurningCanId,
-        DriveConstants.kBackRightChassisAngularOffset,
+        DriveConstants.kRearRightChassisAngularOffset,
         ModuleConstants.kRightRearInverted);
 
     // The gyro sensor
@@ -115,7 +115,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_visionPose = visionPosition;
         m_visionTimestamp = visionTimestamp;
 
-        // NOTE: is this really necessary??
         m_gyro.enableLogging(true);
      
         // Widgets for swerve module angles 
@@ -253,23 +252,21 @@ public class DriveSubsystem extends SubsystemBase {
                 : new ChassisSpeeds(xSpeed, ySpeed, rot)
         );
 
+        final double
+            currentTime = WPIUtilJNI.now() * 1e-6,
+            elapsedTime = currentTime - m_prevTime;
+
         // Rate limit if applicable
         if(rateLimit) {
-            final double
-                currentTime = WPIUtilJNI.now() * 1e-6,
-                elapsedTime = currentTime - m_prevTime;
-
             // Side effect: The velocities of targetVel are modified by this function
             SwerveUtils.RateLimitVelocity(
                 targetVel, m_prevTarget, elapsedTime,
                 DriveConstants.kMagnitudeSlewRate, DriveConstants.kRotationalSlewRate
             );
-
-            // TODO: the previous times and target velocities are only tracked when rate limit is active. 
-            // This could potentially be a problem if rate limit is false for an extended period of time and then is suddenly switched on.
-            m_prevTime = currentTime;
-            m_prevTarget = targetVel;
         }
+
+        m_prevTime = currentTime;
+        m_prevTarget = targetVel;
 
         // Use the DriveKinematics to calculate the module states
         SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(targetVel);
