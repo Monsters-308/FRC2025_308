@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -15,6 +16,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
@@ -25,13 +27,13 @@ public class SwerveModule {
     private final SparkMax m_turningSparkMax;
 
     private final RelativeEncoder m_drivingEncoder;
-    private final AbsoluteEncoder m_turningEncoder;
+    private final CANcoder m_turningEncoder;
 
     private final SparkClosedLoopController m_drivingPIDController;
-    private final SparkClosedLoopController m_turningPIDController;
+    private final PIDController m_turningPIDController;
 
     private final double m_chassisAngularOffset;
-    private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
+    private SwerveModuleState m_desiredStaSte = new SwerveModuleState(0.0, new Rotation2d());
 
     /**
      * Constructs a Swerve Module and configures the driving and turning motor,
