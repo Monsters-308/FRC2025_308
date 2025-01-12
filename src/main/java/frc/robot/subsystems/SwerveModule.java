@@ -61,7 +61,7 @@ public class SwerveModule {
         drivingConfig.closedLoop.d(ModuleConstants.kDrivingD);
         drivingConfig.closedLoop.velocityFF(ModuleConstants.kDrivingFF);
         drivingConfig.closedLoop.outputRange(ModuleConstants.kDrivingMinOutput,
-            ModuleConstants.kDrivingMinOutput);
+            ModuleConstants.kDrivingMaxOutput);
 
         // Configure driving Spark Max with configuration object
         m_drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

@@ -140,9 +140,9 @@ public final class Constants {
         public static final double kDriveWheelFreeSpeedMetersPerSecond = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
                 / kDrivingMotorReduction;
 
-        public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI)
+        public static final double kDrivingEncoderPositionFactor = kWheelCircumferenceMeters
                 / kDrivingMotorReduction; // meters
-        public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
+        public static final double kDrivingEncoderVelocityFactor = (kWheelCircumferenceMeters
                 / kDrivingMotorReduction) / 60.0; // meters per second
 
         public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
@@ -281,7 +281,6 @@ public final class Constants {
     public static final class ElevatorConstants {
         /** CAN ID of the left elevator motor controller. */
         public static final int kElevatorLeftCanId = 0;
-
         /** CAN ID of the right elevator motor controller. */
         public static final int kElevatorRightCanId = 0;
 
@@ -293,12 +292,39 @@ public final class Constants {
 
         /** Whether to invert the left elevator motor. */
         public static final boolean kElevatorLeftInverted = false;
-
         /** Whether to invert the right elevator motor. */
         public static final boolean kElevatorRightInverted = false;
 
+        /** The reduction in distance calculated by endcoders due to gear ratio. */
+        public static final double kElevatorReduction = 1;
+        /** The diameter of the gear/wheel that moves the elevator. */
+        public static final double kGearDiameter = 1;
+        /** The circumference of the gear/wheel that moves the elevator. */
+        public static final double kGearCircumference = kGearDiameter * Math.PI;
+        /** The conversion factor that converts from motor rotations to meters. */
+        public static final double kElevatorEncoderPositionFactor = kGearCircumference / kElevatorReduction;
+        /** The conversion factor that converts from motor rotations per minute to meters per second. */
+        public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
+
+        /** The P for the elevator PID */
+        public static final double kElevatorP = 1;
+        /** The I for the elevator PID */
+        public static final double kElevatorI = 0;
+        /** The D for the elevator PID */
+        public static final double kElevatorD = 0;
+        /** The feed forawrd of the elevator PID */
+        public static final double kElevatorFF = 0;
+        /** The minimum output of the PID controller */
+        public static final double kElevatorMinOutput = -1;
+        /** The maximum output of the PID controller */
+        public static final double kElevatorMaxOutput = -1;
+
+
         /** The speed the elavtor motors should move at. */
-        public static final double elevatorSpeedMetersPerSecond = 0.1;
+        public static final double kElevatorSpeedMetersPerSecond = 0.1;
+
+        /** The heights, in meters, of every elevator level. */
+        public static final double[] kElevatorLevelHeights = { 0, 0.2, 0.4 };
     }
 
     public static final class IntakeConstaints {
