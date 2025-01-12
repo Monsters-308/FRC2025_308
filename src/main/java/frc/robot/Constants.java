@@ -122,22 +122,19 @@ public final class Constants {
      * modules and not to the drive subsystem itself.
      */
     public static final class ModuleConstants {
-
         // Calculations required for driving motor conversion factors and feed forward
-        public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kWheelRadiusMeters = kWheelDiameterMeters / 2;
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
+        public static final DCMotor kMotorGearboxConfig = DCMotor.getNEO(1);
+
         // The coefficient of friction between the drive wheel and the carpet
         public static final double kWheelCOF = 1;
 
-        // The max speed a module can run at with full power
-        public static final double kDrivingMotorFreeSpeedMetersPerSecond = kDrivingMotorFreeSpeedRps;
-
         // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
         public static final double kDrivingMotorReduction = 8.14;
-        public static final double kDriveWheelFreeSpeedMetersPerSecond = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
+        public static final double kDriveWheelFreeSpeedMetersPerSecond = (NEOMotorConstants.kFreeSpeedRps * kWheelCircumferenceMeters)
                 / kDrivingMotorReduction;
 
         public static final double kDrivingEncoderPositionFactor = kWheelCircumferenceMeters
@@ -241,27 +238,30 @@ public final class Constants {
             0
         );
 
-        public static final DCMotor kMotorGearbox = DCMotor.getNEO(1);
-
         public static final PPHolonomicDriveController kPathPlannerController = new PPHolonomicDriveController( 
             kAutoTranslationPID, // Translation PID constants
             kAutoAngularPID // Rotation PID constants
         );
 
         public static final RobotConfig kPathPlannerRobotConfig = new RobotConfig(
-            RobotConstants.kRobotMassKG, RobotConstants.kRobotMOI,
-            new ModuleConfig(ModuleConstants.kWheelRadiusMeters,
-                ModuleConstants.kDriveWheelFreeSpeedMetersPerSecond, ModuleConstants.kWheelCOF,
-                kMotorGearbox,
-                ModuleConstants.kDrivingMotorReduction,
-                ModuleConstants.kDrivingMotorCurrentLimit,
-                1
+            RobotConstants.kRobotMassKG, // robot mass
+            RobotConstants.kRobotMOI, // robot moment of inertia
+            new ModuleConfig(
+                ModuleConstants.kWheelRadiusMeters, // drive wheel radius
+                ModuleConstants.kDriveWheelFreeSpeedMetersPerSecond, // drive motor maximum capable speed
+                ModuleConstants.kWheelCOF, // wheel friction on carpet
+                ModuleConstants.kMotorGearboxConfig, // config for NEO motor gearbox
+                ModuleConstants.kDrivingMotorReduction, // gear ratio
+                ModuleConstants.kDrivingMotorCurrentLimit, // drive motor current limit
+                1 // number of drive motors per module
             ),
-            DriveConstants.kDriveKinematics.getModules());
+            DriveConstants.kDriveKinematics.getModules() // module offsets from center of chassis
+        );
     }
 
-    public static final class NeoMotorConstants {
+    public static final class NEOMotorConstants {
         public static final double kFreeSpeedRpm = 5676;
+        public static final double kFreeSpeedRps = kFreeSpeedRpm / 60;
     }
 
     public static final class VisionConstants {
@@ -283,6 +283,11 @@ public final class Constants {
         public static final int kElevatorLeftCanId = 0;
         /** CAN ID of the right elevator motor controller. */
         public static final int kElevatorRightCanId = 0;
+
+        /** Channel of the elevator bottom limit switch. */
+        public static final int kBottomSwitchChannel = 0;
+        /** Channel of the elevator top limit switch. */
+        public static final int kTopSwitchChannel = 1;
 
         /** Idle mode of the elevator motors. */
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
@@ -306,6 +311,9 @@ public final class Constants {
         /** The conversion factor that converts from motor rotations per minute to meters per second. */
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
+        /** The maximum speed the elevator can move at with pull power */
+        public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
+
         /** The P for the elevator PID */
         public static final double kElevatorP = 1;
         /** The I for the elevator PID */
@@ -314,14 +322,10 @@ public final class Constants {
         public static final double kElevatorD = 0;
         /** The feed forawrd of the elevator PID */
         public static final double kElevatorFF = 0;
-        /** The minimum output of the PID controller */
-        public static final double kElevatorMinOutput = -1;
-        /** The maximum output of the PID controller */
-        public static final double kElevatorMaxOutput = -1;
 
 
-        /** The speed the elavtor motors should move at. */
-        public static final double kElevatorSpeedMetersPerSecond = 0.1;
+        /** The maximum allowed speed the elavtor should move at. */
+        public static final double kElevatorMaxMetersPerSecond = 0.1;
 
         /** The heights, in meters, of every elevator level. */
         public static final double[] kElevatorLevelHeights = { 0, 0.2, 0.4 };

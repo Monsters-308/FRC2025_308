@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -27,11 +28,20 @@ public class ElevatorSubsystem extends SubsystemBase {
         ElevatorConstants.kElevatorRightCanId,
         MotorType.kBrushless);
 
-    /** Encoder that repreents the elevator motors. */
+    /** Encoder that represents the elevator motors. */
     private final RelativeEncoder m_elevatorEncoder;
 
     /** PID controller the controls the elevator motors. */
     private final SparkClosedLoopController m_elevatorPIDController;
+
+    /** Elevator bottom limit switch. */
+    private final DigitalInput m_bottomSwitch = new DigitalInput(ElevatorConstants.kBottomSwitchChannel);
+
+    /** Elevator top limit switch. */
+    private final DigitalInput m_topSwitch = new DigitalInput(ElevatorConstants.kTopSwitchChannel);
+
+    /** The maximum height the elevator is able to go to. */
+    private Double m_maxElevatorHeight;
 
     /**
      * Initializes an ElevatorSubsystem to control the robot's subsystem.
@@ -51,8 +61,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         leftMotorConfig.closedLoop.i(ElevatorConstants.kElevatorI);
         leftMotorConfig.closedLoop.d(ElevatorConstants.kElevatorD);
         leftMotorConfig.closedLoop.velocityFF(ElevatorConstants.kElevatorFF);
-        leftMotorConfig.closedLoop.outputRange(ElevatorConstants.kElevatorMinOutput, 
-            ElevatorConstants.kElevatorMaxOutput);
+        leftMotorConfig.closedLoop.outputRange(
+            -ElevatorConstants.kElevatorMaxMetersPerSecond / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond, 
+            ElevatorConstants.kElevatorMaxMetersPerSecond / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond);
 
         m_elevatorLeft.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -69,22 +80,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         m_elevatorEncoder = m_elevatorLeft.getEncoder();
         m_elevatorPIDController = m_elevatorLeft.getClosedLoopController();
-
-        goDown();
     }
 
     /**
-     * Starts moving the elevator up.
+     * Sets the current speed of the elevator.
+     * @param speed The speed to set the elevator to in meters per second.
      */
-    public void goUp() {
-        m_elevatorPIDController.setReference(ElevatorConstants.kElevatorSpeedMetersPerSecond, ControlType.kVelocity);
-    }
-
-    /**
-     * Starts moving the elevator down.
-     */
-    public void goDown() {
-        m_elevatorPIDController.setReference(-ElevatorConstants.kElevatorSpeedMetersPerSecond, ControlType.kVelocity);
+    public void setElevatorSpeed(double speed) {
+        m_elevatorPIDController.setReference(speed, ControlType.kVelocity);
     }
 
     /**
@@ -102,6 +105,22 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public Command runGoToLevel(int index) {
         return runOnce(() -> goToLevel(index));
+    }
+
+    /**
+     * Moves the elevator to the specified height.
+     * @param height The height to move the elevator to in meters.
+     */
+    public void setElevatorHeight(double height) {
+        m_elevatorPIDController.setReference(height, ControlType.kPosition);
+    }
+
+    /**
+     * Sets the maximum height the elevator can go to after calibration.
+     * @param maxHeight The maximum height to set.
+     */
+    public void setMaxHeight(double maxHeight) {
+        m_maxElevatorHeight = maxHeight;
     }
 
     /** 
@@ -126,10 +145,19 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Gets the current height of the elevator in meters 
+     * Gets the current height of the elevator in meters.
+     * @return The height of the elevator.
      */
     public double getElevatorHeight() {
         return m_elevatorEncoder.getPosition();
+    }
+
+    /**
+     * Gets the current speed of the elevator.
+     * @return The speed of the elevator in meters per second.
+     */
+    public double getElevatorSpeed() {
+        return m_elevatorEncoder.getVelocity();
     }
 
     /**
@@ -137,5 +165,18 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public void stop() {
         m_elevatorLeft.set(0);
+    }
+
+    @Override
+    public void periodic() {
+        if (m_bottomSwitch.get()) {
+            stop();
+            m_elevatorEncoder.setPosition(0);
+        } else if (m_topSwitch.get()) {
+            if (m_maxElevatorHeight != null) {
+                m_elevatorEncoder.setPosition(m_maxElevatorHeight);
+            }
+            stop();
+        }
     }
 }
