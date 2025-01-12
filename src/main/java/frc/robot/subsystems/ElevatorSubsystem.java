@@ -20,12 +20,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** The left motor controller of the elevator. */
     private final SparkMax m_elevatorLeft = new SparkMax(
         ElevatorConstants.kElevatorLeftCanId,
-        MotorType.kBrushed);
+        MotorType.kBrushless);
 
     /** The right motor controller of the elevator. */
     private final SparkMax m_elevatorRight = new SparkMax(
         ElevatorConstants.kElevatorRightCanId,
-        MotorType.kBrushed);
+        MotorType.kBrushless);
 
     /** Encoder that repreents the elevator motors. */
     private final RelativeEncoder m_elevatorEncoder;
