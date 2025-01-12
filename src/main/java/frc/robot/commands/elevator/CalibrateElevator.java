@@ -18,7 +18,7 @@ public class CalibrateElevator extends Command {
     private boolean m_isFinished = false;
 
     /**
-     * Creates a CalibrateElevator Command that calibrates the elevator encoders.
+     * Creates a CalibrateElevator command object that calibrates the elevator encoders.
      * @param elevatorSubsystem The elevator subsystem that represents the elevator.
      */
     public CalibrateElevator(ElevatorSubsystem elevatorSubsystem) {
@@ -27,28 +27,30 @@ public class CalibrateElevator extends Command {
         addRequirements(m_elevatorSubsystem);
     }
     
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        // Moves elevator towards bottom
         m_elevatorSubsystem.setElevatorSpeed(-ElevatorConstants.kElevatorMaxMetersPerSecond);
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         if (m_elevatorSubsystem.getElevatorSpeed() == 0) {
             if (m_hasReachedBottom) {
+                // Once it reaches the bottom, moves the elevator to the top
                 m_hasReachedBottom = true;
                 m_elevatorSubsystem.setElevatorSpeed(ElevatorConstants.kElevatorMaxMetersPerSecond);
             } else {
+                // Sets elevator max height once it reaches the top, then finishes the command
+                m_elevatorSubsystem.setMaxHeight(m_elevatorSubsystem.getElevatorHeight());
                 m_isFinished = true;
             }
         }
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        // Moves elevator back towards the bottom
         m_elevatorSubsystem.setElevatorSpeed(-ElevatorConstants.kElevatorMaxMetersPerSecond);
     }
 

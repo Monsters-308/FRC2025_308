@@ -74,9 +74,9 @@ public class DriveSubsystem extends SubsystemBase {
     private final Field2d m_field = new Field2d();
 
     // Shuffleboard objects
-    private final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
+    private final ShuffleboardTab m_swerveTab = Shuffleboard.getTab("Swerve");
     // Add alliance widget (it's just a boolean widget but I manually change the color)
-    private final SimpleWidget m_allianceWidget = swerveTab.add("Alliance", true); 
+    private final SimpleWidget m_allianceWidget = m_swerveTab.add("Alliance", true); 
     // Widget for toggling limelight data
     private final SimpleWidget m_useLimelightData;
 
@@ -118,24 +118,24 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.enableLogging(true);
      
         // Widgets for swerve module angles 
-        swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
-        swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
-        swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()));
-        swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
+        m_swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
+        m_swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
+        m_swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()));
+        m_swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
 
         // Gyro widget
-        swerveTab.addDouble("Robot Heading", this::getHeading)
+        m_swerveTab.addDouble("Robot Heading", this::getHeading)
             .withWidget(BuiltInWidgets.kGyro)
             .withSize(2, 2)
             .withProperties(Map.of(
                 "Counter Clockwise", true));
         
         // Field widget for displaying odometry estimation
-        swerveTab.add("Field", m_field)
+        m_swerveTab.add("Field", m_field)
             .withSize(6, 3);
         
-        swerveTab.addDouble("robot X", () -> getPose().getX());
-        swerveTab.addDouble("robot Y", () -> getPose().getY());
+        m_swerveTab.addDouble("robot X", () -> getPose().getX());
+        m_swerveTab.addDouble("robot Y", () -> getPose().getY());
 
         // // Gyro values for testing
         // swerveTab.addDouble("gyro pitch", () -> m_gyro.getPitch());
@@ -153,7 +153,7 @@ public class DriveSubsystem extends SubsystemBase {
             this // Reference to this subsystem to set requirements
         );
 
-        m_useLimelightData = swerveTab.add("Limelight Data", true)
+        m_useLimelightData = m_swerveTab.add("Limelight Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch); 
     }
 

@@ -10,9 +10,15 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.commands.elevator.CalibrateElevator;
 
 /**
  * Subsystem that controls the robot's elevator.
@@ -40,8 +46,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** Elevator top limit switch. */
     private final DigitalInput m_topSwitch = new DigitalInput(ElevatorConstants.kTopSwitchChannel);
 
-    /** The maximum height the elevator is able to go to. */
-    private Double m_maxElevatorHeight;
+    /** A shuffleboard tab to write elevator properties to the dashboard. */
+    private ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
 
     /**
      * Initializes an ElevatorSubsystem to control the robot's subsystem.
@@ -80,6 +86,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         m_elevatorEncoder = m_elevatorLeft.getEncoder();
         m_elevatorPIDController = m_elevatorLeft.getClosedLoopController();
+        
+        Preferences.initDouble("Maximum Elevator Height", 0);
+
+        m_elevatorTab.addDouble("Elevator Height", this::getElevatorHeight);
+        m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
+        m_elevatorTab.addDouble("Elevator Speed", this::getElevatorSpeed);
+
+        m_elevatorTab.add("Maximum Elevator Speed", ElevatorConstants.kElevatorMaxMetersPerSecond);
+        m_elevatorTab.addDouble("Maximum Elevator Height", () -> Preferences.getDouble("Maximum Elevator Height", 0));
+
+        m_elevatorTab.add("Calibrate Elevator", new CalibrateElevator(this));
     }
 
     /**
@@ -120,7 +137,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @param maxHeight The maximum height to set.
      */
     public void setMaxHeight(double maxHeight) {
-        m_maxElevatorHeight = maxHeight;
+        Preferences.setDouble("Maximum Elevator Height", maxHeight);
     }
 
     /** 
@@ -173,8 +190,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             stop();
             m_elevatorEncoder.setPosition(0);
         } else if (m_topSwitch.get()) {
-            if (m_maxElevatorHeight != null) {
-                m_elevatorEncoder.setPosition(m_maxElevatorHeight);
+            double maxElevatorHeight = Preferences.getDouble("Maximum Elevator Height", 0);
+            if (maxElevatorHeight > 0) {
+                m_elevatorEncoder.setPosition(maxElevatorHeight);
             }
             stop();
         }
