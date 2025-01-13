@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+import java.util.function.IntSupplier;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -9,9 +12,12 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,7 +51,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final DigitalInput m_topSwitch = new DigitalInput(ElevatorConstants.kTopSwitchChannel);
 
     /** A shuffleboard tab to write elevator properties to the dashboard. */
-    private ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
+    private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
+    /** A shuffleboard layout that holds the go to level command. */
+    private final ShuffleboardLayout m_goToLevelLayout = m_elevatorTab.getLayout("Go To Level");
+    /** The network table entry that contains the level to send the robot to when the dashboard button is pressed. */
+    private final GenericEntry m_levelNetworkTableEntry;
 
     /**
      * Initializes an ElevatorSubsystem to control the robot's subsystem.
@@ -85,16 +95,25 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_elevatorEncoder = m_elevatorLeft.getEncoder();
         m_elevatorPIDController = m_elevatorLeft.getClosedLoopController();
         
-        Preferences.initDouble("Maximum Elevator Height", 0);
+        Preferences.initDouble(ElevatorConstants.kPhysicalHeightLimitKey, ElevatorConstants.kPhysicalHeightLimit);
 
-        m_elevatorTab.addDouble("Elevator Height", this::getElevatorHeight);
+        m_elevatorTab.addDouble("Current Elevator Height", this::getElevatorHeight);
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
         m_elevatorTab.addDouble("Elevator Speed", this::getElevatorSpeed);
 
         m_elevatorTab.add("Maximum Elevator Speed", ElevatorConstants.kElevatorMaxMetersPerSecond);
-        m_elevatorTab.addDouble("Maximum Elevator Height", () -> Preferences.getDouble("Maximum Elevator Height", 0));
+        m_elevatorTab.addDouble("Physical Height Limit", this::getPhysicalHeightLimit);
 
         m_elevatorTab.add("Calibrate Elevator", new CalibrateElevator(this));
+
+        m_levelNetworkTableEntry = m_goToLevelLayout.add("Level", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("Min", 1,
+                "Max", ElevatorConstants.kElevatorLevelHeights.length,
+                "Block Increment", 1))
+            .getEntry();
+
+        m_goToLevelLayout.add(runGoToLevel(() -> (int)m_levelNetworkTableEntry.getInteger(-1)));
     }
 
     /**
@@ -123,19 +142,32 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
+     * Creates a Command that moves to elevator to the level returned from the index supplier.
+     * @param indexSupplier The supplier of the index of the level.
+     * @return The runnable Command.
+     */
+    public Command runGoToLevel(IntSupplier indexSupplier) {
+        return runOnce(() -> {
+            int index = indexSupplier.getAsInt();
+            if (index < 0) { return; }
+            goToLevel(index);
+        });
+    }
+
+    /**
      * Moves the elevator to the specified height.
      * @param height The height to move the elevator to in meters.
      */
-    public void setElevatorHeight(double height) {
+    public void goToHeight(double height) {
         m_elevatorPIDController.setReference(height, ControlType.kPosition);
     }
 
     /**
-     * Sets the maximum height the elevator can go to after calibration.
-     * @param maxHeight The maximum height to set.
+     * Sets the physical height limit the elevator can reach. Used for calibration.
+     * @param height The new physical height limit to set.
      */
-    public void setMaxHeight(double maxHeight) {
-        Preferences.setDouble("Maximum Elevator Height", maxHeight);
+    public void setPhysicalHeightLimit(double height) {
+        Preferences.setDouble(ElevatorConstants.kPhysicalHeightLimitKey, height);
     }
 
     /** 
@@ -168,6 +200,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
+     * Gets the physical height limit the elevator can reach.
+     * @return The physical height limit of the elevator.
+     */
+    public double getPhysicalHeightLimit() {
+        return Preferences.getDouble(ElevatorConstants.kPhysicalHeightLimitKey, ElevatorConstants.kPhysicalHeightLimit);
+    }
+
+    /**
      * Gets the current speed of the elevator.
      * @return The speed of the elevator in meters per second.
      */
@@ -184,15 +224,20 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // Prevent elevator motors from moving after the elevator cannot move any further
         if (m_bottomSwitch.get()) {
             stop();
-            m_elevatorEncoder.setPosition(0);
+            m_elevatorEncoder.setPosition(0); // Reset encoder position to 0 at the bottom
         } else if (m_topSwitch.get()) {
-            double maxElevatorHeight = Preferences.getDouble("Maximum Elevator Height", 0);
-            if (maxElevatorHeight > 0) {
-                m_elevatorEncoder.setPosition(maxElevatorHeight);
-            }
+            m_elevatorEncoder.setPosition(getPhysicalHeightLimit()); // Reset encoder position to the height of the elevator at the top
             stop();
+        }
+
+        // Prevent level in shuffleboard go to level layout from being non-integer
+        double value = m_levelNetworkTableEntry.getDouble(-1);
+        long roundedValue = Math.round(value);
+        if (roundedValue != value) {
+            m_levelNetworkTableEntry.setInteger(roundedValue);
         }
     }
 }

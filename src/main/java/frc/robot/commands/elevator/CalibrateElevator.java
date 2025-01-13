@@ -42,7 +42,7 @@ public class CalibrateElevator extends Command {
                 m_elevatorSubsystem.setElevatorSpeed(ElevatorConstants.kElevatorMaxMetersPerSecond);
             } else {
                 // Sets elevator max height once it reaches the top, then finishes the command
-                m_elevatorSubsystem.setMaxHeight(m_elevatorSubsystem.getElevatorHeight());
+                m_elevatorSubsystem.setPhysicalHeightLimit(m_elevatorSubsystem.getElevatorHeight());
                 m_isFinished = true;
             }
         }

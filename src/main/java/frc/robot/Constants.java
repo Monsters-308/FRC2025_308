@@ -311,21 +311,26 @@ public final class Constants {
         /** The conversion factor that converts from motor rotations per minute to meters per second. */
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
-        /** The maximum speed the elevator can move at with pull power */
+        /** The maximum speed the elevator can move at with pull power. */
         public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
 
-        /** The P for the elevator PID */
+        /** The P for the elevator PID. */
         public static final double kElevatorP = 1;
-        /** The I for the elevator PID */
+        /** The I for the elevator PID. */
         public static final double kElevatorI = 0;
-        /** The D for the elevator PID */
+        /** The D for the elevator PID. */
         public static final double kElevatorD = 0;
-        /** The feed forawrd of the elevator PID */
+        /** The feed forawrd of the elevator PID. */
         public static final double kElevatorFF = 0;
 
 
         /** The maximum allowed speed the elavtor should move at. */
         public static final double kElevatorMaxMetersPerSecond = 0.1;
+
+        /** The physical height of the elevator. */
+        public static final double kPhysicalHeightLimit = 1;
+        /** The preferences key for the elevator height. */
+        public static final String kPhysicalHeightLimitKey = "physical_elevator_height";
 
         /** The heights, in meters, of every elevator level. */
         public static final double[] kElevatorLevelHeights = { 0, 0.2, 0.4 };
