@@ -58,7 +58,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final GenericEntry m_levelNetworkTableEntry;
 
     /**
-     * Initializes an ElevatorSubsystem to control the robot's subsystem.
+     * Initializes an ElevatorSubsystem to control the robot's elevator.
      */
     public ElevatorSubsystem() {
         SparkMaxConfig leftMotorConfig = new SparkMaxConfig();
