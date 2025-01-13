@@ -176,15 +176,16 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public int getCurrentLevel() {
         double height = getElevatorHeight();
-        double smallestDifference = Integer.MAX_VALUE;
+        Double smallestDifference = null;
         int index = 0;
 
         for (int i = 0; i < ElevatorConstants.kElevatorLevelHeights.length; i++) {
             double difference = Math.abs(ElevatorConstants.kElevatorLevelHeights[i] - height);
 
-            if (difference < smallestDifference) {
-                smallestDifference = difference;
-                index = i;
+            // Check if current height difference is smaller than the previous one or if there is no previous one
+            if (difference < smallestDifference || smallestDifference == null) {
+                smallestDifference = difference; // Sets new smallest difference if it is
+                index = i; // Sets level index to i because it has a smaller difference
             }
         }
 
