@@ -63,32 +63,33 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem() {
         SparkMaxConfig leftMotorConfig = new SparkMaxConfig();
 
-        leftMotorConfig.idleMode(ElevatorConstants.kElevatorIdleMode);
-        leftMotorConfig.smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit);
+        leftMotorConfig
+            .idleMode(ElevatorConstants.kElevatorIdleMode)
+            .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
+            .inverted(ElevatorConstants.kElevatorLeftInverted);
 
-        leftMotorConfig.inverted(ElevatorConstants.kElevatorLeftInverted);
+        leftMotorConfig.encoder
+            .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
+            .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
-        leftMotorConfig.encoder.positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor);
-        leftMotorConfig.encoder.velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
-
-        leftMotorConfig.closedLoop.p(ElevatorConstants.kElevatorP);
-        leftMotorConfig.closedLoop.i(ElevatorConstants.kElevatorI);
-        leftMotorConfig.closedLoop.d(ElevatorConstants.kElevatorD);
-        leftMotorConfig.closedLoop.velocityFF(ElevatorConstants.kElevatorFF);
-        leftMotorConfig.closedLoop.outputRange(
-            -ElevatorConstants.kElevatorMaxMetersPerSecond / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond, 
-            ElevatorConstants.kElevatorMaxMetersPerSecond / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond);
+        leftMotorConfig.closedLoop
+            .p(ElevatorConstants.kElevatorP)
+            .i(ElevatorConstants.kElevatorI)
+            .d(ElevatorConstants.kElevatorD)
+            .velocityFF(ElevatorConstants.kElevatorFF)
+            .outputRange(
+                -ElevatorConstants.kElevatorMaxMetersPerSecond / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond, 
+                ElevatorConstants.kElevatorMaxMetersPerSecond / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond);
 
         m_elevatorLeft.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkMaxConfig rightMotorConfig = new SparkMaxConfig();
 
-        rightMotorConfig.idleMode(ElevatorConstants.kElevatorIdleMode);
-        rightMotorConfig.smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit);
-
-        rightMotorConfig.inverted(ElevatorConstants.kElevatorRightInverted);
-
-        rightMotorConfig.follow(m_elevatorLeft);
+        rightMotorConfig
+            .idleMode(ElevatorConstants.kElevatorIdleMode)
+            .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
+            .inverted(ElevatorConstants.kElevatorRightInverted)
+            .follow(m_elevatorLeft);
 
         m_elevatorRight.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
