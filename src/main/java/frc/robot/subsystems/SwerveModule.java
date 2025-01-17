@@ -179,6 +179,9 @@ public class SwerveModule {
         // Optimize the reference state to avoid spinning further than 90 degrees.
         correctedDesiredState.optimize(getTurningAngle());
 
+        // Do cosine scaling on the drive speed to reduce perpendicular movement. 
+        correctedDesiredState.cosineScale(getTurningAngle());
+
         // Command driving and turning SPARKS MAX towards their respective setpoints.
         m_drivingPIDController.setReference(correctedDesiredState.speedMetersPerSecond, SparkMax.ControlType.kVelocity);
         m_turningPIDController.setReference(correctedDesiredState.angle.getRadians(), SparkMax.ControlType.kPosition);
