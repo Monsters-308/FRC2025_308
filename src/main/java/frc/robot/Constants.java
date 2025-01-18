@@ -75,20 +75,7 @@ public final class Constants {
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
-
-        // Angular offsets of the modules relative to the chassis in radians
-
-        /** Angle of the front left module relative to the chassis. */
-        public static final double kFrontLeftChassisAngularOffset = 0;
-
-        /** Angle of the front right module relative to the chassis. */
-        public static final double kFrontRightChassisAngularOffset = 0;
-
-        /** Angle of the rear left module relative to the chassis. */
-        public static final double kRearLeftChassisAngularOffset = 0;
-
-        /** Angle of the rear right module relative to the chassis. */
-        public static final double kRearRightChassisAngularOffset = 0;
+    
 
         // SPARK MAX CAN IDs
 
@@ -115,6 +102,12 @@ public final class Constants {
 
         /** CAN ID of the rear right turning motor controller. */
         public static final int kRearRightTurningCanId = 7;
+
+        // Encoder CAN Ids
+        public static final int KFrontLeftTurningEncoderId = 10;
+        public static final int KFrontRightTurningEncoderId = 11;
+        public static final int KRearLeftTurningEncoderId = 12;
+        public static final int KRearRightTurningEncoderId = 13;
     }
 
     /**
