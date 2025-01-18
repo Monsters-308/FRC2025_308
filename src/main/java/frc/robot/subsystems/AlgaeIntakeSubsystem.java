@@ -29,10 +29,8 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
         rightMotorConf
             .inverted(false)
             .idleMode(null)
-            .smartCurrentLimit(0)
-            .follow(m_algaeIntakeMotorLeft);
+            .smartCurrentLimit(0);
 
-        
     }
-    
+
 }
