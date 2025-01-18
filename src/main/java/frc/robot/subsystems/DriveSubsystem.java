@@ -116,7 +116,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_visionTimestamp = visionTimestamp;
 
         m_gyro.enableLogging(true);
-     
+    
         // Widgets for swerve module angles 
         m_swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
         m_swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
