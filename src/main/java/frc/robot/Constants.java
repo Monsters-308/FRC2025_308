@@ -329,7 +329,16 @@ public final class Constants {
         public static final double[] kElevatorLevelHeights = { 0, 0.2, 0.4 };
     }
 
-    public static final class IntakeConstaints {
+    public static final class AlgaeIntakeConstaints {
         public static final int kIntakeMotorId = 0;
+
+        public static final boolean kleftAlgaeIntakeInverted = false;
+
+        public static final boolean krightAlgaeIntakeInverted = false;
+
+        public static final IdleMode kAlgaeIntakeIdleMode = IdleMode.kBrake;
+
+
     }
+
 }
