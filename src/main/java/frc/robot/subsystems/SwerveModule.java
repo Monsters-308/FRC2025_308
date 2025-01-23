@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -124,7 +125,7 @@ public class SwerveModule {
      * Get the angle that the swerve wheel is facing.
      * @return The angle as a Rotation2d object.
      */
-    private Rotation2d getTurningAngle() {
+    public Rotation2d getTurningAngle() {
         
         double currentEncoderValue = Units.rotationsToRadians(
             m_turningAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()
@@ -180,7 +181,7 @@ public class SwerveModule {
         correctedDesiredState.optimize(getTurningAngle());
 
         // Do cosine scaling on the drive speed to reduce perpendicular movement. 
-        correctedDesiredState.cosineScale(getTurningAngle());
+        // correctedDesiredState.cosineScale(getTurningAngle());
 
         // Command driving and turning SPARKS MAX towards their respective setpoints.
         m_drivingPIDController.setReference(correctedDesiredState.speedMetersPerSecond, SparkMax.ControlType.kVelocity);
