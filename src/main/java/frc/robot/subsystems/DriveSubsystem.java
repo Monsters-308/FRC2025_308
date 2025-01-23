@@ -118,10 +118,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.enableLogging(true);
     
         // Widgets for swerve module angles 
-        m_swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
-        m_swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
-        m_swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()));
-        m_swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
+        m_swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getTurningAngle().getDegrees()));
 
         // Gyro widget
         m_swerveTab.addDouble("Robot Heading", this::getHeading)
