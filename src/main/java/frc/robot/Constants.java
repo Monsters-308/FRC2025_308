@@ -80,34 +80,35 @@ public final class Constants {
         // SPARK MAX CAN IDs
 
         /** CAN ID of the front left driving motor controller. */
-        public static final int kFrontLeftDrivingCanId = 2;
+        public static final int kFrontLeftDrivingCanId = 8; 
 
         /** CAN ID of the rear left driving motor controller. */
-        public static final int kRearLeftDrivingCanId = 8;
+        public static final int kRearLeftDrivingCanId = 4;
 
         /** CAN ID of the front right driving motor controller. */
-        public static final int kFrontRightDrivingCanId = 4;
+        public static final int kFrontRightDrivingCanId = 7;
 
         /** CAN ID of the rear lefrightt driving motor controller. */
-        public static final int kRearRightDrivingCanId = 6;
+        public static final int kRearRightDrivingCanId = 3;
+
 
         /** CAN ID of the front left turning motor controller. */
-        public static final int kFrontLeftTurningCanId = 3;
+        public static final int kFrontLeftTurningCanId = 5;
 
         /** CAN ID of the rear left turning motor controller. */
-        public static final int kRearLeftTurningCanId = 9;
+        public static final int kRearLeftTurningCanId = 9; // Correct
 
         /** CAN ID of the front right turning motor controller. */
-        public static final int kFrontRightTurningCanId = 5;
+        public static final int kFrontRightTurningCanId = 6;
 
         /** CAN ID of the rear right turning motor controller. */
-        public static final int kRearRightTurningCanId = 7;
+        public static final int kRearRightTurningCanId = 2;
 
         // Encoder CAN Ids
-        public static final int KFrontLeftTurningEncoderId = 10;
-        public static final int KFrontRightTurningEncoderId = 11;
-        public static final int KRearLeftTurningEncoderId = 12;
-        public static final int KRearRightTurningEncoderId = 13;
+        public static final int KFrontLeftTurningEncoderId = 13;
+        public static final int KFrontRightTurningEncoderId = 10;
+        public static final int KRearLeftTurningEncoderId = 11;
+        public static final int KRearRightTurningEncoderId = 12;
     }
 
     /**
@@ -126,7 +127,7 @@ public final class Constants {
         public static final double kWheelCOF = 1;
 
         // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
-        public static final double kDrivingMotorReduction = 8.14;
+        public static final double kDrivingMotorReduction = 6.75;
         public static final double kDriveWheelFreeSpeedMetersPerSecond = (NEOMotorConstants.kFreeSpeedRps * kWheelCircumferenceMeters)
                 / kDrivingMotorReduction;
 
@@ -135,8 +136,11 @@ public final class Constants {
         public static final double kDrivingEncoderVelocityFactor = (kWheelCircumferenceMeters
                 / kDrivingMotorReduction) / 60.0; // meters per second
 
-        public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
-        public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+        // Position factor for the turning encoders on the NEOs 
+        public static final double kTurningMotorReduction = 150.0 / 7;
+
+        public static final double kTurningEncoderPositionFactor = (2 * Math.PI) / kTurningMotorReduction; // radians
+        public static final double kTurningEncoderVelocityFactor = kTurningEncoderPositionFactor / 60.0; // radians per second
 
         public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
         public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
@@ -331,7 +335,22 @@ public final class Constants {
         public static final double[] kElevatorLevelHeights = { 0, 0.2, 0.4 };
     }
 
-    public static final class IntakeConstaints {
+    public static final class AlgaeIntakeConstaints {
         public static final int kIntakeMotorId = 0;
+
+        public static final boolean kleftAlgaeIntakeInverted = false;
+
+        public static final boolean krightAlgaeIntakeInverted = false;
+
+        public static final IdleMode kAlgaeIntakeIdleMode = IdleMode.kBrake;
+
+
     }
+
+    public static final class ArmConstaints{
+        public static final int kArmMotorId = 0;
+
+        
+    }
+
 }
