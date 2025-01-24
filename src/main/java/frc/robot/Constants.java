@@ -304,9 +304,6 @@ public final class Constants {
         /** The conversion factor that converts from motor rotations per minute to meters per second. */
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
-        /** The maximum speed the elevator can move at with pull power. */
-        public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
-
         /** The P for the elevator PID. */
         public static final double kElevatorP = 1;
         /** The I for the elevator PID. */
@@ -316,9 +313,14 @@ public final class Constants {
         /** The feed forawrd of the elevator PID. */
         public static final double kElevatorFF = 0;
 
+        /** The maximum speed the elevator can move at with full power. */
+        public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
 
         /** The maximum allowed speed the elavtor should move at. */
-        public static final double kElevatorMaxMetersPerSecond = 0.1;
+        public static final double kElevatorMaxSpeedMetersPerSecond = 0.1;
+
+        /** The maximum allowed acceleration of the elevator. */
+        public static final double kElevatorMaxAccelerationMetersPerSecondSquared = 0.1;
 
         /** The physical height of the elevator. */
         public static final double kPhysicalHeightLimit = 1;

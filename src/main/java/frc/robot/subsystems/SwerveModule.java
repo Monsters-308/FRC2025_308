@@ -34,7 +34,7 @@ public class SwerveModule {
 
     // Used to detect when the turning encoders are updated since they're 
     // not updated as frequently over CAN.
-    private double m_mostRecentTurningEncoderValue = 0;
+    // private double m_mostRecentTurningEncoderValue = 0;
 
     // private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 

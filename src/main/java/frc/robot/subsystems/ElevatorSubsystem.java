@@ -5,13 +5,13 @@ import java.util.function.IntSupplier;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.commands.elevator.CalibrateElevator;
 
 /**
  * Subsystem that controls the robot's elevator.
@@ -42,7 +42,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final RelativeEncoder m_elevatorEncoder;
 
     /** PID controller the controls the elevator motors. */
-    private final SparkClosedLoopController m_elevatorPIDController;
+    private final ProfiledPIDController m_elevatorPIDController = new ProfiledPIDController(
+        ElevatorConstants.kElevatorP,
+        ElevatorConstants.kElevatorI,
+        ElevatorConstants.kElevatorD,
+        new TrapezoidProfile.Constraints(
+            ElevatorConstants.kElevatorMaxSpeedMetersPerSecond,
+            ElevatorConstants.kElevatorMaxAccelerationMetersPerSecondSquared
+        )
+    );
 
     /** Elevator bottom limit switch. */
     private final DigitalInput m_bottomSwitch = new DigitalInput(ElevatorConstants.kBottomSwitchChannel);
@@ -56,6 +64,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final ShuffleboardLayout m_goToLevelLayout = m_elevatorTab.getLayout("Go To Level");
     /** The network table entry that contains the level to send the robot to when the dashboard button is pressed. */
     private final GenericEntry m_levelNetworkTableEntry;
+
+    /** Whether or not the elevator is currently being calibrated. */
+    private boolean m_calibrating = false;
 
     /**
      * Initializes an ElevatorSubsystem to control the robot's elevator.
@@ -72,15 +83,6 @@ public class ElevatorSubsystem extends SubsystemBase {
             .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
             .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
-        leftMotorConfig.closedLoop
-            .p(ElevatorConstants.kElevatorP)
-            .i(ElevatorConstants.kElevatorI)
-            .d(ElevatorConstants.kElevatorD)
-            .velocityFF(ElevatorConstants.kElevatorFF)
-            .outputRange(
-                -ElevatorConstants.kElevatorMaxMetersPerSecond / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond, 
-                ElevatorConstants.kElevatorMaxMetersPerSecond / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond);
-
         m_elevatorLeft.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkMaxConfig rightMotorConfig = new SparkMaxConfig();
@@ -94,18 +96,17 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_elevatorRight.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         m_elevatorEncoder = m_elevatorLeft.getEncoder();
-        m_elevatorPIDController = m_elevatorLeft.getClosedLoopController();
         
         Preferences.initDouble(ElevatorConstants.kPhysicalHeightLimitKey, ElevatorConstants.kPhysicalHeightLimit);
 
         m_elevatorTab.addDouble("Current Elevator Height", this::getElevatorHeight);
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
-        m_elevatorTab.addDouble("Elevator Speed", this::getElevatorSpeed);
+        m_elevatorTab.addDouble("Elevator Speed", this::getElevatorVelocity);
 
-        m_elevatorTab.add("Maximum Elevator Speed", ElevatorConstants.kElevatorMaxMetersPerSecond);
+        m_elevatorTab.add("Maximum Elevator Speed", ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
         m_elevatorTab.addDouble("Physical Height Limit", this::getPhysicalHeightLimit);
 
-        m_elevatorTab.add("Calibrate Elevator", new CalibrateElevator(this));
+        m_elevatorTab.add("Calibrate Elevator", calibrateElevator());
 
         m_levelNetworkTableEntry = m_goToLevelLayout.add("Level", 0)
             .withWidget(BuiltInWidgets.kNumberSlider)
@@ -114,23 +115,15 @@ public class ElevatorSubsystem extends SubsystemBase {
                 "Block Increment", 1))
             .getEntry();
 
-        m_goToLevelLayout.add(runGoToLevel(() -> (int)m_levelNetworkTableEntry.getInteger(-1)));
+        m_goToLevelLayout.add(goToLevel(() -> (int)m_levelNetworkTableEntry.getInteger(-1)));
     }
 
     /**
-     * Sets the current speed of the elevator.
-     * @param speed The speed to set the elevator to in meters per second.
+     * Sets the current velocity of the elevator.
+     * @param velocity The velocity to set the elevator to in meters per second.
      */
-    public void setElevatorSpeed(double speed) {
-        m_elevatorPIDController.setReference(speed, ControlType.kVelocity);
-    }
-
-    /**
-     * Moves the elevators to the specified level.
-     * @param index The index of the level.
-     */
-    public void goToLevel(int index) {
-        m_elevatorPIDController.setReference(ElevatorConstants.kElevatorLevelHeights[index], ControlType.kPosition);
+    private void setElevatorVelocity(double velocity) {
+        m_elevatorLeft.set(velocity / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond + ElevatorConstants.kElevatorFF);
     }
 
     /**
@@ -138,8 +131,9 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @param index The index of the level.
      * @return The runnable Command.
      */
-    public Command runGoToLevel(int index) {
-        return runOnce(() -> goToLevel(index));
+    public Command goToLevel(int index) {
+        return runOnce(() -> m_elevatorPIDController.setGoal(ElevatorConstants.kElevatorLevelHeights[index]))
+            .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
 
     /**
@@ -147,20 +141,23 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @param indexSupplier The supplier of the index of the level.
      * @return The runnable Command.
      */
-    public Command runGoToLevel(IntSupplier indexSupplier) {
+    public Command goToLevel(IntSupplier indexSupplier) {
         return runOnce(() -> {
             int index = indexSupplier.getAsInt();
             if (index < 0) { return; }
-            goToLevel(index);
-        });
+            m_elevatorPIDController.setGoal(ElevatorConstants.kElevatorLevelHeights[index]);
+        })
+        .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
 
     /**
-     * Moves the elevator to the specified height.
+     * Creates a command that moves the elevator to the specified height.
      * @param height The height to move the elevator to in meters.
+     * @return The runnable Command.
      */
-    public void goToHeight(double height) {
-        m_elevatorPIDController.setReference(height, ControlType.kPosition);
+    public Command goToHeight(double height) {
+        return runOnce(() -> m_elevatorPIDController.setGoal(height))
+            .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
 
     /**
@@ -210,10 +207,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Gets the current speed of the elevator.
-     * @return The speed of the elevator in meters per second.
+     * Gets the current velocity of the elevator.
+     * @return The velocity of the elevator in meters per second.
      */
-    public double getElevatorSpeed() {
+    public double getElevatorVelocity() {
         return m_elevatorEncoder.getVelocity();
     }
 
@@ -224,8 +221,31 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_elevatorLeft.set(0);
     }
 
+    /**
+     * Creates a command that calibrates the elevator.
+     * @return The runnable Command.
+     */
+    public Command calibrateElevator() {
+        return runOnce(() -> {
+            m_calibrating = true;
+            m_elevatorLeft.set(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
+        })
+        .andThen(new WaitUntilCommand(() -> getElevatorVelocity() == 0))
+        .andThen(() -> m_elevatorLeft.set(ElevatorConstants.kElevatorMaxSpeedMetersPerSecond))
+        .andThen(new WaitUntilCommand(() -> getElevatorVelocity() == 0))
+        .finallyDo(() -> {
+            setPhysicalHeightLimit(getElevatorHeight());
+            m_elevatorPIDController.setGoal(0);
+            m_calibrating = false;
+        });
+    }
+
     @Override
     public void periodic() {
+        if (!m_calibrating) {
+            setElevatorVelocity(m_elevatorPIDController.calculate(getElevatorHeight()));
+        }
+
         // Prevent elevator motors from moving after the elevator cannot move any further
         if (m_bottomSwitch.get()) {
             stop();
