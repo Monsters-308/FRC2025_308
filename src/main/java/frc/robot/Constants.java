@@ -345,4 +345,10 @@ public final class Constants {
 
     }
 
+    public static final class ArmConstaints{
+        public static final int kArmMotorId = 0;
+
+        
+    }
+
 }
