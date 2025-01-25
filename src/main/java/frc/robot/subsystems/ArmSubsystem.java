@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.utils.SwerveUtils;
 import frc.utils.ThroughBoreEncoder;
 
 /**
@@ -66,7 +67,8 @@ public class ArmSubsystem extends SubsystemBase {
      * @return
      */
     public Command goToAngle(Rotation2d angle) {
-        return runOnce(() -> setGoal(angle.getRotations()))
+        Rotation2d constrainedAngle = Rotation2d.fromDegrees(SwerveUtils.angleConstrain(angle.getDegrees()));
+        return runOnce(() -> setGoal(constrainedAngle.getRotations()))
             .andThen(new WaitUntilCommand(m_angleController::atGoal));
     }
 
@@ -87,7 +89,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double gravityOffset = Math.abs(Math.sin(m_armEncoder.getRadians()) * ArmConstants.kGravityOffsetMultiplier);
+        double gravityOffset = Math.abs(m_armEncoder.getRotation2D().getSin() * ArmConstants.kGravityOffsetMultiplier);
         m_armMotor.set(m_angleController.calculate(m_armEncoder.getRotations()) + gravityOffset);
     }
 }
