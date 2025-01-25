@@ -1,13 +1,11 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstaints;
 import frc.utils.ThroughBoreEncoder;
@@ -18,6 +16,7 @@ public class ArmSubsystem extends SubsystemBase{
 
 
     SparkMaxConfig armMotorConf = new SparkMaxConfig();
+
 
     public ArmSubsystem(){
         armMotorConf
@@ -33,10 +32,20 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic(){
 
     }
-
+    /*
+     * Sets the speed of the motor.
+     */
     public void setSpeed(){
         m_armMotor.set(ArmConstaints.kArmMotorSpeed);
     }
+
+    /**
+     * This function gets the angle of where the angle of the arm is currently at.
+     * @return
+     */
+    public Rotation2d getAngle(){
+        return m_armEncoder.getRotation2D();
+    } 
 
     
     
