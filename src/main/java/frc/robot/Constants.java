@@ -314,8 +314,8 @@ public final class Constants {
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
         public static final double kElevatorD = 0;
-        /** The feed forawrd of the elevator PID. */
-        public static final double kElevatorFF = 0;
+        /** The gravity offset for the elevator PID. */
+        public static final double kElevatorGravityOffset = 0;
 
         /** The maximum speed the elevator can move at with full power. */
         public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
