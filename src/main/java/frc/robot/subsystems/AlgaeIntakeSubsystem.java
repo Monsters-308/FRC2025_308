@@ -37,11 +37,6 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
             m_algaeIntakeMotorArm.configure(ArmMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    @Override
-    public void periodic(){
-
-    }
-
     public void setMotorSpeed(double armSpeed, double rollerSpeed){
         m_algaeIntakeMotorRoller.set(rollerSpeed);
         m_algaeIntakeMotorArm.set(armSpeed);
