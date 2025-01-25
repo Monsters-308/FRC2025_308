@@ -354,8 +354,24 @@ public final class Constants {
         /** The CAN ID of the arm motor. */
         public static final int kArmMotorCanId = 0;
 
+        public static final int kArmEncoderId = 0;
+        
+        public static final int kSmartCurrentLimit = 0;
+
+        public static final IdleMode kIdleMode = IdleMode.kBrake;
+
+        public static final double kArmMotorSpeed = 0.1;
+
         /** The period of the duty cycle for the arm. */
         public static final int kArmDutyCyclePeriod = 4096;
+
+        public static final double kEncoderAngleOffset = 0;
+        
+
+        public static final boolean kEncoderInverted = false;
+        public static final boolean kArmMotorInvered = false;
+
+
     }
 
 }
