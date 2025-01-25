@@ -162,7 +162,7 @@ public class DriveSubsystem extends SubsystemBase {
         // Update pose estimation with odometry data
         m_odometry.update(
             Rotation2d.fromDegrees(getGyroAngle()),
-             new SwerveModulePosition[] {
+            new SwerveModulePosition[] {
                 m_frontLeft.getPosition(),
                 m_frontRight.getPosition(),
                 m_rearLeft.getPosition(),
