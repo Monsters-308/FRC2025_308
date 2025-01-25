@@ -128,7 +128,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             m_elevatorEncoder.getVelocity()
         );
 
-        setGoal(goal);
+        m_elevatorPIDController.setGoal(goal);
     }
 
     /**
@@ -223,7 +223,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * Stops the elevator.
      */
     public void stop() {
-        m_elevatorLeft.set(0);
+        setGoal(getElevatorHeight());
     }
 
     /**
@@ -258,9 +258,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (m_bottomSwitch.get()) {
             stop();
             m_elevatorEncoder.setPosition(0); // Reset encoder position to 0 at the bottom
+            m_elevatorPIDController.reset(0, 0);
         } else if (m_topSwitch.get()) {
-            m_elevatorEncoder.setPosition(getPhysicalHeightLimit()); // Reset encoder position to the height of the elevator at the top
             stop();
+            m_elevatorEncoder.setPosition(getPhysicalHeightLimit()); // Reset encoder position to the height of the elevator at the top
+            m_elevatorPIDController.reset(getPhysicalHeightLimit(), 0);
         }
 
         // Prevent level in shuffleboard go to level layout from being non-integer

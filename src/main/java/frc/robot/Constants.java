@@ -344,6 +344,8 @@ public final class Constants {
 
         public static final IdleMode kAlgaeIntakeIdleMode = IdleMode.kBrake;
 
+        public static final int kSmartCurrentLimit = 35;
+
 
     }
 
@@ -356,7 +358,7 @@ public final class Constants {
         /** The channel ID for the motor encoder. */
         public static final int kArmEncoderId = 0;
         /** The smart current limit for the motor */
-        public static final int kSmartCurrentLimit = 0;
+        public static final int kSmartCurrentLimit = 35;
         /** The idle mode of the motor. */
         public static final IdleMode kIdleMode = IdleMode.kBrake;
         /** Whether to invert the direction of the arm motor. */
@@ -364,14 +366,23 @@ public final class Constants {
         /** Whether to invert the direction of the encoder. */
         public static final boolean kEncoderInverted = false;
 
-        /** The maximum speed of the arm in meters per second. */
-        public static final double kArmMaxSpeedMetersPerSecond = 0.1;
-        /** The maximum acceleration of the arm in meters per second squared. */
-        public static final double kArmMaxAccelerationMetersPerSecondSquared = 0.1;
+        /** The maximum speed of the arm in rotations per second. */
+        public static final double kArmMaxSpeedRPS = 0.1;
+        /** The maximum acceleration of the arm in rotations per second squared. */
+        public static final double kArmMaxAccelerationRPSSquared = 0.1;
 
         /** The period of the duty cycle for the arm. */
         public static final int kArmDutyCyclePeriod = 4096;
         /** The angle offset for the motor encoder in degrees. */
         public static final double kEncoderAngleOffset = 0;
+
+        /** The P for the arm PID controller. */
+        public static final double KArmP = 1;
+        /** The I for the arm PID controller. */
+        public static final double KArmI = 0;
+        /** The D for the arm PID controller. */
+        public static final double KArmD = 0;
+        /** The gravity offset multiplier for the arm. */
+        public static final double kGravityOffsetMultiplier = 1;
     }
 }

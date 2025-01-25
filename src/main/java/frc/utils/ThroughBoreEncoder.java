@@ -40,22 +40,20 @@ public class ThroughBoreEncoder extends DutyCycleEncoder {
      * Gets the current value of the encoder in radians.
      */
     public double getRadians() {
-        return SwerveUtils.angleConstrain((m_inverted ? -1 : 1) * 
-            super.get() * (Math.PI)*2 + m_angleOffset * (180/Math.PI));
+        return getDegrees() * (Math.PI/180);
     }
 
     /** 
      * Gets the current value of the encoder in number of rotations.
      */
     public double getRotations() {
-        return SwerveUtils.angleConstrain((m_inverted ? -1 : 1) * 
-            super.get() + m_angleOffset/360);
+        return getDegrees() / 360;
     }
 
     /**
      * Gets the current value of the encoder as a Rotation2D object.
      */
     public Rotation2d getRotation2D() {
-        return Rotation2d.fromRotations(getRotations());
+        return Rotation2d.fromDegrees(getDegrees());
     }
 }

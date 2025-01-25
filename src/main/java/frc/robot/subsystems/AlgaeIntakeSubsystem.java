@@ -26,26 +26,19 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
         /*sets the configation of the motors*/ 
         RollerMotorConf
             .inverted(AlgaeIntakeConstaints.kleftAlgaeIntakeInverted)
-            .idleMode(null)
-            .smartCurrentLimit(1);
+            .idleMode(AlgaeIntakeConstaints.kAlgaeIntakeIdleMode)
+            .smartCurrentLimit(AlgaeIntakeConstaints.kSmartCurrentLimit);
         ArmMotorConf
             .inverted(AlgaeIntakeConstaints.krightAlgaeIntakeInverted)
-            .idleMode(null)
-            .smartCurrentLimit(0);
+            .idleMode(AlgaeIntakeConstaints.kAlgaeIntakeIdleMode)
+            .smartCurrentLimit(AlgaeIntakeConstaints.kSmartCurrentLimit);
 
             m_algaeIntakeMotor.configure(RollerMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
             m_algaeIntakeMotorArm.configure(ArmMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
+    @Override
     public void periodic(){
-
-    }
-
-    public void setArmMotorSpeed(){
-
-    }
-
-    public void setMotorSpeed(){
 
     }
 
