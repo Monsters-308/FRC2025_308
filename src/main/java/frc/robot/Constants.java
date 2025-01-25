@@ -350,28 +350,28 @@ public final class Constants {
     /**
      * Constants that describe coral arm of the robot.
      */
-    public static final class ArmConstaints {
+    public static final class ArmConstants {
         /** The CAN ID of the arm motor. */
         public static final int kArmMotorCanId = 0;
-
+        /** The channel ID for the motor encoder. */
         public static final int kArmEncoderId = 0;
-        
+        /** The smart current limit for the motor */
         public static final int kSmartCurrentLimit = 0;
-
+        /** The idle mode of the motor. */
         public static final IdleMode kIdleMode = IdleMode.kBrake;
+        /** Whether to invert the direction of the arm motor. */
+        public static final boolean kArmMotorInvered = false;
+        /** Whether to invert the direction of the encoder. */
+        public static final boolean kEncoderInverted = false;
 
-        public static final double kArmMotorSpeed = 0.1;
+        /** The maximum speed of the arm in meters per second. */
+        public static final double kArmMaxSpeedMetersPerSecond = 0.1;
+        /** The maximum acceleration of the arm in meters per second squared. */
+        public static final double kArmMaxAccelerationMetersPerSecondSquared = 0.1;
 
         /** The period of the duty cycle for the arm. */
         public static final int kArmDutyCyclePeriod = 4096;
-
+        /** The angle offset for the motor encoder in degrees. */
         public static final double kEncoderAngleOffset = 0;
-        
-
-        public static final boolean kEncoderInverted = false;
-        public static final boolean kArmMotorInvered = false;
-
-
     }
-
 }
