@@ -66,7 +66,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final GenericEntry m_levelNetworkTableEntry;
 
     /** Whether or not the elevator is currently being calibrated. */
-    private boolean m_calibrating = false;
+    private boolean m_isPIDMode = false;
 
     /**
      * Initializes an ElevatorSubsystem to control the robot's elevator.
@@ -120,15 +120,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     /**
      * Resets and set the goal for the PID controller.
-     * @param goal The goal to set.
+     * @param height The height to set.
      */
-    private void setGoal(double goal) {
+    public void setElevatorHeight(double height) {
+        m_isPIDMode = true;
+
         m_elevatorPIDController.reset(
             m_elevatorEncoder.getPosition(),
             m_elevatorEncoder.getVelocity()
         );
 
-        m_elevatorPIDController.setGoal(goal);
+        m_elevatorPIDController.setGoal(height);
     }
 
     /**
@@ -137,7 +139,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @return The runnable Command.
      */
     public Command goToLevel(int index) {
-        return runOnce(() -> setGoal(ElevatorConstants.kElevatorLevelHeights[index]))
+        return runOnce(() -> setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]))
             .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
 
@@ -150,7 +152,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         return runOnce(() -> {
             int index = indexSupplier.getAsInt();
             if (index < 0) { return; }
-            setGoal(ElevatorConstants.kElevatorLevelHeights[index]);
+            setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]);
         })
         .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
@@ -161,7 +163,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @return The runnable Command.
      */
     public Command goToHeight(double height) {
-        return runOnce(() -> setGoal(height))
+        return runOnce(() -> setElevatorHeight(height))
             .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
 
@@ -171,6 +173,15 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public void setPhysicalHeightLimit(double height) {
         Preferences.setDouble(ElevatorConstants.kPhysicalHeightLimitKey, height);
+    }
+
+    /**
+     * Sets the velocity of the elevator.
+     * @param velocity The velocity to set in meters per second.
+     */
+    public void setElevatorVelocity(double velocity) {
+        m_isPIDMode = false;
+        m_elevatorLeft.set(velocity / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond);
     }
 
     /** 
@@ -223,7 +234,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * Stops the elevator.
      */
     public void stop() {
-        setGoal(getElevatorHeight());
+        setElevatorHeight(getElevatorHeight());
     }
 
     /**
@@ -232,22 +243,20 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public Command calibrateElevator() {
         return runOnce(() -> {
-            m_calibrating = true;
-            m_elevatorLeft.set(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
+            setElevatorVelocity(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
         })
         .andThen(new WaitUntilCommand(() -> getElevatorVelocity() == 0))
         .andThen(() -> m_elevatorLeft.set(ElevatorConstants.kElevatorMaxSpeedMetersPerSecond))
         .andThen(new WaitUntilCommand(() -> getElevatorVelocity() == 0))
         .finallyDo(() -> {
             setPhysicalHeightLimit(getElevatorHeight());
-            setGoal(0);
-            m_calibrating = false;
+            setElevatorHeight(0);
         });
     }
 
     @Override
     public void periodic() {
-        if (!m_calibrating) {
+        if (m_isPIDMode) {
             m_elevatorLeft.set(
                 m_elevatorPIDController.calculate(getElevatorHeight()) + 
                 ElevatorConstants.kElevatorGravityOffset
