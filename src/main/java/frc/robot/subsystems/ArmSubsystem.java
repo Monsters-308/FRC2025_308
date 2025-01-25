@@ -64,7 +64,7 @@ public class ArmSubsystem extends SubsystemBase {
     /**
      * Creates a command the moves the arm to the specified angle.
      * @param angle
-     * @return
+     * @return The command that moves the arm to the specified angle.
      */
     public Command goToAngle(Rotation2d angle) {
         Rotation2d constrainedAngle = Rotation2d.fromDegrees(SwerveUtils.angleConstrain(angle.getDegrees()));
@@ -74,7 +74,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Gets the current angle of the coral arm.
-     * @return
+     * @return The current angle of the arm.
      */
     public Rotation2d getAngle() {
         return m_armEncoder.getRotation2D();
