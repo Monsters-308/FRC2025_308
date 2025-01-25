@@ -14,7 +14,7 @@ import frc.robot.Constants.AlgaeIntakeConstaints;
  */
 public class AlgaeIntakeSubsystem extends SubsystemBase {
     private final SparkMax m_algaeIntakeMotorArm = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorId, MotorType.kBrushless);
-    private final SparkMax m_algaeIntakeMotorLeft = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorId, MotorType.kBrushless);
+    private final SparkMax m_algaeIntakeMotor = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorId, MotorType.kBrushless);
 
 
     public AlgaeIntakeSubsystem() {
@@ -23,7 +23,7 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
 
 
 
-        // sets the configation of the motors
+        /*sets the configation of the motors*/ 
         RollerMotorConf
             .inverted(AlgaeIntakeConstaints.kleftAlgaeIntakeInverted)
             .idleMode(null)
@@ -33,11 +33,19 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
             .idleMode(null)
             .smartCurrentLimit(0);
 
-            m_algaeIntakeMotorLeft.configure(RollerMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            m_algaeIntakeMotor.configure(RollerMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
             m_algaeIntakeMotorArm.configure(ArmMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void periodic(){
+
+    }
+
+    public void setArmMotorSpeed(){
+
+    }
+
+    public void setMotorSpeed(){
 
     }
 
