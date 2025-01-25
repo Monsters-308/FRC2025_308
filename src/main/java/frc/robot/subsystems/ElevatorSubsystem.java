@@ -119,14 +119,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets the current velocity of the elevator.
-     * @param velocity The velocity to set the elevator to in meters per second.
-     */
-    private void setElevatorVelocity(double velocity) {
-        m_elevatorLeft.set(velocity / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond + ElevatorConstants.kElevatorFF);
-    }
-
-    /**
      * Creates a Command that moves to elevator to the specified level.
      * @param index The index of the level.
      * @return The runnable Command.
@@ -243,7 +235,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (!m_calibrating) {
-            setElevatorVelocity(m_elevatorPIDController.calculate(getElevatorHeight()));
+            m_elevatorLeft.set(
+                m_elevatorPIDController.calculate(getElevatorHeight()) + 
+                ElevatorConstants.kElevatorGravityOffset
+            );
         }
 
         // Prevent elevator motors from moving after the elevator cannot move any further
