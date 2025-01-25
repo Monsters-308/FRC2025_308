@@ -119,12 +119,25 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
+     * Resets and set the goal for the PID controller.
+     * @param goal The goal to set.
+     */
+    private void setGoal(double goal) {
+        m_elevatorPIDController.reset(
+            m_elevatorEncoder.getPosition(),
+            m_elevatorEncoder.getVelocity()
+        );
+
+        setGoal(goal);
+    }
+
+    /**
      * Creates a Command that moves to elevator to the specified level.
      * @param index The index of the level.
      * @return The runnable Command.
      */
     public Command goToLevel(int index) {
-        return runOnce(() -> m_elevatorPIDController.setGoal(ElevatorConstants.kElevatorLevelHeights[index]))
+        return runOnce(() -> setGoal(ElevatorConstants.kElevatorLevelHeights[index]))
             .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
 
@@ -137,7 +150,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         return runOnce(() -> {
             int index = indexSupplier.getAsInt();
             if (index < 0) { return; }
-            m_elevatorPIDController.setGoal(ElevatorConstants.kElevatorLevelHeights[index]);
+            setGoal(ElevatorConstants.kElevatorLevelHeights[index]);
         })
         .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
@@ -148,7 +161,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @return The runnable Command.
      */
     public Command goToHeight(double height) {
-        return runOnce(() -> m_elevatorPIDController.setGoal(height))
+        return runOnce(() -> setGoal(height))
             .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
     }
 
@@ -227,7 +240,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         .andThen(new WaitUntilCommand(() -> getElevatorVelocity() == 0))
         .finallyDo(() -> {
             setPhysicalHeightLimit(getElevatorHeight());
-            m_elevatorPIDController.setGoal(0);
+            setGoal(0);
             m_calibrating = false;
         });
     }
