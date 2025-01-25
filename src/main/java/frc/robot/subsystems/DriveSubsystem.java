@@ -27,6 +27,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.utils.FieldUtils;
+import frc.utils.SwerveModule;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
