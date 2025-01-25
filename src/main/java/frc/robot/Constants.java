@@ -347,10 +347,15 @@ public final class Constants {
 
     }
 
-    public static final class ArmConstaints{
-        public static final int kArmMotorId = 0;
+    /**
+     * Constants that describe coral arm of the robot.
+     */
+    public static final class ArmConstaints {
+        /** The CAN ID of the arm motor. */
+        public static final int kArmMotorCanId = 0;
 
-        
+        /** The period of the duty cycle for the arm. */
+        public static final int kArmDutyCyclePeriod = 4096;
     }
 
 }
