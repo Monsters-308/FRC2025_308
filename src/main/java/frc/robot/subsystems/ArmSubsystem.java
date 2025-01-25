@@ -89,7 +89,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double gravityOffset = Math.abs(m_armEncoder.getRotation2D().getSin()) * ArmConstants.kGravityOffsetMultiplier;
+        double gravityOffset = m_armEncoder.getRotation2D().getSin() * ArmConstants.kGravityOffsetMultiplier;
         m_armMotor.set(m_angleController.calculate(m_armEncoder.getRotations()) + gravityOffset);
     }
 }
