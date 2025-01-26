@@ -61,7 +61,8 @@ public class ArmSubsystem extends SubsystemBase {
     public void setAngle(Rotation2d angle) {
         Rotation2d constrainedAngle = Rotation2d.fromDegrees(SwerveUtils.angleConstrain(angle.getDegrees()));
         m_angleController.reset(
-            getAngle().getRotations()
+            getAngle().getRotations(),
+            getVelocity().getRotations()
         );
 
         m_angleController.setGoal(constrainedAngle.getRotations());
@@ -84,6 +85,14 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public Rotation2d getAngle() {
         return m_armEncoder.getRotation2D();
+    }
+
+    /**
+     * Gets the current velocity of the arm.
+     * @return The velocity of the arm as a rotation 2d object.
+     */
+    public Rotation2d getVelocity() {
+        return m_armEncoder.getRate();
     }
 
     /**
