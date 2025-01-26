@@ -4,13 +4,20 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -384,5 +391,19 @@ public final class Constants {
         public static final double KArmD = 0;
         /** The gravity offset multiplier for the arm. */
         public static final double kGravityOffsetMultiplier = 1;
+    }
+
+    public static final class PhotonConstants {
+        
+        public static final Transform3d kRobotToCamera = new Transform3d(
+            new Translation3d(0,0,0),
+            new Rotation3d(0,0,0)
+        );
+
+        public static final String kCameraName = "jojo";
+
+        public static final AprilTagFieldLayout kFeildLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+        
+        public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
     }
 }
