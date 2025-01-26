@@ -23,7 +23,12 @@ public class ArmSubsystem extends SubsystemBase {
     /** The motor controller for the coral arm. */
     private final SparkMax m_armMotor = new SparkMax(ArmConstants.kArmMotorCanId, MotorType.kBrushless);
     /** The encoder for measuring the position and velocity of the motor. */
-    private final ThroughBoreEncoder m_armEncoder = new ThroughBoreEncoder(ArmConstants.kArmEncoderId, ArmConstants.kEncoderInverted, ArmConstants.kEncoderAngleOffset, ArmConstants.kArmDutyCyclePeriod);
+    private final ThroughBoreEncoder m_armEncoder = new ThroughBoreEncoder(
+        ArmConstants.kArmEncoderId,
+        ArmConstants.kEncoderInverted,
+        ArmConstants.kEncoderAngleOffset,
+        ArmConstants.kArmDutyCyclePeriod
+    );
 
     /** The PID controller for the arm motor. */
     private final ProfiledPIDController m_angleController = new ProfiledPIDController(
