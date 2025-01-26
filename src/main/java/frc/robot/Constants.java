@@ -393,17 +393,21 @@ public final class Constants {
         public static final double kGravityOffsetMultiplier = 1;
     }
 
+    /**
+     * Constants that describe how the robot should interface with Photon Vision.
+     */
     public static final class PhotonConstants {
-        
+        /** The transformation that describes how to move from the center of the robot to the Photon Vision camera. */
         public static final Transform3d kRobotToCamera = new Transform3d(
             new Translation3d(0,0,0),
             new Rotation3d(0,0,0)
         );
 
+        /** The name of the Photon Vision camera. */
         public static final String kCameraName = "jojo";
-
+        /** The april tage layout Photon Vision should use. */
         public static final AprilTagFieldLayout kFeildLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-        
+        /** How Photon Vision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
     }
 }
