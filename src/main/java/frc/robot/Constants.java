@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -384,7 +385,7 @@ public final class Constants {
         /** The period of the duty cycle for the arm. */
         public static final int kArmDutyCyclePeriod = 4096;
         /** The angle offset for the motor encoder in degrees. */
-        public static final double kEncoderAngleOffset = 0;
+        public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
         public static final double KArmP = 1;
