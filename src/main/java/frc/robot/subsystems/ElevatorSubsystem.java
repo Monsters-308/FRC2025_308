@@ -65,7 +65,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** The network table entry that contains the level to send the robot to when the dashboard button is pressed. */
     private final GenericEntry m_levelNetworkTableEntry;
 
-    /** Whether or not the elevator is currently being calibrated. */
+    /** Whether or not the elevator is currently using PID or setting the speed directly. */
     private boolean m_isPIDMode = false;
 
     /**
