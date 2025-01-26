@@ -65,7 +65,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** The network table entry that contains the level to send the robot to when the dashboard button is pressed. */
     private final GenericEntry m_levelNetworkTableEntry;
 
-    /** Whether or not the elevator is currently being calibrated. */
+    /** Whether or not the elevator is currently using PID or setting the speed directly. */
     private boolean m_isPIDMode = false;
 
     /**
@@ -115,11 +115,11 @@ public class ElevatorSubsystem extends SubsystemBase {
                 "Block Increment", 1))
             .getEntry();
 
-        m_goToLevelLayout.add(goToLevel(() -> (int)m_levelNetworkTableEntry.getInteger(-1)));
+        m_goToLevelLayout.add(goToLevel(() -> (int)m_levelNetworkTableEntry.getInteger(-1), false));
     }
 
     /**
-     * Resets and set the goal for the PID controller.
+     * Resets and sets the height goal of the PID controller.
      * @param height The height to set.
      */
     public void setElevatorHeight(double height) {
@@ -134,45 +134,56 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
+     * Sets the height goal of the PID controller to the specified level.
+     * @param index The index of the level to set.
+     */
+    public void setElevatorLevel(int index) {
+        setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]);
+    }
+
+    /**
      * Creates a Command that moves to elevator to the specified level.
      * @param index The index of the level.
+     * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the level.
      * @return The runnable Command.
      */
-    public Command goToLevel(int index) {
+    public Command goToLevel(int index, boolean endImmediately) {
         return runOnce(() -> setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]))
-            .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
+            .andThen(new WaitUntilCommand(() -> m_elevatorPIDController.atGoal() || endImmediately));
     }
 
     /**
      * Creates a Command that moves to elevator to the level returned from the index supplier.
      * @param indexSupplier The supplier of the index of the level.
+     * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the level.
      * @return The runnable Command.
      */
-    public Command goToLevel(IntSupplier indexSupplier) {
+    public Command goToLevel(IntSupplier indexSupplier, boolean endImmediately) {
         return runOnce(() -> {
             int index = indexSupplier.getAsInt();
             if (index < 0) { return; }
             setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]);
         })
-        .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
+        .andThen(new WaitUntilCommand(()-> m_elevatorPIDController.atGoal() || endImmediately));
     }
 
     /**
      * Creates a command that moves the elevator to the specified height.
      * @param height The height to move the elevator to in meters.
+     * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the height.
      * @return The runnable Command.
      */
-    public Command goToHeight(double height) {
+    public Command goToHeight(double height, boolean endImmediately) {
         return runOnce(() -> setElevatorHeight(height))
-            .andThen(new WaitUntilCommand(m_elevatorPIDController::atGoal));
+            .andThen(new WaitUntilCommand(()-> m_elevatorPIDController.atGoal() || endImmediately));
     }
 
     /**
      * Sets the physical height limit the elevator can reach. Used for calibration.
-     * @param height The new physical height limit to set.
+     * @param limit The new physical height limit to set.
      */
-    public void setPhysicalHeightLimit(double height) {
-        Preferences.setDouble(ElevatorConstants.kPhysicalHeightLimitKey, height);
+    public void setPhysicalHeightLimit(double limit) {
+        Preferences.setDouble(ElevatorConstants.kPhysicalHeightLimitKey, limit);
     }
 
     /**

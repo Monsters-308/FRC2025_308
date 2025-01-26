@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -342,8 +343,11 @@ public final class Constants {
         public static final double[] kElevatorLevelHeights = { 0, 0.2, 0.4 };
     }
 
+    /**
+     * Constants that describe the algae intake of the robot.
+     */
     public static final class AlgaeIntakeConstaints {
-        public static final int kIntakeMotorId = 0;
+        public static final int kIntakeMotorCanId = 0;
 
         public static final boolean kleftAlgaeIntakeInverted = false;
 
@@ -380,8 +384,8 @@ public final class Constants {
 
         /** The period of the duty cycle for the arm. */
         public static final int kArmDutyCyclePeriod = 4096;
-        /** The angle offset for the motor encoder in degrees. */
-        public static final double kEncoderAngleOffset = 0;
+        /** The angle offset for the motor encoder. */
+        public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
         public static final double KArmP = 1;
@@ -393,17 +397,21 @@ public final class Constants {
         public static final double kGravityOffsetMultiplier = 1;
     }
 
+    /**
+     * Constants that describe how the robot should interface with Photon Vision.
+     */
     public static final class PhotonConstants {
-        
+        /** The transformation that describes how to move from the center of the robot to the Photon Vision camera. */
         public static final Transform3d kRobotToCamera = new Transform3d(
             new Translation3d(0,0,0),
             new Rotation3d(0,0,0)
         );
 
+        /** The name of the Photon Vision camera. */
         public static final String kCameraName = "jojo";
-
+        /** The april tage layout Photon Vision should use. */
         public static final AprilTagFieldLayout kFeildLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-        
+        /** How Photon Vision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
     }
 }

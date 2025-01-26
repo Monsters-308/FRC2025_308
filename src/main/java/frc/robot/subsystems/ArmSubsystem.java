@@ -23,7 +23,12 @@ public class ArmSubsystem extends SubsystemBase {
     /** The motor controller for the coral arm. */
     private final SparkMax m_armMotor = new SparkMax(ArmConstants.kArmMotorCanId, MotorType.kBrushless);
     /** The encoder for measuring the position and velocity of the motor. */
-    private final ThroughBoreEncoder m_armEncoder = new ThroughBoreEncoder(ArmConstants.kArmEncoderId, ArmConstants.kEncoderInverted, ArmConstants.kEncoderAngleOffset, ArmConstants.kArmDutyCyclePeriod);
+    private final ThroughBoreEncoder m_armEncoder = new ThroughBoreEncoder(
+        ArmConstants.kArmEncoderId,
+        ArmConstants.kEncoderInverted,
+        ArmConstants.kEncoderAngleOffset,
+        ArmConstants.kArmDutyCyclePeriod
+    );
 
     /** The PID controller for the arm motor. */
     private final ProfiledPIDController m_angleController = new ProfiledPIDController(
@@ -51,25 +56,26 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Resets and sets the goal of the angle PID controller.
-     * @param goal The goal to set.
+     * @param angle The angle to set.
      */
-    private void setGoal(double goal) {
+    public void setAngle(Rotation2d angle) {
+        Rotation2d constrainedAngle = Rotation2d.fromDegrees(SwerveUtils.angleConstrain(angle.getDegrees()));
         m_angleController.reset(
             getAngle().getRotations()
         );
 
-        m_angleController.setGoal(goal);
+        m_angleController.setGoal(constrainedAngle.getRotations());
     }
 
     /**
      * Creates a command the moves the arm to the specified angle.
-     * @param angle
-     * @return The command that moves the arm to the specified angle.
+     * @param angle The angle the arm should move to.
+     * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the angle.
+     * @return The runnable command.
      */
-    public Command goToAngle(Rotation2d angle) {
-        Rotation2d constrainedAngle = Rotation2d.fromDegrees(SwerveUtils.angleConstrain(angle.getDegrees()));
-        return runOnce(() -> setGoal(constrainedAngle.getRotations()))
-            .andThen(new WaitUntilCommand(m_angleController::atGoal));
+    public Command goToAngle(Rotation2d angle, boolean endImmediately) {
+        return runOnce(() -> setAngle(angle))
+            .andThen(new WaitUntilCommand(() -> m_angleController.atGoal() || endImmediately));
     }
 
     /**
@@ -84,7 +90,7 @@ public class ArmSubsystem extends SubsystemBase {
      * Stops movement of the coral arm.
      */
     public void stop() {
-        setGoal(getAngle().getRotations());
+        setAngle(getAngle());
     }
 
     @Override
