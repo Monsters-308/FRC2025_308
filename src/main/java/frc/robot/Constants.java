@@ -384,7 +384,7 @@ public final class Constants {
 
         /** The period of the duty cycle for the arm. */
         public static final int kArmDutyCyclePeriod = 4096;
-        /** The angle offset for the motor encoder in degrees. */
+        /** The angle offset for the motor encoder. */
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
