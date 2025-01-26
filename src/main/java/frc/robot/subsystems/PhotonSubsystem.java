@@ -9,8 +9,17 @@ import frc.robot.Constants.PhotonConstants;
 public class PhotonSubsystem extends SubsystemBase {
 
     public PhotonSubsystem() {
-
         PhotonCamera camera = new PhotonCamera(PhotonConstants.kCameraName);
+        
+        
     }
+
+    public void getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose){
+        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return photonPoseEstimator.update();
+    }
+
+
+    
 
 }
