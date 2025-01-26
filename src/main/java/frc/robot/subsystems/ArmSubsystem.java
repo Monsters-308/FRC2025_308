@@ -71,7 +71,7 @@ public class ArmSubsystem extends SubsystemBase {
      * Creates a command the moves the arm to the specified angle.
      * @param angle The angle the arm should move to.
      * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the angle.
-     * @return The command that moves the arm to the specified angle.
+     * @return The runnable command.
      */
     public Command goToAngle(Rotation2d angle, boolean endImmediately) {
         return runOnce(() -> setAngle(angle))
