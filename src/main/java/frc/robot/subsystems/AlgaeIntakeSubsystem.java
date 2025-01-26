@@ -13,8 +13,8 @@ import frc.robot.Constants.AlgaeIntakeConstaints;
  * Subsystem that controls the Ground intake.
  */
 public class AlgaeIntakeSubsystem extends SubsystemBase {
-    private final SparkMax m_algaeIntakeMotorArm = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorId, MotorType.kBrushless);
-    private final SparkMax m_algaeIntakeMotorRoller = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorId, MotorType.kBrushless);
+    private final SparkMax m_algaeIntakeMotorArm = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorCanId, MotorType.kBrushless);
+    private final SparkMax m_algaeIntakeMotorRoller = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorCanId, MotorType.kBrushless);
 
 
     public AlgaeIntakeSubsystem() {

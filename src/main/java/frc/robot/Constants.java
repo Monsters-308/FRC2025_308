@@ -342,8 +342,11 @@ public final class Constants {
         public static final double[] kElevatorLevelHeights = { 0, 0.2, 0.4 };
     }
 
+    /**
+     * Constants that describe the algae intake of the robot.
+     */
     public static final class AlgaeIntakeConstaints {
-        public static final int kIntakeMotorId = 0;
+        public static final int kIntakeMotorCanId = 0;
 
         public static final boolean kleftAlgaeIntakeInverted = false;
 
