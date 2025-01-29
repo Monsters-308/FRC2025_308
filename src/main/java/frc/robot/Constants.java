@@ -113,10 +113,10 @@ public final class Constants {
         public static final int kRearRightTurningCanId = 2;
 
         // Encoder CAN Ids
-        public static final int KFrontLeftTurningEncoderId = 13;
-        public static final int KFrontRightTurningEncoderId = 10;
-        public static final int KRearLeftTurningEncoderId = 11;
-        public static final int KRearRightTurningEncoderId = 12;
+        public static final int KFrontLeftTurningEncoderId = 14;
+        public static final int KFrontRightTurningEncoderId = 12;
+        public static final int KRearLeftTurningEncoderId = 13;
+        public static final int KRearRightTurningEncoderId = 11;
     }
 
     /**
