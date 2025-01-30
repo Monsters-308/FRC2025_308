@@ -91,26 +91,26 @@ public final class Constants {
         public static final int kFrontLeftDrivingCanId = 8; 
 
         /** CAN ID of the rear left driving motor controller. */
-        public static final int kRearLeftDrivingCanId = 4;
+        public static final int kRearLeftDrivingCanId = 6;
 
         /** CAN ID of the front right driving motor controller. */
-        public static final int kFrontRightDrivingCanId = 7;
+        public static final int kFrontRightDrivingCanId = 2;
 
         /** CAN ID of the rear lefrightt driving motor controller. */
-        public static final int kRearRightDrivingCanId = 3;
+        public static final int kRearRightDrivingCanId = 4;
 
 
         /** CAN ID of the front left turning motor controller. */
-        public static final int kFrontLeftTurningCanId = 5;
+        public static final int kFrontLeftTurningCanId = 7;
 
         /** CAN ID of the rear left turning motor controller. */
-        public static final int kRearLeftTurningCanId = 9; // Correct
+        public static final int kRearLeftTurningCanId = 5;
 
         /** CAN ID of the front right turning motor controller. */
-        public static final int kFrontRightTurningCanId = 6;
+        public static final int kFrontRightTurningCanId = 1;
 
         /** CAN ID of the rear right turning motor controller. */
-        public static final int kRearRightTurningCanId = 2;
+        public static final int kRearRightTurningCanId = 3;
 
         // Encoder CAN Ids
         public static final int KFrontLeftTurningEncoderId = 14;
