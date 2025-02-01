@@ -123,6 +123,12 @@ public class DriveSubsystem extends SubsystemBase {
         m_swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getTurningAngle().getDegrees()));
         m_swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getTurningAngle().getDegrees()));
         m_swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("frontLeft test angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getRelativeTurningAngle()));
+        m_swerveTab.addDouble("frontRight test angle", () -> SwerveUtils.angleConstrain(m_frontRight.getRelativeTurningAngle()));
+        m_swerveTab.addDouble("rearLeft test angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getRelativeTurningAngle()));
+        m_swerveTab.addDouble("rearRight test angle", () -> SwerveUtils.angleConstrain(m_rearRight.getRelativeTurningAngle()));
+
+        m_swerveTab.addDouble("Desired Angle", () -> m_frontLeft.getDesiredAngle());
 
         // Gyro widget
         m_swerveTab.addDouble("Robot Heading", this::getHeading)
@@ -169,6 +175,11 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearLeft.getPosition(),
                 m_rearRight.getPosition()
             });
+
+        m_frontLeft.updateTurningPID();
+        m_frontRight.updateTurningPID();
+        m_rearLeft.updateTurningPID();
+        m_rearRight.updateTurningPID();
             
         // Try to add vision data to pose estimation
         double timestamp = m_visionTimestamp.getAsDouble();
