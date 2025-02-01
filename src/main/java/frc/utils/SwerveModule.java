@@ -176,6 +176,7 @@ public class SwerveModule {
         // Apply chassis angular offset to the desired state.
         SwerveModuleState correctedDesiredState = new SwerveModuleState();
         correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
+        correctedDesiredState.angle = desiredState.angle;
 
         // Optimize the reference state to avoid spinning further than 90 degrees.
         correctedDesiredState.optimize(getTurningAngle());
