@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 import java.util.Optional;
 import org.photonvision.PhotonPoseEstimator;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,20 +10,14 @@ import frc.robot.Constants.PhotonConstants;
 
 public class PhotonSubsystem extends SubsystemBase {
 
-    private PhotonCamera camera = new PhotonCamera(PhotonConstants.kCameraName);
-    private PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(
+    private PhotonCamera m_camera = new PhotonCamera(PhotonConstants.kCameraName);
+    private PhotonPoseEstimator m_photonPoseEstimator = new PhotonPoseEstimator(
             PhotonConstants.kFeildLayout, 
             PhotonConstants.kPoseStrategy, 
             PhotonConstants.kRobotToCamera
         );
 
-    public PhotonSubsystem() {
-
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+        return m_photonPoseEstimator.update(m_camera.getLatestResult());
     }
-
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return photonPoseEstimator.update(camera.getLatestResult());
-    }
-
 }
