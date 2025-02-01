@@ -8,7 +8,7 @@ public class AlgaeIntakeCommand extends Command {
 
 
    /**
-    * This command controls the intake an which way its rotating.
+    * This command controls the intake an which way its rotating or the way its shooting.
     * @param algaeIntakeSubsystem
     */
 
