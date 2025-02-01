@@ -4,6 +4,8 @@
 
 package frc.utils;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -30,14 +32,20 @@ public class SwerveModule {
     private final RelativeEncoder m_turningEncoder;
     private final CANcoder m_turningAbsoluteEncoder;
 
+    private  double m_desiredAngle = 0;
+
     private final SparkClosedLoopController m_drivingPIDController;
     private final SparkClosedLoopController m_turningPIDController;
+
+    private final PIDController m_turningPID = new PIDController(
+        ModuleConstants.kTurningP,
+        ModuleConstants.kTurningI,
+        ModuleConstants.kTurningD
+    );
 
     // Used to detect when the turning encoders are updated since they're 
     // not updated as frequently over CAN.
     // private double m_mostRecentTurningEncoderValue = 0;
-
-    // private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
     /**
      * Constructs a Swerve Module and configures the driving and turning motor,
@@ -70,7 +78,7 @@ public class SwerveModule {
             .i(ModuleConstants.kDrivingI)
             .d(ModuleConstants.kDrivingD)
             .velocityFF(ModuleConstants.kDrivingFF)
-            .outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMinOutput);
+            .outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
 
         // Configure driving Spark Max with configuration object
         m_drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -89,24 +97,26 @@ public class SwerveModule {
             .positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor)
             .velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
 
+        m_turningPID.enableContinuousInput(-Math.PI, Math.PI);
+
         // Sets PID to use relative encoder
-        turningConfig.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // turningConfig.closedLoop
+        //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 
-        // Enable PID wrap around for the turning motor. This will allow the PID
-        // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
-        // to 10 degrees will go through 0 rather than the other direction which is a
-        // longer route.
-            .positionWrappingEnabled(true) 
-            .positionWrappingMinInput(ModuleConstants.kTurningEncoderPositionPIDMinInput)
-            .positionWrappingMaxInput(ModuleConstants.kTurningEncoderPositionPIDMaxInput)
+        // // Enable PID wrap around for the turning motor. This will allow the PID
+        // // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
+        // // to 10 degrees will go through 0 rather than the other direction which is a
+        // // longer route.
+        //     .positionWrappingEnabled(true) 
+        //     .positionWrappingMinInput(ModuleConstants.kTurningEncoderPositionPIDMinInput)
+        //     .positionWrappingMaxInput(ModuleConstants.kTurningEncoderPositionPIDMaxInput)
 
-        // Set the PID gains for the turning motor.
-            .p(ModuleConstants.kTurningP)
-            .i(ModuleConstants.kTurningI)
-            .d(ModuleConstants.kTurningD)
-            .velocityFF(ModuleConstants.kTurningFF)
-            .outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
+        // // Set the PID gains for the turning motor.
+        //     .p(ModuleConstants.kTurningP)
+        //     .i(ModuleConstants.kTurningI)
+        //     .d(ModuleConstants.kTurningD)
+        //     .velocityFF(ModuleConstants.kTurningFF)
+        //     .outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
 
         // Configure turning Spark Max with configuration object
         m_turningSparkMax.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -141,8 +151,24 @@ public class SwerveModule {
         // return Rotation2d.fromRotations(m_turningEncoder.getPosition());
 
         // For testing purposes, let's rely soley on the absolute encoder
-        m_turningEncoder.setPosition(currentEncoderValue);
+        //m_turningEncoder.setPosition(currentEncoderValue);
         return Rotation2d.fromRadians(currentEncoderValue);
+    }
+
+    /**
+     * Get the angle of the swerve module reported by the built-in NEO encoders.
+     * @return The angle in degrees.
+     */
+    public double getRelativeTurningAngle() {
+        return Units.radiansToDegrees(m_turningSparkMax.getEncoder().getPosition());
+    }
+
+    /**
+     * Get the angle the swerve module is trying to be at.
+     * @return The angle in degrees.
+     */
+    public double getDesiredAngle() {
+        return Units.radiansToDegrees(m_desiredAngle);
     }
 
     /**
@@ -186,9 +212,24 @@ public class SwerveModule {
 
         // Command driving and turning SPARKS MAX towards their respective setpoints.
         m_drivingPIDController.setReference(correctedDesiredState.speedMetersPerSecond, SparkMax.ControlType.kVelocity);
-        m_turningPIDController.setReference(correctedDesiredState.angle.getRadians(), SparkMax.ControlType.kPosition);
+        // m_turningPIDController.setReference(correctedDesiredState.angle.getRadians(), SparkMax.ControlType.kPosition);
 
-        // m_desiredState = desiredState;
+        // Open-loop PID control for the turning encoders because I 
+        // Couldn't get closed-loop control to work.
+        m_desiredAngle = correctedDesiredState.angle.getRadians();
+        m_turningSparkMax.set(
+            m_turningPID.calculate(
+                MathUtil.angleModulus(getTurningAngle().getRadians()), 
+                m_desiredAngle));
+
+    }
+
+    /** Periodically called to manage the open-loop control of the turning motors. */
+    public void updateTurningPID() {
+        m_turningSparkMax.set(
+            m_turningPID.calculate(
+                MathUtil.angleModulus(getTurningAngle().getRadians()), 
+                m_desiredAngle));
     }
 
     /** Zeroes all the SwerveModule encoders. */
