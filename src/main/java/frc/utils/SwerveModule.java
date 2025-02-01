@@ -29,13 +29,13 @@ public class SwerveModule {
     private final SparkMax m_turningSparkMax;
 
     private final RelativeEncoder m_drivingEncoder;
-    private final RelativeEncoder m_turningEncoder;
+    // private final RelativeEncoder m_turningEncoder;
     private final CANcoder m_turningAbsoluteEncoder;
 
     private  double m_desiredAngle = 0;
 
     private final SparkClosedLoopController m_drivingPIDController;
-    private final SparkClosedLoopController m_turningPIDController;
+    // private final SparkClosedLoopController m_turningPIDController;
 
     private final PIDController m_turningPID = new PIDController(
         ModuleConstants.kTurningP,
@@ -123,9 +123,9 @@ public class SwerveModule {
 
         // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
         m_drivingEncoder = m_drivingSparkMax.getEncoder();
-        m_turningEncoder = m_turningSparkMax.getEncoder();
+        // m_turningEncoder = m_turningSparkMax.getEncoder();
         m_drivingPIDController = m_drivingSparkMax.getClosedLoopController();
-        m_turningPIDController = m_turningSparkMax.getClosedLoopController();
+        // m_turningPIDController = m_turningSparkMax.getClosedLoopController();
 
         // m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());
         m_drivingEncoder.setPosition(0);
