@@ -26,10 +26,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.FieldUtils;
+import frc.utils.InputMappings;
 
 /*
  * This class is where the bulk of the robot should be declared.    Since Command-based is a
@@ -45,7 +47,7 @@ public class RobotContainer {
 
     // Controllers
     final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-    final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
+    final CommandXboxController m_coDriverController = new CommandXboxController(OIConstants.kCoDriverControllerPort);
 
     // Sendable choosers to dictate what the robot does during auton
     SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
@@ -218,6 +220,7 @@ public class RobotContainer {
         
 
         // (Put codriver controls here)
+        InputMappings.registerController("codriver", m_coDriverController);
     }
 
     /**
