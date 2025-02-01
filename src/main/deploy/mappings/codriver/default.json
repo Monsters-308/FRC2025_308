@@ -1,0 +1,8 @@
+{
+    "triggers": {
+        "algaeIntake": "x",
+        "algaeOutake": "rightBumper",
+        "elevatorUp": "povUp",
+        "elevatorDown": "povDown"
+    }
+}
