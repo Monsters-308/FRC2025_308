@@ -15,8 +15,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import org.photonvision.EstimatedRobotPose;
 
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
@@ -80,10 +83,13 @@ public class DriveSubsystem extends SubsystemBase {
     private final SimpleWidget m_allianceWidget = m_swerveTab.add("Alliance", true); 
     // Widget for toggling limelight data
     private final SimpleWidget m_useLimelightData;
+    // Widget for toggling photon data
+    private final SimpleWidget m_usePhotonData;
 
     // Suppliers for pose estimation with vision data
     private final Supplier<Pose2d> m_visionPose;
     private final DoubleSupplier m_visionTimestamp;
+    private final Supplier<Optional<EstimatedRobotPose>> m_photonEstimation;
 
     // Swerve pose estimator
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -112,9 +118,10 @@ public class DriveSubsystem extends SubsystemBase {
      * This controls all of the swerve modules, along with the pathplanner setup, the gyro,
      * the odometry, and the use of odometry and vision data to estimate the robot's pose.
      */
-    public DriveSubsystem(Supplier<Pose2d> visionPosition, DoubleSupplier visionTimestamp) {
+    public DriveSubsystem(Supplier<Pose2d> visionPosition, DoubleSupplier visionTimestamp, Supplier<Optional<EstimatedRobotPose>> photonEstimation) {
         m_visionPose = visionPosition;
         m_visionTimestamp = visionTimestamp;
+        m_photonEstimation = photonEstimation;
 
         m_gyro.enableLogging(true);
     
@@ -161,7 +168,10 @@ public class DriveSubsystem extends SubsystemBase {
         );
 
         m_useLimelightData = m_swerveTab.add("Limelight Data", true)
-            .withWidget(BuiltInWidgets.kToggleSwitch); 
+            .withWidget(BuiltInWidgets.kToggleSwitch);
+
+        m_usePhotonData = m_swerveTab.add("Photon Vision Data", true)
+            .withWidget(BuiltInWidgets.kToggleSwitch);
     }
 
     @Override
@@ -189,6 +199,13 @@ public class DriveSubsystem extends SubsystemBase {
             m_odometry.addVisionMeasurement(pose, timestamp);
         }
         
+        Optional<EstimatedRobotPose> estimationOpt = m_photonEstimation.get();
+        estimationOpt.ifPresent(estimation -> {
+            if (m_usePhotonData.getEntry().getBoolean(true)) {
+                m_odometry.addVisionMeasurement(estimation.estimatedPose.toPose2d(), estimation.timestampSeconds);
+            }
+        });
+
         // Update field widget
         m_field.setRobotPose(FieldUtils.fieldWidgetScale(getPose()));
     
