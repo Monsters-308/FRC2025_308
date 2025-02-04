@@ -322,8 +322,15 @@ public final class Constants {
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
         public static final double kElevatorD = 0;
-        /** The gravity offset for the elevator PID. */
-        public static final double kElevatorGravityOffset = 0;
+
+        /** The S gain for the elevator feedforward. */
+        public static final double kElevatorS = 0;
+        /** The gravity gain for the elevator feedforward. */
+        public static final double kElevatorG = 0;
+        /** The V gain for the elevator feedforward. */
+        public static final double kElevatorV = 0;
+        /** The A gain for the elevator feedforward. */
+        public static final double kElevatorA = 0;
 
         /** The maximum speed the elevator can move at with full power. */
         public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
@@ -384,7 +391,7 @@ public final class Constants {
 
         /** The period of the duty cycle for the arm. */
         public static final int kArmDutyCyclePeriod = 4096;
-        /** The angle offset for the motor encoder. */
+        /** The angle offset for the motor encoder such that when the encoder returns 0 the arm is parallel to the floor. */
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
@@ -393,8 +400,14 @@ public final class Constants {
         public static final double KArmI = 0;
         /** The D for the arm PID controller. */
         public static final double KArmD = 0;
-        /** The gravity offset multiplier for the arm. */
-        public static final double kGravityOffsetMultiplier = 1;
+        /** The S gain for the arm feedforward. */
+        public static final double kArmS = 0;
+        /** The gravity gain for the arm feedforward. */
+        public static final double kArmG = 0;
+        /** The V gain for the arm feedforward. */
+        public static final double kArmV = 0;
+        /** The A gain for the arm feedforward. */
+        public static final double kArmA = 0;
     }
 
     /**
