@@ -6,15 +6,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//Import this so you can make this class a command
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
-
-//Import subsystem(s) this command interacts with below
 
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.FieldUtils;
@@ -26,11 +23,13 @@ public class RobotFacePoint extends Command {
     final VisionSubsystem m_visionSubsystem;
     final DriveSubsystem m_driveSubsystem;
      
-    private final PIDController angleController = new PIDController(HeadingConstants.kHeadingP, 
-                                                                  HeadingConstants.kHeadingI, 
-                                                                  HeadingConstants.kHeadingD);
+    private final PIDController angleController = new PIDController(
+        HeadingConstants.kHeadingP, 
+        HeadingConstants.kHeadingI, 
+        HeadingConstants.kHeadingD
+    );
     
-    //If you want to contoll whether or not the command has ended, you should store it in some sort of variable:
+    //If you want to control whether or not the command has ended, you should store it in some sort of variable:
     private boolean m_complete = false;
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_ySpeed;
@@ -78,10 +77,6 @@ public class RobotFacePoint extends Command {
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
         Translation2d pos2 = FieldUtils.flipRed(m_point); // 2D point on field (adjusted for alliance) 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
-        double distanceToTarget = OdometryUtils.getDistancePosToPos(pos1, pos2); // Distance in meters from robot to point
-
-        SmartDashboard.putNumber("Distance to point", distanceToTarget);
-        SmartDashboard.putNumber("Angle to point", angleToTarget.getDegrees());
 
         // Set pid controller to angle to make robot face point
         angleController.setSetpoint(angleToTarget.getDegrees());
@@ -99,16 +94,6 @@ public class RobotFacePoint extends Command {
             true, true
         );
             
-    }
-
-    /*This function is called once when the command ends.
-     * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.
-     * Whether a command is interrupted or not is determined by "boolean interrupted."
-     * Things initialized in "initialize()" should be closed here.
-     */
-    @Override
-    public void end(boolean interrupted){
-        
     }
 
     @Override
