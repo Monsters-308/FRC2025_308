@@ -6,9 +6,15 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -41,6 +47,22 @@ public class ArmSubsystem extends SubsystemBase {
         )
     );
 
+    /** The feedforward for the arm motor. */
+    private final ArmFeedforward m_armFeedforward = new ArmFeedforward(
+        ArmConstants.kArmS,
+        ArmConstants.kArmG,
+        ArmConstants.kArmV,
+        ArmConstants.kArmA
+    );
+
+    /** The previous setpoint velocity in radians for acceleration calculation. */
+    private double m_previousSetpointVelocity;
+    /** The previous setpoint time for acceleration calculation. */
+    private double m_previousSetpointTime;
+
+    /** A shuffleboard tab to write arm properties to the dashboard. */
+    private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
+
     /**
      * Constructs an arm subsystem that controls the coral arm of the robot.
      */
@@ -52,6 +74,22 @@ public class ArmSubsystem extends SubsystemBase {
             .idleMode(ArmConstants.kIdleMode);
 
         m_armMotor.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        m_previousSetpointVelocity = Units.rotationsToRadians(m_angleController.getSetpoint().velocity);
+        m_previousSetpointTime = Timer.getTimestamp();
+
+        m_armTab.addDouble("Arm Angle", () -> getAngle().getDegrees());
+        m_armTab.addDouble("Arm Velocity", () -> getVelocity().getDegrees());
+
+        m_armTab.addDouble("Arm Angle Setpoint", () -> 
+            Units.rotationsToDegrees(m_angleController.getSetpoint().position));
+        m_armTab.addDouble("Arm Velocity Setpoint", () -> 
+            Units.rotationsToDegrees(m_angleController.getSetpoint().velocity));
+
+        m_armTab.addDouble("Arm Angle Goal", () -> 
+            Units.rotationsToDegrees(m_angleController.getGoal().position));
+        m_armTab.addDouble("Arm Velocity Goal", () -> 
+            Units.rotationsToDegrees(m_angleController.getGoal().velocity));
     }
 
     /**
@@ -66,6 +104,9 @@ public class ArmSubsystem extends SubsystemBase {
         );
 
         m_angleController.setGoal(constrainedAngle.getRotations());
+
+        m_previousSetpointVelocity = Units.rotationsToRadians(m_angleController.getSetpoint().velocity);
+        m_previousSetpointTime = Timer.getTimestamp();
     }
 
     /**
@@ -104,7 +145,19 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double gravityOffset = m_armEncoder.getRotation2D().getSin() * ArmConstants.kGravityOffsetMultiplier;
-        m_armMotor.set(m_angleController.calculate(m_armEncoder.getRotations()) + gravityOffset);
+        double currentTime = Timer.getTimestamp();
+
+        State setpoint = m_angleController.getSetpoint();
+        double position = Units.rotationsToRadians(setpoint.position);
+        double velocity = Units.rotationsToRadians(setpoint.velocity);
+        double acceleration = (velocity - m_previousSetpointVelocity) / (currentTime - m_previousSetpointTime);
+
+        m_armMotor.setVoltage(
+            m_angleController.calculate(m_armEncoder.getRotations()) +
+            m_armFeedforward.calculate(position, velocity, acceleration)
+        );
+
+        m_previousSetpointVelocity = velocity;
+        m_previousSetpointTime = currentTime;
     }
 }
