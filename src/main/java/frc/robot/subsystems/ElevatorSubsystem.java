@@ -10,11 +10,12 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -29,12 +30,12 @@ import frc.robot.Constants.ElevatorConstants;
  */
 public class ElevatorSubsystem extends SubsystemBase {
     /** The left motor controller of the elevator. */
-    private final SparkMax m_elevatorLeft = new SparkMax(
+    private final SparkMax m_elevatorLeader = new SparkMax(
         ElevatorConstants.kElevatorLeftCanId,
         MotorType.kBrushless);
 
     /** The right motor controller of the elevator. */
-    private final SparkMax m_elevatorRight = new SparkMax(
+    private final SparkMax m_elevatorFollower = new SparkMax(
         ElevatorConstants.kElevatorRightCanId,
         MotorType.kBrushless);
 
@@ -52,11 +53,20 @@ public class ElevatorSubsystem extends SubsystemBase {
         )
     );
 
+    private final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(
+        ElevatorConstants.kElevatorS,
+        ElevatorConstants.kElevatorG,
+        ElevatorConstants.kElevatorV,
+        ElevatorConstants.kElevatorA
+    );
+
+    /** The previous setpoint velocity for acceleration calculation. */
+    private double m_previousSetpointVelocity;
+    /** The previous setpoint time for acceleration calculation. */
+    private double m_previousSetpointTime;
+
     /** Elevator bottom limit switch. */
     private final DigitalInput m_bottomSwitch = new DigitalInput(ElevatorConstants.kBottomSwitchChannel);
-
-    /** Elevator top limit switch. */
-    private final DigitalInput m_topSwitch = new DigitalInput(ElevatorConstants.kTopSwitchChannel);
 
     /** A shuffleboard tab to write elevator properties to the dashboard. */
     private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
@@ -72,41 +82,39 @@ public class ElevatorSubsystem extends SubsystemBase {
      * Initializes an ElevatorSubsystem to control the robot's elevator.
      */
     public ElevatorSubsystem() {
-        SparkMaxConfig leftMotorConfig = new SparkMaxConfig();
+        SparkMaxConfig leaderMotorConfig = new SparkMaxConfig();
 
-        leftMotorConfig
+        leaderMotorConfig
             .idleMode(ElevatorConstants.kElevatorIdleMode)
             .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
             .inverted(ElevatorConstants.kElevatorLeftInverted);
 
-        leftMotorConfig.encoder
+        leaderMotorConfig.encoder
             .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
             .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
-        m_elevatorLeft.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_elevatorLeader.configure(leaderMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        SparkMaxConfig rightMotorConfig = new SparkMaxConfig();
+        SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
 
-        rightMotorConfig
+        followerMotorConfig
             .idleMode(ElevatorConstants.kElevatorIdleMode)
             .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
             .inverted(ElevatorConstants.kElevatorRightInverted)
-            .follow(m_elevatorLeft);
+            .follow(m_elevatorLeader);
 
-        m_elevatorRight.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_elevatorFollower.configure(followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        m_elevatorEncoder = m_elevatorLeft.getEncoder();
-        
-        Preferences.initDouble(ElevatorConstants.kPhysicalHeightLimitKey, ElevatorConstants.kPhysicalHeightLimit);
+        m_elevatorEncoder = m_elevatorLeader.getEncoder();
 
-        m_elevatorTab.addDouble("Current Elevator Height", this::getElevatorHeight);
+        m_previousSetpointVelocity = m_elevatorPIDController.getSetpoint().velocity;
+        m_previousSetpointTime = Timer.getTimestamp();
+
+        m_elevatorTab.addDouble("Elevator Height", this::getElevatorHeight);
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
         m_elevatorTab.addDouble("Elevator Speed", this::getElevatorVelocity);
 
-        m_elevatorTab.add("Maximum Elevator Speed", ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
-        m_elevatorTab.addDouble("Physical Height Limit", this::getPhysicalHeightLimit);
-
-        m_elevatorTab.add("Calibrate Elevator", calibrateElevator());
+        m_elevatorTab.add("Zero Elevator", zeroElevator());
 
         m_levelNetworkTableEntry = m_goToLevelLayout.add("Level", 0)
             .withWidget(BuiltInWidgets.kNumberSlider)
@@ -131,6 +139,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         );
 
         m_elevatorPIDController.setGoal(height);
+
+        m_previousSetpointVelocity = m_elevatorPIDController.getSetpoint().velocity;
+        m_previousSetpointTime = Timer.getTimestamp();
     }
 
     /**
@@ -149,7 +160,8 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public Command goToLevel(int index, boolean endImmediately) {
         return runOnce(() -> setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]))
-            .andThen(new WaitUntilCommand(() -> m_elevatorPIDController.atGoal() || endImmediately));
+            .andThen(new WaitUntilCommand(() -> m_elevatorPIDController.atGoal() || endImmediately))
+            .withName("Go To Level #" + (index + 1));
     }
 
     /**
@@ -164,7 +176,8 @@ public class ElevatorSubsystem extends SubsystemBase {
             if (index < 0) { return; }
             setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]);
         })
-        .andThen(new WaitUntilCommand(()-> m_elevatorPIDController.atGoal() || endImmediately));
+        .andThen(new WaitUntilCommand(()-> m_elevatorPIDController.atGoal() || endImmediately))
+        .withName("Go");
     }
 
     /**
@@ -179,20 +192,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets the physical height limit the elevator can reach. Used for calibration.
-     * @param limit The new physical height limit to set.
-     */
-    public void setPhysicalHeightLimit(double limit) {
-        Preferences.setDouble(ElevatorConstants.kPhysicalHeightLimitKey, limit);
-    }
-
-    /**
      * Sets the velocity of the elevator.
      * @param velocity The velocity to set in meters per second.
      */
     public void setElevatorVelocity(double velocity) {
         m_isPIDMode = false;
-        m_elevatorLeft.set(velocity / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond);
+        m_elevatorLeader.set(velocity / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond);
     }
 
     /** 
@@ -226,14 +231,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Gets the physical height limit the elevator can reach.
-     * @return The physical height limit of the elevator.
-     */
-    public double getPhysicalHeightLimit() {
-        return Preferences.getDouble(ElevatorConstants.kPhysicalHeightLimitKey, ElevatorConstants.kPhysicalHeightLimit);
-    }
-
-    /**
      * Gets the current velocity of the elevator.
      * @return The velocity of the elevator in meters per second.
      */
@@ -249,40 +246,50 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Creates a command that calibrates the elevator.
+     * Creates a command that zeros the elevator.
      * @return The runnable Command.
      */
-    public Command calibrateElevator() {
+    public Command zeroElevator() {
         return runOnce(() -> {
             setElevatorVelocity(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
         })
         .andThen(new WaitUntilCommand(() -> getElevatorVelocity() == 0))
-        .andThen(() -> m_elevatorLeft.set(ElevatorConstants.kElevatorMaxSpeedMetersPerSecond))
-        .andThen(new WaitUntilCommand(() -> getElevatorVelocity() == 0))
-        .finallyDo(() -> {
-            setPhysicalHeightLimit(getElevatorHeight());
-            setElevatorHeight(0);
-        });
+        .withName("Zero Elevator");
     }
 
     @Override
     public void periodic() {
-        if (m_isPIDMode) {
-            m_elevatorLeft.set(
-                m_elevatorPIDController.calculate(getElevatorHeight()) + 
-                ElevatorConstants.kElevatorGravityOffset
-            );
-        }
-
         // Prevent elevator motors from moving after the elevator cannot move any further
         if (m_bottomSwitch.get()) {
             stop();
             m_elevatorEncoder.setPosition(0); // Reset encoder position to 0 at the bottom
             m_elevatorPIDController.reset(0, 0);
-        } else if (m_topSwitch.get()) {
+
+            m_previousSetpointVelocity = m_elevatorPIDController.getSetpoint().velocity;
+            m_previousSetpointTime = Timer.getTimestamp();
+        }
+        
+        if (getElevatorHeight() >= ElevatorConstants.kPhysicalHeightLimit) {
             stop();
-            m_elevatorEncoder.setPosition(getPhysicalHeightLimit()); // Reset encoder position to the height of the elevator at the top
-            m_elevatorPIDController.reset(getPhysicalHeightLimit(), 0);
+            m_elevatorPIDController.reset(ElevatorConstants.kPhysicalHeightLimit, 0);
+
+            m_previousSetpointVelocity = m_elevatorPIDController.getSetpoint().velocity;
+            m_previousSetpointTime = Timer.getTimestamp();
+        }
+
+        if (m_isPIDMode) {
+            double currentTime = Timer.getTimestamp();
+
+            double velocity = m_elevatorPIDController.getSetpoint().velocity;
+            double acceleration = (velocity - m_previousSetpointVelocity) / (currentTime - m_previousSetpointTime);
+            
+            m_elevatorLeader.setVoltage(
+                m_elevatorPIDController.calculate(getElevatorHeight()) + 
+                m_elevatorFeedforward.calculate(velocity, acceleration)
+            );
+
+            m_previousSetpointVelocity = velocity;
+            m_previousSetpointTime = currentTime;
         }
 
         // Prevent level in shuffleboard go to level layout from being non-integer
