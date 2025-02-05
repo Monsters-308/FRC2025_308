@@ -353,7 +353,7 @@ public final class Constants {
     /**
      * Constants that describe the algae intake of the robot.
      */
-    public static final class AlgaeIntakeConstaints {
+    public static final class AlgaeIntakeConstants {
         public static final int kIntakeMotorCanId = 0;
 
         public static final boolean kleftAlgaeIntakeInverted = false;
@@ -365,8 +365,21 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 35;
         
         public static final double kRollerSpeed = 0.1;
+    }
 
-
+    /** COnstants that describe the coral intake of the robot. */
+    public static final class CoralIntakeConstants {
+        /** The CAN ID for the intake motor. */
+        public static final int kCoralIntakeMotorCanId = 0;
+        /** Whether the coral intake is inverted */
+        public static final boolean kCoralIntakeInverted = false;
+        /** The idle mode of the coral intake motor. */
+        public static final IdleMode kCoralIntakeIdleMode = IdleMode.kBrake;
+        /** The current limit for the coral intake motor. */
+        public static final int kSmartCurrentLimit = 35;
+        
+        /** The speed of the coral intake. */
+        public static final double kCoralIntakeSpeed = 0.1;
     }
 
     /**
