@@ -1,8 +1,33 @@
 {
     "triggers": {
-        "algaeIntake": "a",
-        "algaeOutake": "b",
-        "elevatorUp": "povUp",
-        "elevatorDown": "povDown"
+        "algaeIntake": {
+            "button": "leftBumper"
+        },
+        "algaeShoot": {
+            "button": "leftTrigger",
+            "threshold": 0.1
+        },
+        "toggleIntakeArm": {
+            "button": "x"
+        },
+        "elevator1": {
+            "button": "povDown"
+        },
+        "elevator2": {
+            "button": "povLeft"
+        },
+        "elevator3": {
+            "button": "povRight"
+        },
+        "elevator4": {
+            "button": "povUp"
+        },
+        "coralIntake": {
+            "button": "rightBumper"
+        },
+        "coralShoot": {
+            "button": "rightTrigger",
+            "threshold": 0.1
+        }
     }
 }
