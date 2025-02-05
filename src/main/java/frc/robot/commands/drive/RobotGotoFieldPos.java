@@ -16,21 +16,28 @@ import frc.utils.FieldUtils;
 import frc.utils.SwerveUtils;
 
 public class RobotGotoFieldPos extends Command {
-
     private final DriveSubsystem m_driveSubsystem;
 
-    private final PIDController pidControllerX = new PIDController(HeadingConstants.kTranslationP, 
-                                                                  HeadingConstants.kTranslationI, 
-                                                                  HeadingConstants.kTranslationD);
-    private final PIDController pidControllerY = new PIDController(HeadingConstants.kTranslationP, 
-                                                                  HeadingConstants.kTranslationI, 
-                                                                  HeadingConstants.kTranslationD);
-    private final PIDController pidControllerAngle = new PIDController(HeadingConstants.kHeadingP, 
-                                                                  HeadingConstants.kHeadingI, 
-                                                                  HeadingConstants.kHeadingD);
+    private final PIDController pidControllerX = new PIDController(
+        HeadingConstants.kTranslationP, 
+        HeadingConstants.kTranslationI, 
+        HeadingConstants.kTranslationD
+    );
+
+    private final PIDController pidControllerY = new PIDController(
+        HeadingConstants.kTranslationP, 
+        HeadingConstants.kTranslationI, 
+        HeadingConstants.kTranslationD
+    );
+
+    private final PIDController pidControllerAngle = new PIDController(
+        HeadingConstants.kHeadingP, 
+        HeadingConstants.kHeadingI, 
+        HeadingConstants.kHeadingD
+    );
     private boolean m_complete = false;
 
-    private final Pose2d m_desiredRobotoPos;
+    private final Pose2d m_desiredRobotPos;
     private final boolean m_allianceRelative;
 
     /** 
@@ -39,7 +46,7 @@ public class RobotGotoFieldPos extends Command {
     public RobotGotoFieldPos(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPos, boolean allianceRelative) {
         m_driveSubsystem = driveSubsystem;
 
-        m_desiredRobotoPos = desiredRobotoPos;
+        m_desiredRobotPos = desiredRobotoPos;
 
         m_allianceRelative = allianceRelative;
 
@@ -73,16 +80,15 @@ public class RobotGotoFieldPos extends Command {
         pidControllerY.reset();
         pidControllerAngle.reset();
 
-        pidControllerX.setSetpoint(m_desiredRobotoPos.getX());
+        pidControllerX.setSetpoint(m_desiredRobotPos.getX());
 
-        if(m_allianceRelative){
-            pidControllerY.setSetpoint(FieldUtils.flipRedY(m_desiredRobotoPos.getY()));
+        if (m_allianceRelative) {
+            pidControllerY.setSetpoint(FieldUtils.flipRedY(m_desiredRobotPos.getY()));
             pidControllerAngle.setSetpoint(FieldUtils.flipRedAngle(
-                SwerveUtils.angleConstrain(m_desiredRobotoPos.getRotation().getDegrees())));
-        }
-        else {
-            pidControllerY.setSetpoint(m_desiredRobotoPos.getY());
-            pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_desiredRobotoPos.getRotation().getDegrees()));
+                SwerveUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees())));
+        } else {
+            pidControllerY.setSetpoint(m_desiredRobotPos.getY());
+            pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
         }
     }
 
@@ -113,7 +119,7 @@ public class RobotGotoFieldPos extends Command {
         );
         
         if(pidControllerX.atSetpoint() && pidControllerY.atSetpoint() && pidControllerAngle.atSetpoint()){
-            //m_complete = true;
+            m_complete = true;
         }
     }
 
@@ -144,5 +150,4 @@ public class RobotGotoFieldPos extends Command {
     public boolean isFinished() {
         return m_complete;
     }
-
 }
