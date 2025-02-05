@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -117,6 +118,9 @@ public final class Constants {
         public static final int KFrontRightTurningEncoderId = 12;
         public static final int KRearLeftTurningEncoderId = 13;
         public static final int KRearRightTurningEncoderId = 11;
+
+        // Auto align
+        public static final Pose2d[] kAutoAlignPositions = {};
     }
 
     /**
