@@ -1,16 +1,12 @@
 package frc.utils;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -32,13 +28,24 @@ public class InputMappings {
         controllers.put(id, controller);
     }
 
-    public static Trigger getTrigger(String controllerId, String mapId, String triggerId) throws FileNotFoundException, IOException, ParseException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        JSONObject obj = (JSONObject)parser.parse(new FileReader(Filesystem.getDeployDirectory().getPath() + "/mappings/" + controllerId + "/" + mapId + ".json"));
-        JSONObject triggers = (JSONObject)obj.get("triggers");
-        String triggerType = (String)triggers.get(triggerId);
-        CommandXboxController controller = controllers.get(controllerId);
+    public static Trigger getTrigger(String controllerId, String mapId, String triggerId) {
+        try {
+            JSONObject obj = (JSONObject)parser.parse(new FileReader(Filesystem.getDeployDirectory().getPath() + "/mappings/" + controllerId + "/" + mapId + ".json"));
+            JSONObject triggers = (JSONObject)obj.get("triggers");
+            JSONObject triggerData = (JSONObject)triggers.get(triggerId);
+            String triggerType = (String)triggerData.get("button");
+            double threshold = (double)triggerData.get("threshold");
+            CommandXboxController controller = controllers.get(controllerId);
 
-        Method triggerMethod = controller.getClass().getDeclaredMethod(triggerType);
-        return (Trigger)triggerMethod.invoke(controller);
+            Method triggerMethod = controller.getClass().getDeclaredMethod(triggerType);
+
+            if (triggerType.endsWith("trigger")) {
+                return (Trigger)triggerMethod.invoke(controller, threshold); 
+            }
+
+            return (Trigger)triggerMethod.invoke(controller);
+        } catch(Exception e) {
+            return null;
+        }
     }
 }

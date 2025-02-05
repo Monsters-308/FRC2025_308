@@ -15,10 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.drive.RobotFacePoint;
-import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
+import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.PhotonSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -38,8 +40,15 @@ import frc.utils.InputMappings;
 public class RobotContainer {
     // The robot's subsystems
     private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
-    private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(() -> m_visionSubsystem.getRobotPosition(),
-                () -> m_visionSubsystem.getTimeStampEstimator());
+    private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
+    private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(
+        m_visionSubsystem::getRobotPosition,
+        m_visionSubsystem::getTimeStampEstimator,
+        m_photonSubsystem::getEstimatedGlobalPose
+    );
+
+    private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+    private final AlgaeIntakeSubsystem m_algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
     // Controllers
     final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -60,6 +69,19 @@ public class RobotContainer {
         // Configure limelight default pipeline
         m_visionSubsystem.setDefaultCommand(new DefaultLimelightPipeline(m_visionSubsystem));
 
+        // Configure default commands
+        m_driveSubsystem.setDefaultCommand(
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+            new RunCommand(
+                () -> m_driveSubsystem.drive(
+                    -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                    -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+                    -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+                    true, true),
+                m_driveSubsystem));
+
+            
         // "registerCommand" lets pathplanner identify our commands so we can use them in pathplanner autons
         // Here's RobotFacePoint as an example:
         NamedCommands.registerCommand("FacePoint",
@@ -118,94 +140,37 @@ public class RobotContainer {
     }
 
     /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-     * subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-     * passing it to a
-     * {@link JoystickButton}.
+     * Use this method to define your button->command mappings.
      */
     private void configureButtonBindings() {
 
 
         //------------------------------------------- Driver buttons -------------------------------------------
-
-        // Configure default driving command
-        m_driveSubsystem.setDefaultCommand(
-            // The left stick controls translation of the robot.
-            // Turning is controlled by the X axis of the right stick.
-            new RunCommand(
-                () -> m_driveSubsystem.drive(
-                    -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                    -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                    -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-                    true, true),
-                m_driveSubsystem));
-
-        // Right bumper: puts drive into x mode
-        m_driverController.rightBumper().whileTrue(
-            new RunCommand(m_driveSubsystem::setX, m_driveSubsystem));
-        
-        // Left bumper: sets gyro to 0 degrees
-        m_driverController.leftBumper().onTrue(
-            new InstantCommand(m_driveSubsystem::zeroHeading));
-
-        // A button: makes robot face a point in space
-        m_driverController.a().whileTrue(
-            new RobotFacePoint(
-                m_visionSubsystem,
-                m_driveSubsystem,
-                m_driverController::getLeftY,
-                m_driverController::getLeftX,
-                FieldConstants.kRandomPosition));
-        
-        // Dpad up: makes robot face 0 degrees
-        m_driverController.pov(0).toggleOnTrue(
-            new RobotGotoAngle(
-                m_driveSubsystem,
-                0,
-                false,
-                m_driverController::getLeftY,
-                m_driverController::getLeftX,
-                m_driverController::getRightX));
-
-        // Dpad right: makes robot face 90 degrees to the right
-        m_driverController.pov(90).toggleOnTrue(
-            new RobotGotoAngle(
-                m_driveSubsystem,
-                -90,
-                false,
-                m_driverController::getLeftY,
-                m_driverController::getLeftX,
-                m_driverController::getRightX));
-
-        // Dpad down: makes robot face 180 degrees
-        m_driverController.pov(180).toggleOnTrue(
-            new RobotGotoAngle(
-                m_driveSubsystem,
-                180,
-                false,
-                m_driverController::getLeftY,
-                m_driverController::getLeftX,
-                m_driverController::getRightX));
-                                
-        // Dpad left: makes robot face 90 degrees to the left
-        m_driverController.pov(270).toggleOnTrue(
-            new RobotGotoAngle(
-                m_driveSubsystem,
-                90,
-                false,
-                m_driverController::getLeftY,
-                m_driverController::getLeftX,
-                m_driverController::getRightX));
+        InputMappings.registerController("driver", m_driverController);
 
 
         //------------------------------------------- coDriver buttons -------------------------------------------
-        
-
-        // (Put codriver controls here)
         InputMappings.registerController("codriver", m_coDriverController);
+
+        InputMappings.getTrigger("codriver", "default", "alageIntake")
+            .onTrue(m_algaeIntakeSubsystem.startRoller());
+        InputMappings.getTrigger("codriver", "default", "alageShoot")
+            .onTrue(m_algaeIntakeSubsystem.shootAlgae());
+
+        InputMappings.getTrigger("codriver", "default", "toggleIntakeArm")
+            .onTrue(m_algaeIntakeSubsystem.startArmSpeed());
+
+        InputMappings.getTrigger("codriver", "default", "elevator1")
+            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+        InputMappings.getTrigger("codriver", "default", "elevator2")
+            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+        InputMappings.getTrigger("codriver", "default", "elevator3")
+            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+        InputMappings.getTrigger("codriver", "default", "elevator4")
+            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+
+
+        
     }
 
     /**

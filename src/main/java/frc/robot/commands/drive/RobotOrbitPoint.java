@@ -10,17 +10,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.FieldUtils;
 import frc.utils.OdometryUtils;
 
-public class RobotFacePoint extends Command {
-
-    //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
-    final VisionSubsystem m_visionSubsystem;
+public class RobotOrbitPoint extends Command {
     final DriveSubsystem m_driveSubsystem;
      
     private final PIDController angleController = new PIDController(
@@ -30,9 +25,8 @@ public class RobotFacePoint extends Command {
     );
     
     //If you want to control whether or not the command has ended, you should store it in some sort of variable:
-    private boolean m_complete = false;
-    private final DoubleSupplier m_xSpeed;
-    private final DoubleSupplier m_ySpeed;
+    private final DoubleSupplier m_approachSpeed;
+    private final DoubleSupplier m_orbitSpeed;
 
     private final Translation2d m_point;
 
@@ -40,11 +34,10 @@ public class RobotFacePoint extends Command {
      * This command rotates the robot in space using the pose estimation compared to a given point on the field.
      * The driver still has full control over the X and Y of the robot.
      */
-    public RobotFacePoint(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed, Translation2d point){
+    public RobotOrbitPoint(DriveSubsystem driveSubsystem, DoubleSupplier approachSpeed, DoubleSupplier orbitSpeed, Translation2d point){
         m_driveSubsystem = driveSubsystem;
-        m_visionSubsystem = visionSubsystem;
-        m_xSpeed = xSpeed;
-        m_ySpeed = ySpeed;
+        m_approachSpeed = approachSpeed;
+        m_orbitSpeed = orbitSpeed;
         m_point = point;
 
         angleController.enableContinuousInput(-180, 180);
@@ -63,9 +56,7 @@ public class RobotFacePoint extends Command {
     //When not overridden, this function is blank.
     @Override
     public void initialize(){
-        m_visionSubsystem.setPipeline(VisionConstants.kAprilTagPipeline);
         angleController.reset();
-        m_complete = false;
     }
 
     /*This function is called repeatedly when the schedueler's "run()" function is called.
@@ -88,16 +79,10 @@ public class RobotFacePoint extends Command {
         rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
         
         m_driveSubsystem.drive(
-            -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
-            -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kJoystickDeadband),
+            -MathUtil.applyDeadband(m_approachSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
+            -MathUtil.applyDeadband(m_orbitSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
             rotation,
-            true, true
-        );
-            
-    }
-
-    @Override
-    public boolean isFinished(){
-        return m_complete;
+            false, true
+        );   
     }
 }
