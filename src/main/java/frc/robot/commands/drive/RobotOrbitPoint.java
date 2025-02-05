@@ -30,15 +30,18 @@ public class RobotOrbitPoint extends Command {
 
     private final Translation2d m_point;
 
+    private final boolean m_allianceRelative;
+
     /**
      * This command rotates the robot in space using the pose estimation compared to a given point on the field.
      * The driver still has full control over the X and Y of the robot.
      */
-    public RobotOrbitPoint(DriveSubsystem driveSubsystem, DoubleSupplier approachSpeed, DoubleSupplier orbitSpeed, Translation2d point){
+    public RobotOrbitPoint(DriveSubsystem driveSubsystem, DoubleSupplier approachSpeed, DoubleSupplier orbitSpeed, Translation2d point, boolean allianceRelative) {
         m_driveSubsystem = driveSubsystem;
         m_approachSpeed = approachSpeed;
         m_orbitSpeed = orbitSpeed;
         m_point = point;
+        m_allianceRelative = allianceRelative;
 
         angleController.enableContinuousInput(-180, 180);
         angleController.setTolerance(HeadingConstants.kHeadingTolerance);
@@ -64,9 +67,8 @@ public class RobotOrbitPoint extends Command {
      */
     @Override
     public void execute(){
-        
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = FieldUtils.flipRed(m_point); // 2D point on field (adjusted for alliance) 
+        Translation2d pos2 = m_allianceRelative ? FieldUtils.flipRed(m_point) : m_point; // 2D point on field (adjusted for alliance) 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
 
         // Set pid controller to angle to make robot face point
