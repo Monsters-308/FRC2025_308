@@ -363,6 +363,8 @@ public final class Constants {
         public static final IdleMode kAlgaeIntakeIdleMode = IdleMode.kBrake;
 
         public static final int kSmartCurrentLimit = 35;
+        
+        public static final double kRollerSpeed = 0.1;
 
 
     }
