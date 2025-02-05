@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotFacePoint;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -85,7 +86,7 @@ public class RobotContainer {
         // "registerCommand" lets pathplanner identify our commands so we can use them in pathplanner autons
         // Here's RobotFacePoint as an example:
         NamedCommands.registerCommand("FacePoint",
-            new RobotFacePoint(m_visionSubsystem, m_driveSubsystem, () -> 0, () -> 0, FieldConstants.kRandomPosition)
+            new RobotFacePoint(m_visionSubsystem, m_driveSubsystem, () -> 0, () -> 0, FieldConstants.kRandomPosition, false)
         );
         
         // Adding options to the sendable choosers
@@ -146,6 +147,8 @@ public class RobotContainer {
         //------------------------------------------- Driver buttons -------------------------------------------
         InputMappings.registerController("driver", m_driverController);
 
+        InputMappings.event("driver", "autoAlign")
+            .onTrue(new AutoAlign(m_driveSubsystem, true));
 
         //------------------------------------------- coDriver buttons -------------------------------------------
         InputMappings.registerController("coDriver", m_coDriverController);
