@@ -56,7 +56,7 @@ public final class Constants {
         // the robot, rather the allowed maximum speeds
 
         /** The highest allowed speed of the drive train. */
-        public static final double kMaxSpeedMetersPerSecond = 5;
+        public static final double kMaxSpeedMetersPerSecond = 4.6;
 
         /** The highest allowed rotational speed of the drive train. */
         public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
@@ -150,8 +150,8 @@ public final class Constants {
         public static final double kTurningEncoderPositionFactor = (2 * Math.PI) / kTurningMotorReduction; // radians
         public static final double kTurningEncoderVelocityFactor = kTurningEncoderPositionFactor / 60.0; // radians per second
 
-        public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
-        public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
+        public static final double kTurningEncoderPositionPIDMinInput = -Math.PI; // radians
+        public static final double kTurningEncoderPositionPIDMaxInput = Math.PI; // radians
 
         public static final double kDrivingP = 0.04;
         public static final double kDrivingI = 0;
@@ -160,7 +160,7 @@ public final class Constants {
         public static final double kDrivingMinOutput = -1;
         public static final double kDrivingMaxOutput = 1;
 
-        public static final double kTurningP = 0.75;
+        public static final double kTurningP = 1;
         public static final double kTurningI = 0;
         public static final double kTurningD = 0;
         public static final double kTurningFF = 0;
