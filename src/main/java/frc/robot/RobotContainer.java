@@ -152,25 +152,22 @@ public class RobotContainer {
         //------------------------------------------- coDriver buttons -------------------------------------------
         InputMappings.registerController("codriver", m_coDriverController);
 
-        InputMappings.getTrigger("codriver", "default", "alageIntake")
+        InputMappings.getTrigger("codriver", "alageIntake")
             .onTrue(m_algaeIntakeSubsystem.startRoller());
-        InputMappings.getTrigger("codriver", "default", "alageShoot")
+        InputMappings.getTrigger("codriver", "alageShoot")
             .onTrue(m_algaeIntakeSubsystem.shootAlgae());
 
-        InputMappings.getTrigger("codriver", "default", "toggleIntakeArm")
+        InputMappings.getTrigger("codriver", "toggleIntakeArm")
             .onTrue(m_algaeIntakeSubsystem.startArmSpeed());
 
-        InputMappings.getTrigger("codriver", "default", "elevator1")
+        InputMappings.getTrigger("codriver", "elevator1")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-        InputMappings.getTrigger("codriver", "default", "elevator2")
+        InputMappings.getTrigger("codriver", "elevator2")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-        InputMappings.getTrigger("codriver", "default", "elevator3")
+        InputMappings.getTrigger("codriver", "elevator3")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-        InputMappings.getTrigger("codriver", "default", "elevator4")
+        InputMappings.getTrigger("codriver", "elevator4")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-
-
-        
     }
 
     /**
