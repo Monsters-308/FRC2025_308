@@ -143,36 +143,34 @@ public class RobotContainer {
      * Use this method to define your button->command mappings.
      */
     private void configureButtonBindings() {
-
-
         //------------------------------------------- Driver buttons -------------------------------------------
         InputMappings.registerController("driver", m_driverController);
 
 
         //------------------------------------------- coDriver buttons -------------------------------------------
-        InputMappings.registerController("codriver", m_coDriverController);
+        InputMappings.registerController("coDriver", m_coDriverController);
 
-        InputMappings.getTrigger("codriver", "alageIntake")
+        InputMappings.event("codriver", "alageIntake")
             .onTrue(m_algaeIntakeSubsystem.startRoller());
-        InputMappings.getTrigger("codriver", "alageShoot")
+        InputMappings.event("codriver", "alageShoot")
             .onTrue(m_algaeIntakeSubsystem.shootAlgae());
 
-        InputMappings.getTrigger("codriver", "toggleIntakeArm")
+        InputMappings.event("codriver", "toggleIntakeArm")
             .onTrue(m_algaeIntakeSubsystem.startArmSpeed());
 
-        InputMappings.getTrigger("codriver", "elevator1")
+        InputMappings.event("codriver", "elevator1")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-        InputMappings.getTrigger("codriver", "elevator2")
+        InputMappings.event("codriver", "elevator2")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-        InputMappings.getTrigger("codriver", "elevator3")
+        InputMappings.event("codriver", "elevator3")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-        InputMappings.getTrigger("codriver", "elevator4")
+        InputMappings.event("codriver", "elevator4")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
     }
 
     /**
      * Function for adding all of our auton paths to each of the choosers
-     * @param autonChooser The sendable chooser being used for auton.
+     * @param autonChooser The {@link SendableChooser} being used for auton.
      */
     private void applyCommands(SendableChooser<Command> autonChooser){
         autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
@@ -187,8 +185,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return new SequentialCommandGroup(
-        m_autonFirstAction.getSelected(),
-        m_autonSecondAction.getSelected()
+            m_autonFirstAction.getSelected(),
+            m_autonSecondAction.getSelected()
         );
     }
 }
