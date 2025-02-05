@@ -1,5 +1,6 @@
 {
-    "triggers": {
+    "displayName": "Default",
+    "events": {
         "orbitReef": {
             "button": "rightBumper"
         },
