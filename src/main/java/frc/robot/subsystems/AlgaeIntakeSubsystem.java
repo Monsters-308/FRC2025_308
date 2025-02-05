@@ -8,14 +8,14 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AlgaeIntakeConstaints;
+import frc.robot.Constants.AlgaeIntakeConstants;
 
 /**
  * Subsystem that controls the algae intake.
  */
 public class AlgaeIntakeSubsystem extends SubsystemBase {
-    private final SparkMax m_algaeIntakeMotorArm = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorCanId, MotorType.kBrushless);
-    private final SparkMax m_algaeIntakeMotorRoller = new SparkMax(AlgaeIntakeConstaints.kIntakeMotorCanId, MotorType.kBrushless);
+    private final SparkMax m_algaeIntakeMotorArm = new SparkMax(AlgaeIntakeConstants.kIntakeMotorCanId, MotorType.kBrushless);
+    private final SparkMax m_algaeIntakeMotorRoller = new SparkMax(AlgaeIntakeConstants.kIntakeMotorCanId, MotorType.kBrushless);
 
 
     public AlgaeIntakeSubsystem() {
@@ -24,19 +24,19 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
         
         // sets the configation of the motors
         rollerMotorConf
-            .inverted(AlgaeIntakeConstaints.kleftAlgaeIntakeInverted)
-            .idleMode(AlgaeIntakeConstaints.kAlgaeIntakeIdleMode)
-            .smartCurrentLimit(AlgaeIntakeConstaints.kSmartCurrentLimit);
+            .inverted(AlgaeIntakeConstants.kAlgaeIntakeRollerInverted)
+            .idleMode(AlgaeIntakeConstants.kAlgaeIntakeIdleMode)
+            .smartCurrentLimit(AlgaeIntakeConstants.kSmartCurrentLimit);
         armMotorConf
-            .inverted(AlgaeIntakeConstaints.krightAlgaeIntakeInverted)
-            .idleMode(AlgaeIntakeConstaints.kAlgaeIntakeIdleMode)
-            .smartCurrentLimit(AlgaeIntakeConstaints.kSmartCurrentLimit);
+            .inverted(AlgaeIntakeConstants.kAlgaeIntakeArmInverted)
+            .idleMode(AlgaeIntakeConstants.kAlgaeIntakeIdleMode)
+            .smartCurrentLimit(AlgaeIntakeConstants.kSmartCurrentLimit);
 
         m_algaeIntakeMotorRoller.configure(rollerMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_algaeIntakeMotorArm.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    // this will set the speeds.
+    // this will set the speeds 
     public void setIntakeSpeeds(double armSpeed, double rollerSpeed) {
         m_algaeIntakeMotorRoller.set(rollerSpeed);
         m_algaeIntakeMotorArm.set(armSpeed);
@@ -55,11 +55,11 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
      * this will set the speeds in the command.
      */
     public Command startRoller() {
-        return runOnce(() -> setRollerSpeed(AlgaeIntakeConstaints.kRollerSpeed));
+        return runOnce(() -> setRollerSpeed(AlgaeIntakeConstants.kRollerSpeed));
     }
 
     public Command shootAlgae() {
-        return runOnce(() -> setRollerSpeed(-AlgaeIntakeConstaints.kRollerSpeed));
+        return runOnce(() -> setRollerSpeed(-AlgaeIntakeConstants.kRollerSpeed));
     }
 
     public Command startArmSpeed() {

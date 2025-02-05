@@ -356,9 +356,9 @@ public final class Constants {
     public static final class AlgaeIntakeConstants {
         public static final int kIntakeMotorCanId = 0;
 
-        public static final boolean kleftAlgaeIntakeInverted = false;
+        public static final boolean kAlgaeIntakeRollerInverted = false;
 
-        public static final boolean krightAlgaeIntakeInverted = false;
+        public static final boolean kAlgaeIntakeArmInverted = false;
 
         public static final IdleMode kAlgaeIntakeIdleMode = IdleMode.kBrake;
 
