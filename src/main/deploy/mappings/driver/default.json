@@ -1,0 +1,10 @@
+{
+    "triggers": {
+        "orbitReef": {
+            "button": "rightBumper"
+        },
+        "autoAlign": {
+            "button": "leftBumper"
+        }
+    }
+}
