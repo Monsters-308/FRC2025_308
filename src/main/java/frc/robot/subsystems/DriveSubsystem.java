@@ -175,11 +175,6 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearLeft.getPosition(),
                 m_rearRight.getPosition()
             });
-
-        m_frontLeft.updateTurningPID();
-        m_frontRight.updateTurningPID();
-        m_rearLeft.updateTurningPID();
-        m_rearRight.updateTurningPID();
             
         // Try to add vision data to pose estimation
         double timestamp = m_visionTimestamp.getAsDouble();
