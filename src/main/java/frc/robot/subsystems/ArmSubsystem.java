@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -55,11 +54,6 @@ public class ArmSubsystem extends SubsystemBase {
         ArmConstants.kArmA
     );
 
-    /** The previous setpoint velocity in radians for acceleration calculation. */
-    private double m_previousSetpointVelocity;
-    /** The previous setpoint time for acceleration calculation. */
-    private double m_previousSetpointTime;
-
     /** A shuffleboard tab to write arm properties to the dashboard. */
     private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
@@ -74,9 +68,6 @@ public class ArmSubsystem extends SubsystemBase {
             .idleMode(ArmConstants.kIdleMode);
 
         m_armMotor.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        m_previousSetpointVelocity = Units.rotationsToRadians(m_angleController.getSetpoint().velocity);
-        m_previousSetpointTime = Timer.getTimestamp();
 
         m_armTab.addDouble("Arm Angle", () -> getAngle().getDegrees());
         m_armTab.addDouble("Arm Velocity", () -> getVelocity().getDegrees());
@@ -104,9 +95,6 @@ public class ArmSubsystem extends SubsystemBase {
         );
 
         m_angleController.setGoal(constrainedAngle.getRotations());
-
-        m_previousSetpointVelocity = Units.rotationsToRadians(m_angleController.getSetpoint().velocity);
-        m_previousSetpointTime = Timer.getTimestamp();
     }
 
     /**
@@ -145,19 +133,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double currentTime = Timer.getTimestamp();
-
         State setpoint = m_angleController.getSetpoint();
         double position = Units.rotationsToRadians(setpoint.position);
         double velocity = Units.rotationsToRadians(setpoint.velocity);
-        double acceleration = (velocity - m_previousSetpointVelocity) / (currentTime - m_previousSetpointTime);
 
         m_armMotor.setVoltage(
             m_angleController.calculate(m_armEncoder.getRotations()) +
-            m_armFeedforward.calculate(position, velocity, acceleration)
+            m_armFeedforward.calculate(position, velocity)
         );
-
-        m_previousSetpointVelocity = velocity;
-        m_previousSetpointTime = currentTime;
     }
 }

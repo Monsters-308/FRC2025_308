@@ -15,7 +15,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -60,11 +59,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         ElevatorConstants.kElevatorA
     );
 
-    /** The previous setpoint velocity for acceleration calculation. */
-    private double m_previousSetpointVelocity;
-    /** The previous setpoint time for acceleration calculation. */
-    private double m_previousSetpointTime;
-
     /** Elevator bottom limit switch. */
     private final DigitalInput m_bottomSwitch = new DigitalInput(ElevatorConstants.kBottomSwitchChannel);
 
@@ -107,9 +101,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
 
-        m_previousSetpointVelocity = m_elevatorPIDController.getSetpoint().velocity;
-        m_previousSetpointTime = Timer.getTimestamp();
-
         m_elevatorTab.addDouble("Elevator Height", this::getElevatorHeight);
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
         m_elevatorTab.addDouble("Elevator Speed", this::getElevatorVelocity);
@@ -139,9 +130,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         );
 
         m_elevatorPIDController.setGoal(height);
-
-        m_previousSetpointVelocity = m_elevatorPIDController.getSetpoint().velocity;
-        m_previousSetpointTime = Timer.getTimestamp();
     }
 
     /**
@@ -264,32 +252,20 @@ public class ElevatorSubsystem extends SubsystemBase {
             stop();
             m_elevatorEncoder.setPosition(0); // Reset encoder position to 0 at the bottom
             m_elevatorPIDController.reset(0, 0);
-
-            m_previousSetpointVelocity = m_elevatorPIDController.getSetpoint().velocity;
-            m_previousSetpointTime = Timer.getTimestamp();
         }
         
         if (getElevatorHeight() >= ElevatorConstants.kPhysicalHeightLimit) {
             stop();
             m_elevatorPIDController.reset(ElevatorConstants.kPhysicalHeightLimit, 0);
-
-            m_previousSetpointVelocity = m_elevatorPIDController.getSetpoint().velocity;
-            m_previousSetpointTime = Timer.getTimestamp();
         }
 
         if (m_isPIDMode) {
-            double currentTime = Timer.getTimestamp();
-
             double velocity = m_elevatorPIDController.getSetpoint().velocity;
-            double acceleration = (velocity - m_previousSetpointVelocity) / (currentTime - m_previousSetpointTime);
             
             m_elevatorLeader.setVoltage(
                 m_elevatorPIDController.calculate(getElevatorHeight()) + 
-                m_elevatorFeedforward.calculate(velocity, acceleration)
+                m_elevatorFeedforward.calculate(velocity)
             );
-
-            m_previousSetpointVelocity = velocity;
-            m_previousSetpointTime = currentTime;
         }
 
         // Prevent level in shuffleboard go to level layout from being non-integer
