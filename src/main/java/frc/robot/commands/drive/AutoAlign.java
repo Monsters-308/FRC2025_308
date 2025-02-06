@@ -1,8 +1,4 @@
 package frc.robot.commands.drive;
-/*
- * The template code does not have a function for setting the robot to face a certain way, so we're just gonna have to implement that
- * ourselves using the drive function, the getHeading function, and a pid controller that we'll have to tune.
- */
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -16,35 +12,44 @@ import frc.utils.FieldUtils;
 import frc.utils.OdometryUtils;
 import frc.utils.SwerveUtils;
 
+/**
+ * Uses PID to make the robot go to the nearest auto align position.
+ */
 public class AutoAlign extends Command {
-
+    /** The {@link DriveSubsystem} of the robot. */
     private final DriveSubsystem m_driveSubsystem;
 
+    /** The {@link PIDController} for the robot's x-coordinate. */
     private final PIDController pidControllerX = new PIDController(
         HeadingConstants.kTranslationP, 
         HeadingConstants.kTranslationI, 
         HeadingConstants.kTranslationD
     );
 
+    /** The {@link PIDController} for the robot's y-coordinate. */
     private final PIDController pidControllerY = new PIDController(
         HeadingConstants.kTranslationP, 
         HeadingConstants.kTranslationI, 
         HeadingConstants.kTranslationD
     );
 
+    /** The {@link PIDController} for the robot's angle. */
     private final PIDController pidControllerAngle = new PIDController(
         HeadingConstants.kHeadingP, 
         HeadingConstants.kHeadingI, 
         HeadingConstants.kHeadingD
     );
     
+    /** Whether the {@link Command} has finished. */
     private boolean m_complete = false;
 
+    /** The disired position of the robot, set to the closest auto align point. */
     private Pose2d m_desiredRobotPos = null;
+    /** Whether the auto align points are alliance relative. */
     private final boolean m_allianceRelative;
 
     /** 
-     * Uses PID to make the robot go to a certain postion relative to the field.  
+     * Creates an {@link AutoAlign} object that uses PID to make the robot go to the nearest auto align position.
      */
     public AutoAlign(DriveSubsystem driveSubsystem, boolean allianceRelative) {
         m_driveSubsystem = driveSubsystem;
@@ -59,13 +64,6 @@ public class AutoAlign extends Command {
         addRequirements(m_driveSubsystem);
     }
     
-    /*
-     * This function is called once when the command is schedueled.
-     * If you are overriding "isFinished()", you should probably use this to set
-     * m_complete to false so the command doesn't
-     * instantly end.
-     */
-    // When not overridden, this function is blank.
     @Override
     public void initialize() {
         m_complete = false;
@@ -97,12 +95,6 @@ public class AutoAlign extends Command {
         }
     }
 
-    /*
-     * This function is called repeatedly when the schedueler's "run()" function is
-     * called.
-     * Once you want the function to end, you should set m_complete to true.
-     */
-    // When not overridden, this function is blank.
     @Override
     public void execute() {
         Pose2d currentPos = m_driveSubsystem.getPose();
@@ -123,34 +115,16 @@ public class AutoAlign extends Command {
             true, false
         );
         
-        if(pidControllerX.atSetpoint() && pidControllerY.atSetpoint() && pidControllerAngle.atSetpoint()){
+        if(pidControllerX.atSetpoint() && pidControllerY.atSetpoint() && pidControllerAngle.atSetpoint()) {
             m_complete = true;
         }
     }
 
-    /*
-     * This function is called once when the command ends.
-     * A command ends either when you tell it to end with the "isFinished()"
-     * function below, or when it is interupted.
-     * Whether a command is interrupted or not is determined by
-     * "boolean interrupted."
-     * Things initialized in "initialize()" should be closed here.
-     */
-    // When not overridden, this function is blank.
     @Override
     public void end(boolean interrupted) {
         m_driveSubsystem.drive(0, 0, 0, false, false);
     }
 
-    /*
-     * This fuction is used to tell the robot when the command has ended.
-     * This function is called after each time the "execute()" function is ran.
-     * Once this function returns true, "end(boolean interrupted)" is ran and the
-     * command ends.
-     * It is recommended that you don't use this for commands that should run
-     * continuously, such as drive commands.
-     */
-    // When not overridden, this function returns false.
     @Override
     public boolean isFinished() {
         return m_complete;
