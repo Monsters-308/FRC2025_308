@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -183,7 +184,7 @@ public abstract class InputMappings {
                 }
 
                 if (displayName == null) {
-                    displayName = mapping.getName().replaceAll("\\.json", "");
+                    displayName = WordUtils.capitalize(mapping.getName().replace(".json", ""));
                 }
 
                 if (mapping.getName().equals("default.json")) {
