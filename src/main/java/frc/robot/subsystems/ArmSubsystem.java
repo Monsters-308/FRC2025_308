@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
-import frc.utils.GeneralUtils;
+import frc.utils.Utils;
 import frc.utils.ThroughBoreEncoder;
 
 /**
@@ -85,7 +85,7 @@ public class ArmSubsystem extends SubsystemBase {
         m_armTab.addDouble("Arm Velocity Goal", () -> 
             Units.rotationsToDegrees(m_angleController.getGoal().velocity));
 
-        GeneralUtils.configureSysID(
+        Utils.configureSysID(
             m_armTab.getLayout("Arm SysID"), this, 
             voltage -> {
                 m_isPIDMode = false;
@@ -101,7 +101,7 @@ public class ArmSubsystem extends SubsystemBase {
     public void setAngle(Rotation2d angle) {
         m_isPIDMode = true;
 
-        Rotation2d constrainedAngle = Rotation2d.fromDegrees(GeneralUtils.angleConstrain(angle.getDegrees()));
+        Rotation2d constrainedAngle = Rotation2d.fromDegrees(Utils.angleConstrain(angle.getDegrees()));
         m_angleController.reset(
             getAngle().getRotations(),
             getVelocity().getRotations()

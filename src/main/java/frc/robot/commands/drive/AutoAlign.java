@@ -9,7 +9,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.FieldUtils;
-import frc.utils.GeneralUtils;
+import frc.utils.Utils;
 
 /**
  * Uses PID to make the robot go to the nearest auto align position.
@@ -68,7 +68,7 @@ public class AutoAlign extends Command {
         Double smallestDst = null;
 
         for (Pose2d pose : FieldConstants.kAutoAlignPositions) {
-            double dst = GeneralUtils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
+            double dst = Utils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
             if (smallestDst == null || dst < smallestDst) {
                 smallestDst = dst;
                 m_desiredRobotPos = pose;
@@ -83,7 +83,7 @@ public class AutoAlign extends Command {
 
         pidControllerX.setSetpoint(m_desiredRobotPos.getX());
         pidControllerY.setSetpoint(m_desiredRobotPos.getY());
-        pidControllerAngle.setSetpoint(GeneralUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
+        pidControllerAngle.setSetpoint(Utils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
     }
 
     @Override

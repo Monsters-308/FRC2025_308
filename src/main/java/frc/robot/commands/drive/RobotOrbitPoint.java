@@ -14,7 +14,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 import frc.utils.FieldUtils;
-import frc.utils.GeneralUtils;
+import frc.utils.Utils;
 
 public class RobotOrbitPoint extends Command {
     final DriveSubsystem m_driveSubsystem;
@@ -67,7 +67,7 @@ public class RobotOrbitPoint extends Command {
     public void execute() {
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
         Translation2d pos2 = pos1.getX() < FieldConstants.kFieldHeightMeters / 2 ? FieldUtils.flipRed(m_point) : FieldUtils.flip(FieldUtils.flipRed(m_point)); // 2D point on field (adjusted for alliance) 
-        Rotation2d angleToTarget = GeneralUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
+        Rotation2d angleToTarget = Utils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
 
         // Set pid controller to angle to make robot face point
         angleController.setSetpoint(angleToTarget.getDegrees());

@@ -31,7 +31,7 @@ import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.utils.FieldUtils;
 import frc.utils.SwerveModule;
-import frc.utils.GeneralUtils;
+import frc.utils.Utils;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -126,14 +126,14 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.enableLogging(true);
     
         // Widgets for swerve module angles 
-        m_swerveTab.addDouble("frontLeft angle", () -> GeneralUtils.angleConstrain(m_frontLeft.getTurningAngle().getDegrees()));
-        m_swerveTab.addDouble("frontRight angle", () -> GeneralUtils.angleConstrain(m_frontRight.getTurningAngle().getDegrees()));
-        m_swerveTab.addDouble("rearLeft angle", () -> GeneralUtils.angleConstrain(m_rearLeft.getTurningAngle().getDegrees()));
-        m_swerveTab.addDouble("rearRight angle", () -> GeneralUtils.angleConstrain(m_rearRight.getTurningAngle().getDegrees()));
-        m_swerveTab.addDouble("frontLeft test angle", () -> GeneralUtils.angleConstrain(m_frontLeft.getRelativeTurningAngle()));
-        m_swerveTab.addDouble("frontRight test angle", () -> GeneralUtils.angleConstrain(m_frontRight.getRelativeTurningAngle()));
-        m_swerveTab.addDouble("rearLeft test angle", () -> GeneralUtils.angleConstrain(m_rearLeft.getRelativeTurningAngle()));
-        m_swerveTab.addDouble("rearRight test angle", () -> GeneralUtils.angleConstrain(m_rearRight.getRelativeTurningAngle()));
+        m_swerveTab.addDouble("frontLeft angle", () -> Utils.angleConstrain(m_frontLeft.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("frontRight angle", () -> Utils.angleConstrain(m_frontRight.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("rearLeft angle", () -> Utils.angleConstrain(m_rearLeft.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("rearRight angle", () -> Utils.angleConstrain(m_rearRight.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("frontLeft test angle", () -> Utils.angleConstrain(m_frontLeft.getRelativeTurningAngle()));
+        m_swerveTab.addDouble("frontRight test angle", () -> Utils.angleConstrain(m_frontRight.getRelativeTurningAngle()));
+        m_swerveTab.addDouble("rearLeft test angle", () -> Utils.angleConstrain(m_rearLeft.getRelativeTurningAngle()));
+        m_swerveTab.addDouble("rearRight test angle", () -> Utils.angleConstrain(m_rearRight.getRelativeTurningAngle()));
 
         m_swerveTab.addDouble("Desired Angle", () -> m_frontLeft.getDesiredAngle());
 
@@ -173,7 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_usePhotonData = m_swerveTab.add("Photon Vision Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch);
 
-        GeneralUtils.configureSysID(
+        Utils.configureSysID(
             m_swerveTab.getLayout("Linear SysID"), this,
             voltage -> {
                 m_frontLeft.setDriveVoltage(voltage);
@@ -183,7 +183,7 @@ public class DriveSubsystem extends SubsystemBase {
             }
         );
 
-        GeneralUtils.configureSysID(
+        Utils.configureSysID(
             m_swerveTab.getLayout("Angular SysID"), this,
             voltage -> {
                 m_frontLeft.setDriveVoltage(voltage);
@@ -303,7 +303,7 @@ public class DriveSubsystem extends SubsystemBase {
         // Rate limit if applicable
         if(rateLimit) {
             // Side effect: The velocities of targetVel are modified by this function
-            GeneralUtils.rateLimitVelocity(
+            Utils.rateLimitVelocity(
                 targetVel, m_prevTarget, elapsedTime,
                 DriveConstants.kMagnitudeSlewRate, DriveConstants.kRotationalSlewRate
             );
@@ -389,7 +389,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the robot's heading in degrees, from -180 to 180
      */
     public double getHeading() {
-        return GeneralUtils.angleConstrain(
+        return Utils.angleConstrain(
             m_odometry.getEstimatedPosition().getRotation().getDegrees()
         );
     }

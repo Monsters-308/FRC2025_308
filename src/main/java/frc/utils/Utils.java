@@ -17,8 +17,8 @@ import frc.robot.Constants.FieldConstants;
 /**
  * General untilies used throughout the code.
  */
-public class GeneralUtils {
-    private GeneralUtils() {}
+public class Utils {
+    private Utils() {}
 
     /**
      * Limit the linear and angular accelerations of the chassis between setpoints.
