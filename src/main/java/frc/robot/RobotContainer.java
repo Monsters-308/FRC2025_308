@@ -162,12 +162,11 @@ public class RobotContainer {
         InputMappings.registerController("coDriver", m_coDriverController);
 
         InputMappings.event("coDriver", "alageIntake")
-            .onTrue(m_algaeIntakeSubsystem.startRoller());
+            .onTrue(m_algaeIntakeSubsystem.intakeAlgae());
         InputMappings.event("coDriver", "alageShoot")
             .onTrue(m_algaeIntakeSubsystem.shootAlgae());
-
-        InputMappings.event("coDriver", "toggleIntakeArm")
-            .onTrue(m_algaeIntakeSubsystem.startArmSpeed());
+        InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
+            .onTrue(m_algaeIntakeSubsystem.armToggle());
 
         InputMappings.event("coDriver", "elevator1")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
