@@ -8,7 +8,7 @@
             "button": "leftTrigger",
             "threshold": 0.1
         },
-        "toggleIntakeArm": {
+        "toggleAlgaeIntakeArm": {
             "button": "x"
         },
         "elevator1": {
