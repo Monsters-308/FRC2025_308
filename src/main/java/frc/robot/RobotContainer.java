@@ -16,6 +16,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotFacePoint;
+import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
@@ -121,8 +122,8 @@ public class RobotContainer {
         Shuffleboard.getTab("Autonomous").add("Set Middle",
             new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
                 new Pose2d(
-                    1.5, 
-                    5.55, 
+                    1.5,
+                    5.55,
                     Rotation2d.fromDegrees(180))
             )))
             .ignoringDisable(true)
@@ -148,7 +149,14 @@ public class RobotContainer {
         InputMappings.registerController("driver", m_driverController);
 
         InputMappings.event("driver", "autoAlign")
-            .onTrue(new AutoAlign(m_driveSubsystem, true));
+            .onTrue(new AutoAlign(m_driveSubsystem));
+
+        InputMappings.event("driver", "orbitReef")
+            .whileTrue(new RobotOrbitPoint(m_driveSubsystem,
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+                FieldConstants.kReefPosition)
+            );
 
         //------------------------------------------- coDriver buttons -------------------------------------------
         InputMappings.registerController("coDriver", m_coDriverController);
