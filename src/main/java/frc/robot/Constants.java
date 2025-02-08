@@ -373,6 +373,12 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 35;
         
         public static final double kRollerSpeed = 0.1;
+
+        public static final double kArmSpeed = 0.1;
+
+        public static final double kArmTimeout = 1;
+        
+        public static final double kArmErrorThreshold = 0.05;
     }
 
     /** COnstants that describe the coral intake of the robot. */
