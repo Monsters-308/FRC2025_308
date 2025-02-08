@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.FieldUtils;
@@ -45,15 +46,12 @@ public class AutoAlign extends Command {
 
     /** The disired position of the robot, set to the closest auto align point. */
     private Pose2d m_desiredRobotPos = null;
-    /** Whether the auto align points are alliance relative. */
-    private final boolean m_allianceRelative;
 
     /** 
      * Creates an {@link AutoAlign} object that uses PID to make the robot go to the nearest auto align position.
      */
-    public AutoAlign(DriveSubsystem driveSubsystem, boolean allianceRelative) {
+    public AutoAlign(DriveSubsystem driveSubsystem) {
         m_driveSubsystem = driveSubsystem;
-        m_allianceRelative = allianceRelative;
 
         pidControllerX.setTolerance(HeadingConstants.kTranslationTolerance);
         pidControllerY.setTolerance(HeadingConstants.kTranslationTolerance);
@@ -79,11 +77,13 @@ public class AutoAlign extends Command {
             }
         }
 
+        if (robotPose.getX() < FieldConstants.kFieldWidthMeters / 2) {
+            m_desiredRobotPos = FieldUtils.flipRed(m_desiredRobotPos);
+        }
+
         pidControllerX.reset();
         pidControllerY.reset();
         pidControllerAngle.reset();
-
-        m_desiredRobotPos = m_allianceRelative ? FieldUtils.flipRed(m_desiredRobotPos) : m_desiredRobotPos;
 
         pidControllerX.setSetpoint(m_desiredRobotPos.getX());
         pidControllerY.setSetpoint(m_desiredRobotPos.getY());
