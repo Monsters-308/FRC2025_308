@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 /**
  * Loads input mappings of the controllers through JSON files.
  */
-public abstract class InputMappings {
+public final class InputMappings {
     /** The {@link JSONParser} used to parse input mappings. */
     private static JSONParser m_parser = new JSONParser();
     
