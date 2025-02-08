@@ -1,10 +1,17 @@
 package frc.utils;
 
+import java.util.function.Consumer;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
 
 public class GeneralUtils {
@@ -94,5 +101,41 @@ public class GeneralUtils {
         double distance = Math.sqrt(Math.abs(Math.pow(x1-x2, 2)) + Math.abs(Math.pow(y1-y2, 2)));
 
         return distance;
+    }
+
+    /**
+     * Configures SysID for a {@link Subsystem} on a {@link ShuffleboardLayout}.
+     * @param layout The layout to add the {@link Command} objects to.
+     * @param voltagConsumer Drive the motors being tested at the given voltage.
+     * @param subsystem The {@link Subsystem} that controls the motors.
+     */
+    public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Consumer<Voltage> voltagConsumer) {
+        SysIdRoutine sysIdRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+            new SysIdRoutine.Mechanism(
+                voltagConsumer,
+                null, // No log consumer, since data is recorded by URCL
+                subsystem
+            )
+        );
+
+        // The methods below return Command objects
+        Command quasistaticForward = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+        Command quasistaticBackward = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+        Command dynamicForward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+        Command dynamicBackward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+
+        Command all = quasistaticForward
+            .andThen(dynamicBackward)
+            .andThen(dynamicForward)
+            .andThen(dynamicBackward)
+            .withName("Run All");
+
+        layout.add(quasistaticForward);
+        layout.add(quasistaticBackward);
+        layout.add(dynamicForward);
+        layout.add(dynamicBackward);
+
+        layout.add(all);
     }
 }
