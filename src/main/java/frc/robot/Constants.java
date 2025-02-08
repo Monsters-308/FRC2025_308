@@ -66,15 +66,15 @@ public final class Constants {
         public static final double kMagnitudeSlewRate = 5 * kMaxSpeedMetersPerSecond; // meters per second^2
 
         /** The highest rotational acceleration allowed in the drive train */
-        public static final double kRotationalSlewRate = 5 * kMaxAngularSpeed;                // radians per second^2
+        public static final double kRotationalSlewRate = 5 * kMaxAngularSpeed; // radians per second^2
 
         // Chassis configuration
 
         /** Distance between centers of right and left wheels on robot. */
-        public static final double kTrackWidth = Units.inchesToMeters(21);
+        public static final double kTrackWidth = Units.inchesToMeters(23);
 
         /** Distance between front and back wheels on robot. */
-        public static final double kWheelBase = Units.inchesToMeters(21);
+        public static final double kWheelBase = Units.inchesToMeters(23.125);
 
         /** A kinematics object that calculates how the robot should move
          * using the positions of the modules on the robot.
@@ -138,7 +138,7 @@ public final class Constants {
         // The coefficient of friction between the drive wheel and the carpet
         public static final double kWheelCOF = 1;
 
-        // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
+        // The L2 MK4 and MK4i modules have a gear ratio of 6.75:1 on the drive wheels.
         public static final double kDrivingMotorReduction = 6.75;
         public static final double kDriveWheelFreeSpeedMetersPerSecond = (NEOMotorConstants.kFreeSpeedRps * kWheelCircumferenceMeters)
                 / kDrivingMotorReduction;
