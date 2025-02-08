@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -30,18 +31,15 @@ public class RobotOrbitPoint extends Command {
 
     private final Translation2d m_point;
 
-    private final boolean m_allianceRelative;
-
     /**
      * This command rotates the robot in space using the pose estimation compared to a given point on the field.
      * The driver still has full control over the X and Y of the robot.
      */
-    public RobotOrbitPoint(DriveSubsystem driveSubsystem, DoubleSupplier approachSpeed, DoubleSupplier orbitSpeed, Translation2d point, boolean allianceRelative) {
+    public RobotOrbitPoint(DriveSubsystem driveSubsystem, DoubleSupplier approachSpeed, DoubleSupplier orbitSpeed, Translation2d point) {
         m_driveSubsystem = driveSubsystem;
         m_approachSpeed = approachSpeed;
         m_orbitSpeed = orbitSpeed;
         m_point = point;
-        m_allianceRelative = allianceRelative;
 
         angleController.enableContinuousInput(-180, 180);
         angleController.setTolerance(HeadingConstants.kHeadingTolerance);
@@ -58,7 +56,7 @@ public class RobotOrbitPoint extends Command {
      */
     //When not overridden, this function is blank.
     @Override
-    public void initialize(){
+    public void initialize() {
         angleController.reset();
     }
 
@@ -66,9 +64,9 @@ public class RobotOrbitPoint extends Command {
      * Once you want the function to end, you should set m_complete to true.
      */
     @Override
-    public void execute(){
+    public void execute() {
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = m_allianceRelative ? FieldUtils.flipRed(m_point) : m_point; // 2D point on field (adjusted for alliance) 
+        Translation2d pos2 = pos1.getX() < FieldConstants.kFieldWidthMeters / 2 ? FieldUtils.flipRed(m_point) : m_point; // 2D point on field (adjusted for alliance) 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
 
         // Set pid controller to angle to make robot face point
