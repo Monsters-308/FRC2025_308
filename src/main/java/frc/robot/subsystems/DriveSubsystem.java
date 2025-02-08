@@ -157,8 +157,8 @@ public class DriveSubsystem extends SubsystemBase {
         
         // Configure the AutoBuilder
         AutoBuilder.configure(
-            () -> FieldUtils.flipGlobalBlue(getPose()), // Robot pose supplier
-            (Pose2d newPose) -> resetOdometry(FieldUtils.flipGlobalBlue(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
+            () -> FieldUtils.flipRed(getPose()), // Robot pose supplier
+            (Pose2d newPose) -> resetOdometry(FieldUtils.flipRed(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             AutoConstants.kPathPlannerController, // Path planner controller for holonomic drive.
