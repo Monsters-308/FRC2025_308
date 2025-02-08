@@ -134,12 +134,11 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         State setpoint = m_angleController.getSetpoint();
-        double position = Units.rotationsToRadians(setpoint.position);
-        double velocity = Units.rotationsToRadians(setpoint.velocity);
+        double velocitySetpoint = Units.rotationsToRadians(setpoint.velocity);
 
         m_armMotor.setVoltage(
             m_angleController.calculate(m_armEncoder.getRotations()) +
-            m_armFeedforward.calculate(position, velocity)
+            m_armFeedforward.calculateWithVelocities(getAngle().getRadians(), getVelocity().getRadians(), velocitySetpoint)
         );
     }
 }
