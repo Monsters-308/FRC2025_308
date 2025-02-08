@@ -32,13 +32,7 @@ public abstract class InputMappings {
     /** The {@link Map} of controller IDs and {@link SendableChooser} objects. */
     private static Map<String, SendableChooser<String>> m_choosers = new HashMap<>();
 
-    /**
-     * Cannot instantiate the type {@link InputMappings}.
-     * @throws InstantiationException
-     */
-    private InputMappings() throws InstantiationException {
-        throw new InstantiationException("Cannot instantiate the type InputMappings");
-    }
+    private InputMappings() {}
 
     /**
      * Registers a {@link GenericHID} object with the specified ID.
