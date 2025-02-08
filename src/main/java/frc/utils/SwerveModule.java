@@ -9,14 +9,19 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Voltage;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
+
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
 
@@ -217,5 +222,21 @@ public class SwerveModule {
     /** Zeroes all the SwerveModule encoders. */
     public void resetEncoders() {
         m_drivingEncoder.setPosition(0);
+    }
+
+    /**
+     * Sets the voltage of the drive motor.
+     * @param volts The voltage to set.
+     */
+    public void setDriveVoltage(Voltage volts) {
+        m_drivingPIDController.setReference(volts.in(Volts), ControlType.kVoltage);
+    }
+
+    /**
+     * Sets the voltage of the turning motor.
+     * @param volts The voltage to set.
+     */
+    public void setTurningVoltage(Voltage volts) {
+        m_drivingPIDController.setReference(volts.in(Volts), ControlType.kVoltage);
     }
 }
