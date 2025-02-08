@@ -16,7 +16,7 @@ public class FieldUtils {
      * If set to false, Blue is returned instead of null.
      * @return The Alliance color (or null/Blue if invalid).
      */
-    public static Alliance getAlliance(boolean nullable){
+    public static Alliance getAlliance(boolean nullable) {
         Alliance alliance = DriverStation.getAlliance().orElse(null);
         if (nullable || alliance != null){
             return alliance;
@@ -30,7 +30,7 @@ public class FieldUtils {
      * Returns the Alliance color.
      * @return The Alliance color (or Blue if invalid).
      */
-    public static Alliance getAlliance(){
+    public static Alliance getAlliance() {
         return getAlliance(false);
     }
 
@@ -38,7 +38,7 @@ public class FieldUtils {
      * Returns whether or not the robot is on the red alliance.
      * @return true if on red alliance, false if on blue alliance or invalid.
      */
-    public static boolean isRedAlliance(){
+    public static boolean isRedAlliance() {
         return getAlliance() == Alliance.Red;
     }
 
@@ -48,7 +48,7 @@ public class FieldUtils {
      * @param pose The pose object relative to the blue side (in meters).
      * @return The new pose object scaled.
      */
-    public static Pose2d fieldWidgetScale(Pose2d pose){
+    public static Pose2d fieldWidgetScale(Pose2d pose) {
         pose = flipRed(pose);
 
         // linearly scale widget x and y
@@ -68,11 +68,11 @@ public class FieldUtils {
      * @param position A translation object for the blue side.
      * @return The translation object mirrored for the red side.
      */
-    public static Translation2d flipRed(Translation2d position){
-        if (isRedAlliance()){
+    public static Translation2d flipRed(Translation2d position) {
+        if (isRedAlliance()) {
             return new Translation2d(
                 FieldConstants.kFieldWidthMeters - position.getX(),
-                FieldConstants.kFieldHeightMeters-position.getY()
+                FieldConstants.kFieldHeightMeters - position.getY()
             );
         }
         return position;
@@ -83,8 +83,8 @@ public class FieldUtils {
      * @param position A pose2d object for the blue side.
      * @return The translation object mirrored for the red side.
      */
-    public static Pose2d flipRed(Pose2d position){
-        if (isRedAlliance()){
+    public static Pose2d flipRed(Pose2d position) {
+        if (isRedAlliance()) {
             return new Pose2d(
                 flipRed(position.getTranslation()),
                 flipRedAngle(position.getRotation())
@@ -99,8 +99,8 @@ public class FieldUtils {
      * @param angle A rotation2d object. 
      * @return The same object but flipped.
      */
-    public static Rotation2d flipRedAngle(Rotation2d angle){
-        if (isRedAlliance()){
+    public static Rotation2d flipRedAngle(Rotation2d angle) {
+        if (isRedAlliance()) {
             return Rotation2d.fromDegrees(angle.getDegrees() + 180);
         }
         return angle;
@@ -112,10 +112,35 @@ public class FieldUtils {
      * @param angle An angle in degrees or radians, as long as it's from -180 to 180 or -Pi to Pi.
      * @return The flipped angle.
      */
-    public static double flipRedAngle(double angle){
-        if (isRedAlliance()){
+    public static double flipRedAngle(double angle) {
+        if (isRedAlliance()) {
             return angle + 180;
         }
         return angle;
+    }
+
+    /**
+     * Flips a position to the other alliance.
+     * @param pose The position to flip.
+     * @return The flipped position.
+     */
+    public static Pose2d flip(Pose2d pose) {
+        return new Pose2d(
+            FieldConstants.kFieldWidthMeters - pose.getX(),
+            FieldConstants.kFieldHeightMeters - pose.getY(),
+            Rotation2d.fromDegrees(pose.getRotation().getDegrees() + 180)
+        );
+    }
+
+    /**
+     * Flips a translation to the other alliance.
+     * @param translation The translation to flip.
+     * @return The flipped translation.
+     */
+    public static Translation2d flip(Translation2d translation) {
+        return new Translation2d(
+            FieldConstants.kFieldWidthMeters - translation.getX(),
+            FieldConstants.kFieldHeightMeters - translation.getY()
+        );
     }
 }
