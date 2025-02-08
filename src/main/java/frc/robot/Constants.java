@@ -118,9 +118,6 @@ public final class Constants {
         public static final int KFrontRightTurningEncoderId = 12;
         public static final int KRearLeftTurningEncoderId = 13;
         public static final int KRearRightTurningEncoderId = 11;
-
-        // Auto align
-        public static final Pose2d[] kAutoAlignPositions = {};
     }
 
     /**
@@ -229,6 +226,13 @@ public final class Constants {
         public static final Translation2d kRandomPosition = new Translation2d(
             kFieldWidthMeters/2, kFieldHeightMeters/2
         );
+
+        /** Auto align positions. */
+        public static final Pose2d[] kAutoAlignPositions = {};
+
+        // TODO: add reef position
+        /** Reef position for orbit controls. */
+        public static final Translation2d kReefPosition = new Translation2d(0, 0);
     }
 
     public static final class AutoConstants {

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -69,7 +68,7 @@ public class AutoAlign extends Command {
         Pose2d robotPose = m_driveSubsystem.getPose();
         Double smallestDst = null;
 
-        for (Pose2d pose : DriveConstants.kAutoAlignPositions) {
+        for (Pose2d pose : FieldConstants.kAutoAlignPositions) {
             double dst = OdometryUtils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
             if (smallestDst == null || dst < smallestDst) {
                 smallestDst = dst;
