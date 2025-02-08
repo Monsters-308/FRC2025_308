@@ -80,16 +80,15 @@ public class RobotGotoFieldPos extends Command {
         pidControllerY.reset();
         pidControllerAngle.reset();
 
-        pidControllerX.setSetpoint(m_desiredRobotPos.getX());
+        pidControllerX.reset();
+        pidControllerY.reset();
+        pidControllerAngle.reset();
 
-        if (m_allianceRelative) {
-            pidControllerY.setSetpoint(FieldUtils.flipRedY(m_desiredRobotPos.getY()));
-            pidControllerAngle.setSetpoint(FieldUtils.flipRedAngle(
-                SwerveUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees())));
-        } else {
-            pidControllerY.setSetpoint(m_desiredRobotPos.getY());
-            pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
-        }
+        Pose2d m_updatedRobotPos = m_allianceRelative ? FieldUtils.flipRed(m_desiredRobotPos) : m_desiredRobotPos;
+
+        pidControllerX.setSetpoint(m_updatedRobotPos.getX());
+        pidControllerY.setSetpoint(m_updatedRobotPos.getY());
+        pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_updatedRobotPos.getRotation().getDegrees()));
     }
 
     /*
