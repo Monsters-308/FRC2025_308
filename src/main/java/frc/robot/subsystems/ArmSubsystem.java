@@ -54,6 +54,9 @@ public class ArmSubsystem extends SubsystemBase {
         ArmConstants.kArmA
     );
 
+    /** Whether to use PID or not. */
+    private boolean m_isPIDMode = true;
+
     /** A shuffleboard tab to write arm properties to the dashboard. */
     private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
@@ -81,6 +84,14 @@ public class ArmSubsystem extends SubsystemBase {
             Units.rotationsToDegrees(m_angleController.getGoal().position));
         m_armTab.addDouble("Arm Velocity Goal", () -> 
             Units.rotationsToDegrees(m_angleController.getGoal().velocity));
+
+        GeneralUtils.configureSysID(
+            m_armTab.getLayout("Arm SysID"), this, 
+            voltage -> {
+                m_isPIDMode = false;
+                m_armMotor.setVoltage(voltage);
+            }
+        );
     }
 
     /**
@@ -88,6 +99,8 @@ public class ArmSubsystem extends SubsystemBase {
      * @param angle The angle to set.
      */
     public void setAngle(Rotation2d angle) {
+        m_isPIDMode = true;
+
         Rotation2d constrainedAngle = Rotation2d.fromDegrees(GeneralUtils.angleConstrain(angle.getDegrees()));
         m_angleController.reset(
             getAngle().getRotations(),
@@ -133,12 +146,14 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        State setpoint = m_angleController.getSetpoint();
-        double velocitySetpoint = Units.rotationsToRadians(setpoint.velocity);
+        if (m_isPIDMode) {
+            State setpoint = m_angleController.getSetpoint();
+            double velocitySetpoint = Units.rotationsToRadians(setpoint.velocity);
 
-        m_armMotor.setVoltage(
-            m_angleController.calculate(m_armEncoder.getRotations()) +
-            m_armFeedforward.calculateWithVelocities(getAngle().getRadians(), getVelocity().getRadians(), velocitySetpoint)
-        );
+            m_armMotor.setVoltage(
+                m_angleController.calculate(m_armEncoder.getRotations()) +
+                m_armFeedforward.calculateWithVelocities(getAngle().getRadians(), getVelocity().getRadians(), velocitySetpoint)
+            );
+        }
     }
 }
