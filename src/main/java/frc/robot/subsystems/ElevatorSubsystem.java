@@ -260,11 +260,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
 
         if (m_isPIDMode) {
-            double velocity = m_elevatorPIDController.getSetpoint().velocity;
+            double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
             
             m_elevatorLeader.setVoltage(
                 m_elevatorPIDController.calculate(getElevatorHeight()) + 
-                m_elevatorFeedforward.calculate(velocity)
+                m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
             );
         }
 
