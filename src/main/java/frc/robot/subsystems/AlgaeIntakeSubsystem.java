@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -17,6 +18,7 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
     private final SparkMax m_algaeIntakeMotorArm = new SparkMax(AlgaeIntakeConstants.kIntakeMotorCanId, MotorType.kBrushless);
     private final SparkMax m_algaeIntakeMotorRoller = new SparkMax(AlgaeIntakeConstants.kIntakeMotorCanId, MotorType.kBrushless);
 
+    private final RelativeEncoder m_algaeIntakeArmEncoder;
 
     public AlgaeIntakeSubsystem() {
         SparkMaxConfig rollerMotorConf = new SparkMaxConfig();
@@ -34,9 +36,10 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
 
         m_algaeIntakeMotorRoller.configure(rollerMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_algaeIntakeMotorArm.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        m_algaeIntakeArmEncoder = m_algaeIntakeMotorArm.getEncoder();
     }
 
-    // this will set the speeds 
     public void setIntakeSpeeds(double armSpeed, double rollerSpeed) {
         m_algaeIntakeMotorRoller.set(rollerSpeed);
         m_algaeIntakeMotorArm.set(armSpeed);
@@ -50,11 +53,7 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
         m_algaeIntakeMotorArm.set(speed);
     }
 
-
-    /**
-     * this will set the speeds in the command.
-     */
-    public Command startRoller() {
+    public Command intakeAlgae() {
         return runOnce(() -> setRollerSpeed(AlgaeIntakeConstants.kRollerSpeed));
     }
 
@@ -62,9 +61,22 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
         return runOnce(() -> setRollerSpeed(-AlgaeIntakeConstants.kRollerSpeed));
     }
 
-    public Command startArmSpeed() {
-        //TODO: do this!!!!!! >:3
-        return null;
+    public Command armIn() {
+        return runOnce(() -> setArmSpeed(-AlgaeIntakeConstants.kArmSpeed))
+            .withTimeout(AlgaeIntakeConstants.kArmTimeout)
+            .finallyDo(() -> setArmSpeed(0));
     }
 
+    public Command armOut() {
+        return runOnce(() -> setArmSpeed(AlgaeIntakeConstants.kArmSpeed))
+            .withTimeout(AlgaeIntakeConstants.kArmTimeout)
+            .finallyDo(() -> setArmSpeed(0));
+    }
+
+    public Command armToggle() {
+        return runOnce(() -> setArmSpeed(
+            m_algaeIntakeArmEncoder.getPosition() < AlgaeIntakeConstants.kArmErrorThreshold ? AlgaeIntakeConstants.kArmSpeed : -AlgaeIntakeConstants.kArmSpeed))
+            .withTimeout(AlgaeIntakeConstants.kArmTimeout)
+            .finallyDo(() -> setArmSpeed(0));
+    }
 }
