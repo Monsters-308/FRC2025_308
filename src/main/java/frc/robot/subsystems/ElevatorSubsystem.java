@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElevatorConstants;
+import frc.utils.GeneralUtils;
 
 /**
  * Subsystem that controls the robot's elevator.
@@ -115,6 +116,14 @@ public class ElevatorSubsystem extends SubsystemBase {
             .getEntry();
 
         m_goToLevelLayout.add(goToLevel(() -> (int)m_levelNetworkTableEntry.getInteger(-1), false));
+
+        GeneralUtils.configureSysID(
+            m_elevatorTab.getLayout("Elevator SysID"), this, 
+            voltage -> {
+                m_isPIDMode = false;
+                m_elevatorLeader.setVoltage(voltage);
+            }
+        );
     }
 
     /**
