@@ -9,7 +9,6 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.FieldUtils;
-import frc.utils.OdometryUtils;
 import frc.utils.GeneralUtils;
 
 /**
@@ -69,16 +68,14 @@ public class AutoAlign extends Command {
         Double smallestDst = null;
 
         for (Pose2d pose : FieldConstants.kAutoAlignPositions) {
-            double dst = OdometryUtils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
+            double dst = GeneralUtils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
             if (smallestDst == null || dst < smallestDst) {
                 smallestDst = dst;
                 m_desiredRobotPos = pose;
             }
         }
 
-        if (robotPose.getX() < FieldConstants.kFieldWidthMeters / 2) {
-            m_desiredRobotPos = FieldUtils.flipRed(m_desiredRobotPos);
-        }
+        m_desiredRobotPos = robotPose.getX() < FieldConstants.kFieldHeightMeters / 2 ? FieldUtils.flipRed(m_desiredRobotPos) : FieldUtils.flip(FieldUtils.flipRed(m_desiredRobotPos));
 
         pidControllerX.reset();
         pidControllerY.reset();
