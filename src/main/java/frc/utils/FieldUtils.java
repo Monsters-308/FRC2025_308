@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 
 public class FieldUtils {
+    private FieldUtils() {}
+
     /**
      * Returns the Alliance color.
      * @param nullable (Optional) Whether null should be returned if the alliance is invalid. 

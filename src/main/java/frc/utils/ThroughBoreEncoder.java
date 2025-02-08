@@ -41,7 +41,7 @@ public class ThroughBoreEncoder extends DutyCycleEncoder {
      * @return The rotation in degrees.
      */
     public double getDegrees() {
-        double degrees = SwerveUtils.angleConstrain((m_inverted ? -1 : 1) * 
+        double degrees = GeneralUtils.angleConstrain((m_inverted ? -1 : 1) * 
             super.get() * 360 + m_angleOffset.getDegrees());
         m_lastMeasurement = Rotation2d.fromDegrees(degrees);
         m_lastTime = Timer.getTimestamp();

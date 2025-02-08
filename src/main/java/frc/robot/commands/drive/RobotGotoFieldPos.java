@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.FieldUtils;
-import frc.utils.SwerveUtils;
+import frc.utils.GeneralUtils;
 
 public class RobotGotoFieldPos extends Command {
     private final DriveSubsystem m_driveSubsystem;
@@ -88,7 +88,7 @@ public class RobotGotoFieldPos extends Command {
 
         pidControllerX.setSetpoint(m_updatedRobotPos.getX());
         pidControllerY.setSetpoint(m_updatedRobotPos.getY());
-        pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_updatedRobotPos.getRotation().getDegrees()));
+        pidControllerAngle.setSetpoint(GeneralUtils.angleConstrain(m_updatedRobotPos.getRotation().getDegrees()));
     }
 
     /*

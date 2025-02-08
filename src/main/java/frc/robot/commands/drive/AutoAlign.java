@@ -10,7 +10,7 @@ import frc.robot.Constants.HeadingConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.FieldUtils;
 import frc.utils.OdometryUtils;
-import frc.utils.SwerveUtils;
+import frc.utils.GeneralUtils;
 
 /**
  * Uses PID to make the robot go to the nearest auto align position.
@@ -86,7 +86,7 @@ public class AutoAlign extends Command {
 
         pidControllerX.setSetpoint(m_desiredRobotPos.getX());
         pidControllerY.setSetpoint(m_desiredRobotPos.getY());
-        pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
+        pidControllerAngle.setSetpoint(GeneralUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
     }
 
     @Override
