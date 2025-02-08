@@ -83,16 +83,11 @@ public class AutoAlign extends Command {
         pidControllerY.reset();
         pidControllerAngle.reset();
 
-        pidControllerX.setSetpoint(m_desiredRobotPos.getX());
+        m_desiredRobotPos = m_allianceRelative ? FieldUtils.flipRed(m_desiredRobotPos) : m_desiredRobotPos;
 
-        if (m_allianceRelative) {
-            pidControllerY.setSetpoint(FieldUtils.flipRedY(m_desiredRobotPos.getY()));
-            pidControllerAngle.setSetpoint(FieldUtils.flipRedAngle(
-                SwerveUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees())));
-        } else {
-            pidControllerY.setSetpoint(m_desiredRobotPos.getY());
-            pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
-        }
+        pidControllerX.setSetpoint(m_desiredRobotPos.getX());
+        pidControllerY.setSetpoint(m_desiredRobotPos.getY());
+        pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
     }
 
     @Override
