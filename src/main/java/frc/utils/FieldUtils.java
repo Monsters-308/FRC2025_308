@@ -47,7 +47,7 @@ public class FieldUtils {
      * @return The new pose object scaled.
      */
     public static Pose2d fieldWidgetScale(Pose2d pose){
-        pose = flipGlobalBlue(pose);
+        pose = flipRed(pose);
 
         // linearly scale widget x and y
         // NOTE: We are doing this because shuffleboard's field widget is bugged. You would 
@@ -69,9 +69,9 @@ public class FieldUtils {
     public static Translation2d flipRed(Translation2d position){
         if (isRedAlliance()){
             return new Translation2d(
-                position.getX(),
+                FieldConstants.kFieldWidthMeters - position.getX(),
                 FieldConstants.kFieldHeightMeters-position.getY()
-            );  
+            );
         }
         return position;
     }
@@ -92,18 +92,6 @@ public class FieldUtils {
     }
 
     /**
-     * Flips a y coordinate so that it'll line up on the red side if the robot is on the red alliance.
-     * @param yPosition A number used to represent the y coordinate of a position (in meters).
-     * @return The y value mirrored down the middle of the field (in meters).
-     */
-    public static double flipRedY(double yPosition){
-        if (isRedAlliance()){
-            return FieldConstants.kFieldHeightMeters - yPosition;
-        }
-        return yPosition;
-    }
-
-    /**
      * Mirrors a Rotation2d object so that left becomes right if the robot is on the red alliance.
      * This is equivalent to multiplying the angle by -1.
      * @param angle A rotation2d object. 
@@ -111,7 +99,7 @@ public class FieldUtils {
      */
     public static Rotation2d flipRedAngle(Rotation2d angle){
         if (isRedAlliance()){
-            return angle.times(-1);
+            return Rotation2d.fromDegrees(angle.getDegrees() + 180);
         }
         return angle;
     }
@@ -124,24 +112,8 @@ public class FieldUtils {
      */
     public static double flipRedAngle(double angle){
         if (isRedAlliance()){
-            return -angle;
+            return angle + 180;
         }
         return angle;
-    }
-
-    /**
-     * Similar to redWidgetFlip, this flips both the x, y, and rotation in order to 
-     * keep a global blue alliance origin. This can be used for converting into and 
-     * out of a global blue alliance origin.
-     * @return The pose flipped if on red alliance.
-     */
-    public static Pose2d flipGlobalBlue(Pose2d robotPose){
-        if(isRedAlliance()){
-            return new Pose2d(
-                FieldConstants.kFieldWidthMeters - robotPose.getX(), 
-                FieldConstants.kFieldHeightMeters - robotPose.getY(), 
-                Rotation2d.fromDegrees(robotPose.getRotation().getDegrees() + 180));
-        }
-        return robotPose;
     }
 }
