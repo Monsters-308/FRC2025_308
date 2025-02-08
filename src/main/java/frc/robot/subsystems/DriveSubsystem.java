@@ -34,10 +34,13 @@ import frc.utils.SwerveModule;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class DriveSubsystem extends SubsystemBase {
     // Create Swerve Modules
@@ -172,6 +175,78 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_usePhotonData = m_swerveTab.add("Photon Vision Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch);
+
+        ShuffleboardLayout linearSysID = m_swerveTab.getLayout("Linear SysID");
+
+        // Create the SysId routine
+        SysIdRoutine linearSysIdRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+            new SysIdRoutine.Mechanism(
+                (voltage) -> {
+                    m_frontLeft.setDriveVoltage(voltage);
+                    m_frontRight.setDriveVoltage(voltage);
+                    m_rearLeft.setDriveVoltage(voltage);
+                    m_rearRight.setDriveVoltage(voltage);
+                },
+                null, // No log consumer, since data is recorded by URCL
+                this
+            )
+        );
+
+        // The methods below return Command objects
+        Command linearQuasistaticForward = linearSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+        Command linearQuasistaticBackward = linearSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+        Command linearDynamicForward = linearSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+        Command linearDynamicBackward = linearSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+
+        Command linearAll = linearQuasistaticForward
+            .andThen(linearDynamicBackward)
+            .andThen(linearDynamicForward)
+            .andThen(linearDynamicBackward)
+            .withName("Run All");
+
+        linearSysID.add(linearQuasistaticForward);
+        linearSysID.add(linearQuasistaticBackward);
+        linearSysID.add(linearDynamicForward);
+        linearSysID.add(linearDynamicBackward);
+
+        linearSysID.add(linearAll);
+
+        ShuffleboardLayout angularSysID = m_swerveTab.getLayout("Angular SysID");
+
+        // Create the SysId routine
+        SysIdRoutine angularSysIdRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+            new SysIdRoutine.Mechanism(
+                (voltage) -> {
+                    m_frontLeft.setDriveVoltage(voltage);
+                    m_frontRight.setDriveVoltage(voltage.times(-1));
+                    m_rearLeft.setDriveVoltage(voltage);
+                    m_rearRight.setDriveVoltage(voltage.times(-1));
+                },
+                null, // No log consumer, since data is recorded by URCL
+                this
+            )
+        );
+
+        // The methods below return Command objects
+        Command angularQuasistaticForward = angularSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+        Command angularQuasistaticBackward = angularSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+        Command angularDynamicForward = angularSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+        Command angularDynamicBackward = angularSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+
+        Command angularAll = angularQuasistaticForward
+            .andThen(angularDynamicBackward)
+            .andThen(angularDynamicForward)
+            .andThen(angularDynamicBackward)
+            .withName("Run All");
+
+        angularSysID.add(angularQuasistaticForward);
+        angularSysID.add(angularQuasistaticBackward);
+        angularSysID.add(angularDynamicForward);
+        angularSysID.add(angularDynamicBackward);
+
+        angularSysID.add(angularAll);
     }
 
     @Override
