@@ -65,6 +65,11 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        InputMappings.registerController("driver", m_driverController);
+        InputMappings.registerController("coDriver", m_coDriverController);
+
+        InputMappings.addChoosers(Shuffleboard.getTab("Input"));
+
         // Configure the button bindings
         configureButtonBindings();
 
@@ -146,7 +151,6 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         //------------------------------------------- Driver buttons -------------------------------------------
-        InputMappings.registerController("driver", m_driverController);
 
         InputMappings.event("driver", "autoAlign")
             .onTrue(new AutoAlign(m_driveSubsystem));
@@ -159,7 +163,6 @@ public class RobotContainer {
             );
 
         //------------------------------------------- coDriver buttons -------------------------------------------
-        InputMappings.registerController("coDriver", m_coDriverController);
 
         InputMappings.event("coDriver", "alageIntake")
             .onTrue(m_algaeIntakeSubsystem.intakeAlgae());
