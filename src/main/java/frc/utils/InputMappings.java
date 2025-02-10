@@ -27,12 +27,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public final class InputMappings {
     /** The {@link JSONParser} used to parse input mappings. */
-    private static JSONParser m_parser = new JSONParser();
+    private static final JSONParser m_parser = new JSONParser();
     
     /** The {@link Map} of IDs and controller objects. */
-    private static Map<String, CommandGenericHID> m_controllers = new HashMap<>();
+    private static final Map<String, CommandGenericHID> m_controllers = new HashMap<>();
     /** The {@link Map} of controller IDs and {@link SendableChooser} objects. */
-    private static Map<String, SendableChooser<String>> m_choosers = new HashMap<>();
+    private static final Map<String, SendableChooser<String>> m_choosers = new HashMap<>();
 
     private InputMappings() {}
 
@@ -61,10 +61,10 @@ public final class InputMappings {
      * @return The {@link Trigger} which will trigger with the button defined in the selected mapping.
      */
     public static Trigger event(String controllerId, String eventId) {
-        CommandGenericHID controller = m_controllers.get(controllerId);
+        final CommandGenericHID controller = m_controllers.get(controllerId);
 
-        File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
-        File controllerDirectoy = mappingsDirectory.toPath().resolve(controllerId).toFile();
+        final File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
+        final File controllerDirectoy = mappingsDirectory.toPath().resolve(controllerId).toFile();
 
         try {
             if (!mappingsDirectory.exists()) {
@@ -79,11 +79,11 @@ public final class InputMappings {
             return new Trigger(() -> false);
         }
 
-        File[] mappings = mappingsDirectory.listFiles();
-        Trigger[] triggers = new Trigger[mappings.length];
+        final File[] mappings = mappingsDirectory.listFiles();
+        final Trigger[] triggers = new Trigger[mappings.length];
 
         for (int i = 0; i < mappings.length; i++) {
-            JSONObject obj;
+            final JSONObject obj;
 
             try {
                 obj = (JSONObject)m_parser.parse(new FileReader(mappings[i]));
@@ -92,13 +92,13 @@ public final class InputMappings {
                 return new Trigger(() -> false);
             }
 
-            JSONObject mappingTriggers = (JSONObject)obj.get("events");
-            JSONObject triggerData = (JSONObject)mappingTriggers.get(eventId);
-            String triggerType = (String)triggerData.get("button");
+            final JSONObject mappingTriggers = (JSONObject)obj.get("events");
+            final JSONObject triggerData = (JSONObject)mappingTriggers.get(eventId);
+            final String triggerType = (String)triggerData.get("button");
 
-            Double threshold = (Double)triggerData.get("threshold");
+            final Double threshold = (Double)triggerData.get("threshold");
 
-            Method triggerMethod;
+            final Method triggerMethod;
 
             try {
                 if (triggerType.equals("leftTrigger") || triggerType.equals("rightTrigger") && threshold != null) {
@@ -120,7 +120,7 @@ public final class InputMappings {
         }
 
         Trigger combinedTrigger = triggers[0].and(() -> { 
-            String selected = getChooser(controllerId).getSelected();
+            final String selected = getChooser(controllerId).getSelected();
             if (selected == null) return false;
             return selected.equals(mappings[0].getAbsolutePath());
         });
@@ -130,7 +130,7 @@ public final class InputMappings {
 
             combinedTrigger = combinedTrigger.or(
                 triggers[i].and(() -> { 
-                    String selected = getChooser(controllerId).getSelected();
+                    final String selected = getChooser(controllerId).getSelected();
                     if (selected == null) return false;
                     return selected.equals(mappings[iFinal].getAbsolutePath());
                 })
@@ -151,8 +151,8 @@ public final class InputMappings {
         if (chooser == null) {
             chooser = new SendableChooser<>();
 
-            File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
-            File controllerDirectoy = mappingsDirectory.toPath().resolve(controllerId).toFile();
+            final File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
+            final File controllerDirectoy = mappingsDirectory.toPath().resolve(controllerId).toFile();
 
             try {
                 if (!mappingsDirectory.exists()) {
@@ -167,7 +167,7 @@ public final class InputMappings {
                 return chooser;
             }
 
-            File[] mappings = mappingsDirectory.listFiles();
+            final File[] mappings = mappingsDirectory.listFiles();
 
             for (File mapping : mappings) {
                 String displayName;
@@ -203,7 +203,7 @@ public final class InputMappings {
      * @param tab The {@link ShuffleboardTab} to add the {@link ShuffleboardLayout} and {@link SendableChooser} objects to.
      */
     public static void addChoosers(ShuffleboardTab tab) {
-        ShuffleboardLayout mappingLayout = tab.getLayout("Mappings");
+        final ShuffleboardLayout mappingLayout = tab.getLayout("Mappings");
 
         for (String key : m_controllers.keySet()) {
             mappingLayout.add(WordUtils.capitalize(key), getChooser(key));
