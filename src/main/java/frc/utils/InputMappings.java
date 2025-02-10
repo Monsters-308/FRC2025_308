@@ -169,7 +169,7 @@ public final class InputMappings {
 
             final File[] mappings = mappingsDirectory.listFiles();
 
-            for (File mapping : mappings) {
+            for (final File mapping : mappings) {
                 String displayName;
 
                 try {
@@ -205,7 +205,7 @@ public final class InputMappings {
     public static void addChoosers(ShuffleboardTab tab) {
         final ShuffleboardLayout mappingLayout = tab.getLayout("Mappings");
 
-        for (String key : m_controllers.keySet()) {
+        for (final String key : m_controllers.keySet()) {
             mappingLayout.add(WordUtils.capitalize(key), getChooser(key));
         }
     }
