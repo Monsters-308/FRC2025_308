@@ -108,15 +108,15 @@ public class Utils {
 
     /**
      * Configures SysID for a {@link Subsystem} on a {@link ShuffleboardLayout}.
-     * @param layout The layout to add the {@link Command} objects to.
-     * @param voltagConsumer Drive the motors being tested at the given voltage.
+     * @param layout The layout to add the {@link Command} buttons to.
+     * @param driveAtVoltage Drive the motors being tested at the given voltage.
      * @param subsystem The {@link Subsystem} that controls the motors.
      */
-    public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Consumer<Voltage> voltagConsumer) {
+    public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Consumer<Voltage> driveAtVoltage) {
         SysIdRoutine sysIdRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(),
             new SysIdRoutine.Mechanism(
-                voltagConsumer,
+                driveAtVoltage,
                 null, // No log consumer, since data is recorded by URCL
                 subsystem
             )
@@ -129,7 +129,7 @@ public class Utils {
         Command dynamicBackward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
 
         Command all = quasistaticForward
-            .andThen(dynamicBackward)
+            .andThen(quasistaticBackward)
             .andThen(dynamicForward)
             .andThen(dynamicBackward)
             .withName("Run All");
@@ -138,7 +138,6 @@ public class Utils {
         layout.add(quasistaticBackward);
         layout.add(dynamicForward);
         layout.add(dynamicBackward);
-
         layout.add(all);
     }
 }
