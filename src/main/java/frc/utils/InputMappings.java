@@ -16,6 +16,8 @@ import org.json.simple.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -193,6 +195,19 @@ public final class InputMappings {
         }
 
         return chooser;
+    }
+
+    /**
+     * Adds every mapping {@link SendableChooser} for every controller
+     * to a {@link ShuffleboardLayout} in the specified {@link ShuffleboardTab}.
+     * @param tab The {@link ShuffleboardTab} to add the {@link ShuffleboardLayout} and {@link SendableChooser} objects to.
+     */
+    public static void addChoosers(ShuffleboardTab tab) {
+        ShuffleboardLayout mappingLayout = tab.getLayout("Mappings");
+
+        for (String key : m_controllers.keySet()) {
+            mappingLayout.add(WordUtils.capitalize(key), getChooser(key));
+        }
     }
 
     /**
