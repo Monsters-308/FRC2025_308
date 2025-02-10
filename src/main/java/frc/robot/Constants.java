@@ -241,6 +241,7 @@ public final class Constants {
             kFieldWidthMeters/2, kFieldHeightMeters/2
         );
 
+        // TODO: add auto align positions
         /** Auto align positions. */
         public static final Pose2d[] kAutoAlignPositions = {};
 
