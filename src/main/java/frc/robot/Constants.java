@@ -37,10 +37,14 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    private Constants() {}
+
     /**
      * Constants that describe physical aspects of the entire robot.
      */
     public static final class RobotConstants {
+        private RobotConstants() {}
+
         /** Mass of the robot in kilograms. */
         public static final double kRobotMassKG = 68;
 
@@ -53,6 +57,8 @@ public final class Constants {
      * how specific hardware is identified in software.
      */
     public static final class DriveConstants {
+        private DriveConstants() {}
+
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
 
@@ -125,6 +131,8 @@ public final class Constants {
      * modules and not to the drive subsystem itself.
      */
     public static final class ModuleConstants {
+        private ModuleConstants() {}
+
         // Calculations required for driving motor conversion factors and feed forward
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kWheelRadiusMeters = kWheelDiameterMeters / 2;
@@ -191,6 +199,8 @@ public final class Constants {
     }
 
     public static final class HeadingConstants {
+        private HeadingConstants() {}
+
         // The gyro should be CCW positive
         public static final boolean kGyroReversed = true;
 
@@ -209,6 +219,8 @@ public final class Constants {
     }
 
     public static final class OIConstants {
+        private OIConstants() {}
+
         public static final int kDriverControllerPort = 0;
         public static final int kCoDriverControllerPort = 1;
         
@@ -217,6 +229,8 @@ public final class Constants {
     }
 
     public static final class FieldConstants {
+        private FieldConstants() {}
+
         /** X axis: long side */
         public static final double kFieldWidthMeters = 16.54175;
         /** Y axis: short side */
@@ -236,6 +250,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
+        private AutoConstants() {}
+
         public static final double kAutoMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
 
@@ -273,11 +289,15 @@ public final class Constants {
     }
 
     public static final class NEOMotorConstants {
+        private NEOMotorConstants() {}
+
         public static final double kFreeSpeedRpm = 5676;
         public static final double kFreeSpeedRps = kFreeSpeedRpm / 60;
     }
 
     public static final class VisionConstants {
+        private VisionConstants() {}
+
         // Pipeline constants
         public static final int kAprilTagPipeline = 0;
         // public static final int kReflectiveTapePipeline = 3;
@@ -292,6 +312,8 @@ public final class Constants {
      * Constants that describe how the robot's elevator should move and access hardware
      */
     public static final class ElevatorConstants {
+        private ElevatorConstants() {}
+
         /** CAN ID of the left elevator motor controller. */
         public static final int kElevatorLeftCanId = 0;
         /** CAN ID of the right elevator motor controller. */
@@ -362,6 +384,8 @@ public final class Constants {
      * Constants that describe the algae intake of the robot.
      */
     public static final class AlgaeIntakeConstants {
+        private AlgaeIntakeConstants() {}
+
         public static final int kIntakeMotorCanId = 0;
 
         public static final boolean kAlgaeIntakeRollerInverted = false;
@@ -383,6 +407,8 @@ public final class Constants {
 
     /** COnstants that describe the coral intake of the robot. */
     public static final class CoralIntakeConstants {
+        private CoralIntakeConstants() {}
+
         /** The CAN ID for the intake motor. */
         public static final int kCoralIntakeMotorCanId = 0;
         /** Whether the coral intake is inverted */
@@ -400,6 +426,8 @@ public final class Constants {
      * Constants that describe coral arm of the robot.
      */
     public static final class ArmConstants {
+        private ArmConstants() {}
+
         /** The CAN ID of the arm motor. */
         public static final int kArmMotorCanId = 0;
         /** The channel ID for the motor encoder. */
@@ -443,6 +471,8 @@ public final class Constants {
      * Constants that describe how the robot should interface with Photon Vision.
      */
     public static final class PhotonConstants {
+        private PhotonConstants() {}
+
         /** The transformation that describes how to move from the center of the robot to the Photon Vision camera. */
         public static final Transform3d kRobotToCamera = new Transform3d(
             new Translation3d(0,0,0),
