@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.drive.AutoAlign;
-import frc.robot.commands.drive.RobotFacePoint;
 import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -41,28 +39,37 @@ import frc.utils.InputMappings;
  */
 public class RobotContainer {
     // The robot's subsystems
+    /** The {@link VisionSubsystem} of the robot. */
     private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+    /** The {@link PhotonSubsystem} of the robot. */
     private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
+    /** The {@link DriveSubsystem} of the robot. */
     private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(
         m_visionSubsystem::getRobotPosition,
         m_visionSubsystem::getTimeStampEstimator,
         m_photonSubsystem::getEstimatedGlobalPose
     );
 
+    /** The {@link ElevatorSubsystem} of the robot. */
     private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+    /** The {@link AlgaeIntakeSubsystem} of the robot. */
     private final AlgaeIntakeSubsystem m_algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
     // Controllers
+    /** The {@link CommandXboxContoller} object that represents the driver controller. */
     final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+    /** The {@link CommandXboxContoller} object that represents the coDriver controller. */
     final CommandXboxController m_coDriverController = new CommandXboxController(OIConstants.kCoDriverControllerPort);
 
     // Sendable choosers to dictate what the robot does during auton
+    /** The {@link SendableChooser} send to Elastic for the first auton path to follow. */
     SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
+    /** The {@link SendableChooser} send to Elastic for the second auton path to follow. */
     SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
 
 
     /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
+     * The container for the robot. Contains <code>Subsystem</code> objects, OI devices, and <code>Command</code> objects.
      */
     public RobotContainer() {
         InputMappings.registerController("driver", m_driverController);
@@ -87,13 +94,6 @@ public class RobotContainer {
                     -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
                     true, true),
                 m_driveSubsystem));
-
-            
-        // "registerCommand" lets pathplanner identify our commands so we can use them in pathplanner autons
-        // Here's RobotFacePoint as an example:
-        NamedCommands.registerCommand("FacePoint",
-            new RobotFacePoint(m_visionSubsystem, m_driveSubsystem, () -> 0, () -> 0, FieldConstants.kRandomPosition, false)
-        );
         
         // Adding options to the sendable choosers
         applyCommands(m_autonFirstAction);
@@ -147,7 +147,7 @@ public class RobotContainer {
     }
 
     /**
-     * Use this method to define your button->command mappings.
+     * Use this method to define your button -> <code>Command</code> mappings.
      */
     private void configureButtonBindings() {
         //------------------------------------------- Driver buttons -------------------------------------------
@@ -193,7 +193,6 @@ public class RobotContainer {
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {

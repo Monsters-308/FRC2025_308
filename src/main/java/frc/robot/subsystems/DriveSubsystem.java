@@ -25,7 +25,7 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -39,59 +39,73 @@ import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * Subsystem that controls all of the {@link SwerveModule} objects, along with the pathplanner setup, the gyro,
+     * the odometry, and the use of odometry and vision data to estimate the robot's position.
+ */
 public class DriveSubsystem extends SubsystemBase {
     // Create Swerve Modules
+
+    /** The {@link SwerveModule} for the front left wheel. */
     private final SwerveModule m_frontLeft = new SwerveModule(
         DriveConstants.kFrontLeftDrivingCanId,
         DriveConstants.kFrontLeftTurningCanId,
         DriveConstants.KFrontLeftTurningEncoderId,
         ModuleConstants.kLeftFrontInverted);
 
+    /** The {@link SwerveModule} for the front right wheel. */
     private final SwerveModule m_frontRight = new SwerveModule(
         DriveConstants.kFrontRightDrivingCanId,
         DriveConstants.kFrontRightTurningCanId,
         DriveConstants.KFrontRightTurningEncoderId,
         ModuleConstants.kRightFrontInverted);
 
+    /** The {@link SwerveModule} for the rear left wheel. */
     private final SwerveModule m_rearLeft = new SwerveModule(
         DriveConstants.kRearLeftDrivingCanId,
         DriveConstants.kRearLeftTurningCanId,
         DriveConstants.KRearLeftTurningEncoderId,
         ModuleConstants.kLeftRearInverted);
 
+    /** The {@link SwerveModule} for the rear right wheel. */
     private final SwerveModule m_rearRight = new SwerveModule(
         DriveConstants.kRearRightDrivingCanId,
         DriveConstants.kRearRightTurningCanId,
         DriveConstants.KRearRightTurningEncoderId,
         ModuleConstants.kRightRearInverted);
 
-    // The gyro sensor
+    /** An {@link AHRS} object that represents the robot gyro. */
     private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
     
     // Note: the NavX takes a second to configure before it can be used. I have seen some teams create the gyro in a separate thread, which might be worth considering.
 
-    // These values are for tracking slew rate, which lets the robot accelerate and slow down gradually
+    /** The previous time for slew rate calculation. */
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+    /** The previous {@link ChassisSpeeds} target for slew rate calculation. */
     private ChassisSpeeds m_prevTarget = new ChassisSpeeds();
 
-    // Field widget for displaying odometry
+    /** The Field widget for displaying odometry. */
     private final Field2d m_field = new Field2d();
 
     // Shuffleboard objects
+
+    /** A {@link ShuffleboardTab} for swerve drive. */
     private final ShuffleboardTab m_swerveTab = Shuffleboard.getTab("Swerve");
-    // Add alliance widget (it's just a boolean widget but I manually change the color)
+    /** A widget the gives the current alliance color. */
     private final SimpleWidget m_allianceWidget = m_swerveTab.add("Alliance", true); 
-    // Widget for toggling limelight data
+    /** {@link SimpleWidget} for toggling limelight data. */
     private final SimpleWidget m_useLimelightData;
-    // Widget for toggling photon data
+    /** {@link SimpleWidget} for toggling Photon Vision data. */
     private final SimpleWidget m_usePhotonData;
 
-    // Suppliers for pose estimation with vision data
+    // TODO: remove original limelight
     private final Supplier<Pose2d> m_visionPose;
     private final DoubleSupplier m_visionTimestamp;
+
+    /** A {@link Supplier} of optional {@link EstimatedRobotPose} objects from Photon Vision */
     private final Supplier<Optional<EstimatedRobotPose>> m_photonEstimation;
 
-    // Swerve pose estimator
+    /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
         DriveConstants.kDriveKinematics,
         Rotation2d.fromDegrees(getGyroAngle()),
@@ -102,21 +116,21 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         },
         new Pose2d(),
-        /**
+        /*
          * VecBuilder -> Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
          * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
         */
         VecBuilder.fill(0.1, 0.1, .05),
-        /**
+        /*
          * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
          * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
         */
         VecBuilder.fill(2, 2, 3)
     );
 
-    /** 
-     * This controls all of the swerve modules, along with the pathplanner setup, the gyro,
-     * the odometry, and the use of odometry and vision data to estimate the robot's pose.
+    /**
+     * Constrcuts a {@link DriveSubsystem} to control all of the {@link SwerveModule} objects, along with the pathplanner setup, the gyro,
+     * the odometry, and the use of odometry and vision data to estimate the robot's position.
      */
     public DriveSubsystem(Supplier<Pose2d> visionPosition, DoubleSupplier visionTimestamp, Supplier<Optional<EstimatedRobotPose>> photonEstimation) {
         m_visionPose = visionPosition;
@@ -161,8 +175,8 @@ public class DriveSubsystem extends SubsystemBase {
             (Pose2d newPose) -> resetOdometry(FieldUtils.flipRed(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            AutoConstants.kPathPlannerController, // Path planner controller for holonomic drive.
-            AutoConstants.kPathPlannerRobotConfig, // Path planner config for robot constants
+            AutonConstants.kPathPlannerController, // Path planner controller for holonomic drive.
+            AutonConstants.kPathPlannerRobotConfig, // Path planner config for robot constants
             FieldUtils::isRedAlliance, // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
             this // Reference to this subsystem to set requirements
         );
@@ -249,9 +263,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Returns the currently-estimated pose of the robot.
-     *
-     * @return The pose.
+     * Returns the currently-estimated positon of the robot.
+     * @return The position as a {@link Pose2d} object.
      */
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
@@ -259,8 +272,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * Resets the odometry to the specified pose. Note: this also resets the angle of the robot.
-     *
-     * @param pose The pose to which to set the odometry.
+     * @param pose The pose to which to set the odometry as a {@link Pose2d} object.
      */
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
@@ -276,7 +288,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * Method to drive the robot using joystick info.
-     *
      * @param xSpeed Speed of the robot in the x direction (forward).
      * @param ySpeed Speed of the robot in the y direction (sideways).
      * @param rot Angular rate of the robot.
@@ -336,9 +347,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets the swerve ModuleStates.
-     *
-     * @param desiredStates The desired SwerveModule states.
+     * Sets {@link SwerveModuleState} objects as the desired states.
+     * @param desiredStates The desired {@link SwerveModule} states.
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -349,7 +359,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearRight.setDesiredState(desiredStates[3]);
     }
 
-    /** Resets the drive encoders to currently read a position of 0. */
+    /**
+     * Resets the drive encoders to currently read a position of 0.
+     */
     public void resetEncoders() {
         m_frontLeft.resetEncoders();
         m_rearLeft.resetEncoders();
@@ -357,14 +369,15 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearRight.resetEncoders();
     }
 
-    /** Zeroes the heading of the robot. */
+    /**
+     * Zeroes the heading of the robot.
+     */
     public void zeroHeading() {
         setHeading(0);
     }
 
     /**
      * Sets the robot's heading to a specific angle.
-     * 
      * @param angle The angle (in degrees) to set the robot's heading to.
      */
     public void setHeading(double angle) {
@@ -385,8 +398,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * Returns the heading of the robot.
-     *
-     * @return the robot's heading in degrees, from -180 to 180
+     * @return The robot's heading in degrees, from -180 to 180
      */
     public double getHeading() {
         return Utils.angleConstrain(
@@ -404,7 +416,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Returns the pitch of the ROBOT (not necessarily the gyro).
+     * Returns the pitch of the <i>robot</i> (not necessarily the gyro).
      * @return The pitch of the robot in degrees from -180 to 180.
      */
     public double getRobotPitch() {
@@ -412,7 +424,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Returns the roll of the ROBOT (not necessarily the gyro).
+     * Returns the roll of the <i>robot</i> (not necessarily the gyro).
      * @return The roll of the robot in degrees from -180 to 180.
      */
     public double getRobotRoll() {
@@ -421,8 +433,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * Returns the turn rate of the robot.
-     *
-     * @return The turn rate of the robot, in degrees per second
+     * @return The turn rate of the robot, in degrees per second.
      */
     public double getTurnRate() {
         return m_gyro.getRate() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
@@ -430,20 +441,18 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * Used by pathplanner to figure out how quickly the robot is moving.
-     * 
-     * @return The robot-relative translational speeds
+     * @return The robot-relative translational speeds as a {@link ChassisSpeeds} object.
      */
-    private ChassisSpeeds getRobotRelativeSpeeds(){
+    private ChassisSpeeds getRobotRelativeSpeeds() {
         // Uses forward kinematics to calculate the robot's speed given the states of the swerve modules.
         return DriveConstants.kDriveKinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState());
     }
 
     /**
-     * Used by pathplanner to control the robot.
-     * 
-     * @param speeds The velocities to move the chassis at.
+     * Used by PathPlanner to control the robot.
+     * @param speeds The velocities to move the chassis at as a {@link ChassisSpeeds} object.
      */
-    private void driveRobotRelative(ChassisSpeeds speeds){
+    private void driveRobotRelative(ChassisSpeeds speeds) {
         // This takes the velocities and converts them into precentages (-1 to 1)
         drive((speeds.vxMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond), 
             (speeds.vyMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond), 

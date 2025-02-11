@@ -9,12 +9,15 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.Constants.CoralIntakeConstants;
 
 /**
- * The subsystem that controls the robot's coral intake.
+ * The subsystem that controls the coral intake.
  */
 public class CoralIntakeSubsystem {
     /** The motor controller for the coral intake motor. */
     private final SparkMax m_coralIntakeMotor = new SparkMax(CoralIntakeConstants.kCoralIntakeMotorCanId, MotorType.kBrushless);
 
+    /**
+     * Constructs a {@link CoralIntakeSubsystem} that controls the coral intake.
+     */
     public CoralIntakeSubsystem() {
         SparkMaxConfig coralIntakeMotorConf = new SparkMaxConfig();
         

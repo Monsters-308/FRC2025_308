@@ -107,10 +107,13 @@ public class Utils {
     }
 
     /**
-     * Configures SysID for a {@link Subsystem} on a {@link ShuffleboardLayout}.
-     * @param layout The layout to add the {@link Command} buttons to.
+     * Configures SysID for a <code>Subsystem</code> on a <code>ShuffleboardLayout</code>.
+     * @param layout The layout to add the <code>Command</code> buttons to.
      * @param driveAtVoltage Drive the motors being tested at the given voltage.
-     * @param subsystem The {@link Subsystem} that controls the motors.
+     * @param subsystem The <code>Subsystem</code> that controls the motors.
+     * @see Subsystem
+     * @see ShuffleboardLayout
+     * @see Command
      */
     public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Consumer<Voltage> driveAtVoltage) {
         SysIdRoutine sysIdRoutine = new SysIdRoutine(

@@ -35,7 +35,7 @@ public class ArmSubsystem extends SubsystemBase {
         ArmConstants.kArmDutyCyclePeriod
     );
 
-    /** The PID controller for the arm motor. */
+    /** The {@link ProfiledPIDController} for the arm motor. */
     private final ProfiledPIDController m_angleController = new ProfiledPIDController(
         ArmConstants.KArmP,
         ArmConstants.KArmI,
@@ -46,7 +46,7 @@ public class ArmSubsystem extends SubsystemBase {
         )
     );
 
-    /** The feedforward for the arm motor. */
+    /** The {@link ArmFeedforward} for the arm motor. */
     private final ArmFeedforward m_armFeedforward = new ArmFeedforward(
         ArmConstants.kArmS,
         ArmConstants.kArmG,
@@ -57,11 +57,11 @@ public class ArmSubsystem extends SubsystemBase {
     /** Whether to use PID or not. */
     private boolean m_isPIDMode = true;
 
-    /** A shuffleboard tab to write arm properties to the dashboard. */
+    /** A {@link SuffleboardTab} to write arm properties to the dashboard. */
     private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
     /**
-     * Constructs an arm subsystem that controls the coral arm of the robot.
+     * Constructs an {@link ArmSubsystem} that controls the coral arm of the robot.
      */
     public ArmSubsystem() {
         SparkMaxConfig armMotorConf = new SparkMaxConfig();
@@ -96,7 +96,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Resets and sets the goal of the angle PID controller.
-     * @param angle The angle to set.
+     * @param angle The angle to set as a {@link Rotation2d}.
      */
     public void setAngle(Rotation2d angle) {
         m_isPIDMode = true;
@@ -112,7 +112,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Creates a command the moves the arm to the specified angle.
-     * @param angle The angle the arm should move to.
+     * @param angle The angle the arm should move to as a {@link Rotation2d}.
      * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the angle.
      * @return The runnable command.
      */
@@ -131,7 +131,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Gets the current velocity of the arm.
-     * @return The velocity of the arm as a rotation 2d object.
+     * @return The velocity of the arm as a {@link Rotation2d} object.
      */
     public Rotation2d getVelocity() {
         return m_armEncoder.getRate();

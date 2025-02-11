@@ -14,21 +14,21 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
+ * each mode, as described in the {@link TimedRobot} documentation. If you change the name of this class or
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
+    /** The {@link Command} that follows the selected auton path. */
     private Command m_autonomousCommand;
 
+    /** The {@link RobotContainer} for configuring elements of the robot. */
     private RobotContainer m_robotContainer;
 
     /**
-     * This function is run when the robot is first started up and should be used for any
-     * initialization code.
+     * Constructs a new {@link Robot}.
      */
-    @Override
-    public void robotInit() {
+    public Robot() {
         // Instantiate our RobotContainer. This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
@@ -42,13 +42,6 @@ public class Robot extends TimedRobot {
         URCL.start();
     }
 
-    /**
-     * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-     * that you want ran during disabled, autonomous, teleoperated and test.
-     *
-     * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-     * SmartDashboard integrated updating.
-     */
     @Override
     public void robotPeriodic() {
         // Runs the Scheduler. This is responsible for polling buttons, adding newly-scheduled
@@ -58,14 +51,12 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
     }
 
-    /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {}
 
     @Override
     public void disabledPeriodic() {}
 
-    /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -76,7 +67,6 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {}
 
@@ -91,7 +81,6 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {}
 
@@ -101,7 +90,6 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().cancelAll();
     }
 
-    /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {}
 }

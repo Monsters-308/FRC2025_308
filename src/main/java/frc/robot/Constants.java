@@ -6,10 +6,13 @@ package frc.robot;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.controllers.PathFollowingController;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -23,6 +26,13 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.CoralIntakeSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.PhotonSubsystem;
+import frc.utils.SwerveModule;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -48,13 +58,12 @@ public final class Constants {
         /** Mass of the robot in kilograms. */
         public static final double kRobotMassKG = 68;
 
-        /** Robot's moment of inertia. */
+        /** Moment of inertia of the robot. */
         public static final double kRobotMOI = 20;
     }
 
     /**
-     * Constants that describe how the robot should move and
-     * how specific hardware is identified in software.
+     * Describe how the {@link DriveSubsystem} should move the robot.
      */
     public static final class DriveConstants {
         private DriveConstants() {}
@@ -82,9 +91,7 @@ public final class Constants {
         /** Distance between front and back wheels on robot. */
         public static final double kWheelBase = Units.inchesToMeters(23.125);
 
-        /** A kinematics object that calculates how the robot should move
-         * using the positions of the modules on the robot.
-         */
+        /** A kinematics object that calculates how the robot should move using the positions of the modules on the robot. */
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -94,140 +101,200 @@ public final class Constants {
 
         // SPARK MAX CAN IDs
 
-        /** CAN ID of the front left driving motor controller. */
+        /** CAN ID of the front left driving {@link SparkMax}. */
         public static final int kFrontLeftDrivingCanId = 8; 
-
-        /** CAN ID of the rear left driving motor controller. */
+        /** CAN ID of the rear left driving {@link SparkMax}. */
         public static final int kRearLeftDrivingCanId = 6;
-
-        /** CAN ID of the front right driving motor controller. */
+        /** CAN ID of the front right driving {@link SparkMax}. */
         public static final int kFrontRightDrivingCanId = 2;
-
-        /** CAN ID of the rear lefrightt driving motor controller. */
+        /** CAN ID of the rear lefrightt driving {@link SparkMax}. */
         public static final int kRearRightDrivingCanId = 4;
 
-
-        /** CAN ID of the front left turning motor controller. */
+        /** CAN ID of the front left turning {@link SparkMax}. */
         public static final int kFrontLeftTurningCanId = 7;
-
-        /** CAN ID of the rear left turning motor controller. */
+        /** CAN ID of the rear left turning {@link SparkMax}. */
         public static final int kRearLeftTurningCanId = 5;
-
-        /** CAN ID of the front right turning motor controller. */
+        /** CAN ID of the front right turning {@link SparkMax}. */
         public static final int kFrontRightTurningCanId = 1;
-
-        /** CAN ID of the rear right turning motor controller. */
+        /** CAN ID of the rear right turning {@link SparkMax}. */
         public static final int kRearRightTurningCanId = 3;
 
         // Encoder CAN Ids
+
+        /** CAN ID of the front left turning {@link CANcoder}. */
         public static final int KFrontLeftTurningEncoderId = 14;
+        /** CAN ID of the front right turning {@link CANcoder}. */
         public static final int KFrontRightTurningEncoderId = 12;
+        /** CAN ID of the rear left turning {@link CANcoder}. */
         public static final int KRearLeftTurningEncoderId = 13;
+        /** CAN ID of the rear right turning {@link CANcoder}. */
         public static final int KRearRightTurningEncoderId = 11;
     }
 
     /**
-     * Constants related to the individual swerve
-     * modules and not to the drive subsystem itself.
+     * Constants related to the individual {@link SwerveModule} objects and not to the drive subsystem itself.
      */
     public static final class ModuleConstants {
         private ModuleConstants() {}
 
-        // Calculations required for driving motor conversion factors and feed forward
+        // Calculations required for driving motor conversion factors and feedforward
+
+        /** The diameter of a wheel in meter. */
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
+        /** The radius of the wheel in meters. */
         public static final double kWheelRadiusMeters = kWheelDiameterMeters / 2;
+        /** The circumference of the wheel in meters. */
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
+        /** The {@link DCMotor} that represents a module. */
         public static final DCMotor kMotorGearboxConfig = DCMotor.getNEO(1);
 
-        // The coefficient of friction between the drive wheel and the carpet
+        /** The coefficient of friction between the drive wheel and the carpet */
         public static final double kWheelCOF = 1;
 
         // The L2 MK4 and MK4i modules have a gear ratio of 6.75:1 on the drive wheels.
+
+        /** How much gear ratio reduces the amount of wheel revolutions relative to the amount of motor revolutions. */
         public static final double kDrivingMotorReduction = 6.75;
+        /** The maximum amount of speed a module can drive when running at full power. */
         public static final double kDriveWheelFreeSpeedMetersPerSecond = (NEOMotorConstants.kFreeSpeedRps * kWheelCircumferenceMeters)
-                / kDrivingMotorReduction;
+            / kDrivingMotorReduction;
 
+        /** Converts motor revolutions to meters traveled. */
         public static final double kDrivingEncoderPositionFactor = kWheelCircumferenceMeters
-                / kDrivingMotorReduction; // meters
+            / kDrivingMotorReduction; // meters
+        /** Converts motor revolutions per minute to meters per second. */
         public static final double kDrivingEncoderVelocityFactor = (kWheelCircumferenceMeters
-                / kDrivingMotorReduction) / 60.0; // meters per second
+            / kDrivingMotorReduction) / 60.0; // meters per second
 
-        // Position factor for the turning encoders on the NEOs 
+        /** How much gear ratio reduces the amount of wheel revolutions relative to the amount of motor revolutions. */
         public static final double kTurningMotorReduction = 150.0 / 7;
 
+        /** Converts motor revolutions to angle in radians. */
         public static final double kTurningEncoderPositionFactor = (2 * Math.PI) / kTurningMotorReduction; // radians
+        /** Converts motor revolutions per minute to radians per second. */
         public static final double kTurningEncoderVelocityFactor = kTurningEncoderPositionFactor / 60.0; // radians per second
 
+        /** Smallest angle in radians of turning encoder for value wrapping. */
         public static final double kTurningEncoderPositionPIDMinInput = -Math.PI; // radians
+        /** Largest angle in radians of turning encoder for value wrapping. */
         public static final double kTurningEncoderPositionPIDMaxInput = Math.PI; // radians
 
+        /** The P for the driving PID. */
         public static final double kDrivingP = 0.04;
+        /** The I for the driving PID. */
         public static final double kDrivingI = 0;
+        /** The D for the driving PID. */
         public static final double kDrivingD = 0;
+        /** The feedforward for the REV {@link ClosedLoopController}. */
         public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedMetersPerSecond; 
+        /** Minimum output of the driving PID. */
         public static final double kDrivingMinOutput = -1;
+        /** maximum output of the driving PID. */
         public static final double kDrivingMaxOutput = 1;
 
+        /** The P for the turning PID. */
         public static final double kTurningP = 1;
+        /** The I for the turning PID. */
         public static final double kTurningI = 0;
+        /** The D for the turning PID. */
         public static final double kTurningD = 0;
+        /** The feedforward for the REV {@link ClosedLoopController}. */
         public static final double kTurningFF = 0;
+        /** Minimum output of the turning PID. */
         public static final double kTurningMinOutput = -1;
+        /** Minimum output of the turning PID. */
         public static final double kTurningMaxOutput = 1;
 
         // Inversion of drive motors
         // This will vary depending on how your wheels are oriented when you zero them.
+
+        /** Whether or not to invert the front left drive {@link SparkMax}. */
         public static final boolean kLeftFrontInverted = true;
+        /** Whether or not to invert the rear left drive {@link SparkMax}. */
         public static final boolean kLeftRearInverted = true;
+        /** Whether or not to invert the front right drive {@link SparkMax}. */
         public static final boolean kRightFrontInverted = true;
+        /** Whether or not to invert the rear right drive {@link SparkMax}. */
         public static final boolean kRightRearInverted = true;
 
-        // Inversion of turning motors
-        // Unless oriented differently, all of your turning motors should spin in the same direction.
+        /** 
+         * Whether or not to invert the turning {@link SparkMax} controllers.
+         * Unless oriented differently, all of your turning motors should spin in the same direction.
+         */
         public static final boolean kTurningMotorsInverted = true;
 
-        // Inversion of turning ENCODERS (not motors).
-        // Unless oriented differently, all of your turning encoders should spin in the same direction.
+        /** 
+         * Whether or not to invert the turning {@link CANcoder} encoders.
+         * Unless oriented differently, all of your turning encoders should read values with the same sign.
+         */
         public static final boolean kTurningEncoderInverted = false;
 
+        /** The {@link IdleMode} of the driving motors. */
         public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
+        /** The {@link IdleMode} of the turnings motors. */
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
+        /** The current limit of the driving motors in amps. */
         public static final int kDrivingMotorCurrentLimit = 35; // amps
+        /** The current limit of the turning motors in amps. */
         public static final int kTurningMotorCurrentLimit = 35; // amps
     }
 
+    /**
+     * Describe how the robot should move to certain position and angle setpoints.
+     */
     public static final class HeadingConstants {
         private HeadingConstants() {}
 
-        // The gyro should be CCW positive
+        /** Whether or not to reverse the gyro to make it CCW positive. */
         public static final boolean kGyroReversed = true;
 
         // This is used for making the robot face a certain direction
+
+        /** The P for the PID making the robot rotate to certain angles. */
         public static final double kHeadingP = 0.025;
+        /** The I for the PID making the robot rotate to certain angles. */
         public static final double kHeadingI = 0;
+        /** The D for the PID making the robot rotate to certain angles. */
         public static final double kHeadingD = 0.001;
+        /** The maximum output of the PID making the robot rotate to certain angles. */
         public static final double kHeadingMaxOutput = 0.8; // Percent
+        /** The acceptable error in angle to the desired angle. */
         public static final double kHeadingTolerance = 1; // Degrees
 
+        /** The P for the PID making the robot move to certain positions. */
         public static final double kTranslationP = 5;
+        /** The I for the PID making the robot move to certain positions. */
         public static final double kTranslationI = 0;
+        /** The D for the PID making the robot move to certain positions. */
         public static final double kTranslationD = 0;
+        /** The maximum output of the PID making the robot move to certain positions. */
         public static final double kTranslationMaxOutput = 1; // Percent 
+        /** The acceptable error in position to the desired position. */
         public static final double kTranslationTolerance = Units.inchesToMeters(3); // Meters
     }
 
+    /**
+     * Define ports and deadbands for the different controllers.
+     */
     public static final class OIConstants {
         private OIConstants() {}
 
+        /** The port of the driver controller. */
         public static final int kDriverControllerPort = 0;
+        /** The port of the coDriver controller. */
         public static final int kCoDriverControllerPort = 1;
         
+        /** The deadband of the driver controller. */
         public static final double kJoystickDeadband = 0.05;
+        /** The deadband of the coDriver controller. */
         public static final double kTriggerDeadband = 0.5;
     }
 
+    /**
+     * Describe information about the game field.
+     */
     public static final class FieldConstants {
         private FieldConstants() {}
 
@@ -235,15 +302,10 @@ public final class Constants {
         public static final double kFieldWidthMeters = 17.548225;
         /** Y axis: short side */
         public static final double kFieldHeightMeters = 8.0518;
-        
-        // Translation2d can be used to store the coordinates of important positions on the field:
-        public static final Translation2d kRandomPosition = new Translation2d(
-            kFieldWidthMeters/2, kFieldHeightMeters/2
-        );
 
         /** Auto align positions. */
         public static final Pose2d[] kAutoAlignPositions = {
-            /* Coral positions */
+            /* Coral human player station positions */
             // Column 1
             new Pose2d(3.198, 4.191, new Rotation2d()),
             new Pose2d(3.198, 3.86, new Rotation2d()),
@@ -263,38 +325,47 @@ public final class Constants {
             new Pose2d(5.8, 4.191, Rotation2d.fromDegrees(180)),
             new Pose2d(5.8, 3.86, Rotation2d.fromDegrees(180)),
 
-            // Processor
+            // Processor position
             new Pose2d(5.985, 0.51, Rotation2d.fromDegrees(90)),
 
         };
 
-        /** Reef position for orbit controls. */
+        /** Reef position for orbital controls. */
         public static final Translation2d kReefPosition = new Translation2d(4.49, 4.0255);
     }
 
-    public static final class AutoConstants {
-        private AutoConstants() {}
+    /**
+     * Define how PathPlanner should move the robot during the autonomous period.
+     */
+    public static final class AutonConstants {
+        private AutonConstants() {}
 
+        /** The maximum speed PathPlanner will drive the robot in meters per second. */
         public static final double kAutoMaxSpeedMetersPerSecond = 3;
+        /** The maximum speed PathPlanner will turn the robot wheels in radians per second. */
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
 
+        /** A {@link PIDConstants} object that describes the PID constants PathPlanner should use move the robot. */
         public static final PIDConstants kAutoTranslationPID = new PIDConstants(
             HeadingConstants.kTranslationP, 
             HeadingConstants.kTranslationI, 
             HeadingConstants.kTranslationD
         );
 
+        /** A {@link PIDConstants} object that describes the PID constants PathPlanner should use to turn the robot wheels. */
         public static final PIDConstants kAutoAngularPID = new PIDConstants(
             5, 
             0, 
             0
         );
 
+        /** A {@link PathFollowingController} that tells PathPlanner how to follow paths. */
         public static final PPHolonomicDriveController kPathPlannerController = new PPHolonomicDriveController( 
             kAutoTranslationPID, // Translation PID constants
             kAutoAngularPID // Rotation PID constants
         );
 
+        /** A {@link RobotConfig} that describes physical information about the robot for PathPlanner. */
         public static final RobotConfig kPathPlannerRobotConfig = new RobotConfig(
             RobotConstants.kRobotMassKG, // robot mass
             RobotConstants.kRobotMOI, // robot moment of inertia
@@ -311,10 +382,13 @@ public final class Constants {
         );
     }
 
+    /** Describes physical constraints of the NEO motors. */
     public static final class NEOMotorConstants {
         private NEOMotorConstants() {}
 
+        /** The maximum speed the motors go run at in revolutions per minute. */
         public static final double kFreeSpeedRpm = 5676;
+        /** The maximum speed the motors go run at in revolutions per second. */
         public static final double kFreeSpeedRps = kFreeSpeedRpm / 60;
     }
 
@@ -332,7 +406,7 @@ public final class Constants {
     }
 
     /**
-     * Constants that describe how the robot's elevator should move and access hardware
+     * Describe how the {@link ElevatorSubsystem} should move the elevator.
      */
     public static final class ElevatorConstants {
         private ElevatorConstants() {}
@@ -404,31 +478,43 @@ public final class Constants {
     }
 
     /**
-     * Constants that describe the algae intake of the robot.
+     * Describe how the {@link AlgaeIntakeSubsystem} should intake and shoot algae.
      */
     public static final class AlgaeIntakeConstants {
         private AlgaeIntakeConstants() {}
 
-        public static final int kIntakeMotorCanId = 0;
+        /** CAN ID of the algae intake roller motor. */
+        public static final int kAlgaeIntakeRollerMotorCanId = 0;
+        /** CAN ID of the algae intake arm motor. */
+        public static final int kAlgaeIntakeArmMotorCanId = 1;
 
+        /** Whether or not to invert the algae intake roller motor. */
         public static final boolean kAlgaeIntakeRollerInverted = false;
-
+        /** Whether or not to invert the algae intake arm motor. */
         public static final boolean kAlgaeIntakeArmInverted = false;
 
-        public static final IdleMode kAlgaeIntakeIdleMode = IdleMode.kBrake;
+        /** The {@link IdleMode} of alage intake roller. */
+        public static final IdleMode kAlgaeIntakeRollerIdleMode = IdleMode.kBrake;
+        /** The {@link IdleMode} of alage intake arm. */
+        public static final IdleMode kAlgaeIntakeArmIdleMode = IdleMode.kBrake;
 
-        public static final int kSmartCurrentLimit = 35;
+        /** The current limit of the alage intake roller in amps. */
+        public static final int kAlageIntakeRollerSmartCurrentLimit = 35;
+        /** The current limit of the alage intake arm in amps. */
+        public static final int kAlageIntakeArmSmartCurrentLimit = 35;
         
+        /** The speed the roller should be run at when intaking and shooting. */
         public static final double kRollerSpeed = 0.1;
 
+        /** The speed the arm should be run at when movin in and out. */
         public static final double kArmSpeed = 0.1;
-
+        /** How long the arm motor should be run until it is garunteed to be in the correct position. */
         public static final double kArmTimeout = 1;
-        
+        /** The acceptable error for what is considered fully in or out. */
         public static final double kArmErrorThreshold = 0.05;
     }
 
-    /** COnstants that describe the coral intake of the robot. */
+    /** Describe how the {@link CoralIntakeSubsystem} should intake and shoot coral. */
     public static final class CoralIntakeConstants {
         private CoralIntakeConstants() {}
 
@@ -441,12 +527,12 @@ public final class Constants {
         /** The current limit for the coral intake motor. */
         public static final int kSmartCurrentLimit = 35;
         
-        /** The speed of the coral intake. */
+        /** The speed the coral intake should be run at when intaking or shooting. */
         public static final double kCoralIntakeSpeed = 0.1;
     }
 
     /**
-     * Constants that describe coral arm of the robot.
+     * Describe how the {@link ArmSubsystem} should rotate the coral arm.
      */
     public static final class ArmConstants {
         private ArmConstants() {}
@@ -491,7 +577,7 @@ public final class Constants {
     }
 
     /**
-     * Constants that describe how the robot should interface with Photon Vision.
+     * Describe how the {@link PhotonSubsystem} should interface with Photon Vision.
      */
     public static final class PhotonConstants {
         private PhotonConstants() {}

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class ThroughBoreEncoder extends DutyCycleEncoder {
     /** Whether the encoder is inverted. */
     private boolean m_inverted;
-    /** The offset to apply to the returned angle values in degrees. */
+    /** The offset to apply to the returned angle values as a {@link Rotation2d} object. */
     private Rotation2d m_angleOffset;
 
     /** The last known measurement. */
@@ -20,11 +20,12 @@ public class ThroughBoreEncoder extends DutyCycleEncoder {
     private double m_lastTime;
 
     /**
-     * A duty cycle encoder specifically for the rev through bore encoder.
+     * A <code>DutyCycleEncoder</code> specifically for the rev through bore encoder.
      * @param channel The channel on the roborio (where the through bore encoder is plugged into on the roborio 1-10).
-     * @param angleOffset The offset to apply to the returned angle values.
+     * @param angleOffset The offset to apply to the returned angle values as a {@link Rotation2d} object.
      * @param inverted Whether or not to negate the encoder values.
      * @param period The period of the duty cycle.
+     * @see DutyCycleEncoder
      */
     public ThroughBoreEncoder(int channel, boolean inverted, Rotation2d angleOffset, int period) {
         super(channel);
@@ -66,8 +67,9 @@ public class ThroughBoreEncoder extends DutyCycleEncoder {
     }
 
     /**
-     * Gets the current value of the encoder as a Rotation2D object.
-     * @return The rotation object.
+     * Gets the current value of the encoder as a <code>Rotation2d</code> object.
+     * @return The <code>Rotation2d</code> object.
+     * @see Rotation2d
      */
     public Rotation2d getRotation2D() {
         return Rotation2d.fromDegrees(getDegrees());
@@ -75,7 +77,8 @@ public class ThroughBoreEncoder extends DutyCycleEncoder {
 
     /**
      * Gets the rate of change since the last measurement.
-     * @return The rate of change in rotations per second.
+     * @return The rate of change in rotations per second as a <code>Rotation2d</code> object.
+     * @see Rotation2d
      */
     public Rotation2d getRate() {
         return Rotation2d.fromRotations(

@@ -4,7 +4,6 @@
 
 package frc.utils;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -27,37 +26,50 @@ import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Constants.ModuleConstants;
 
+/**
+ * Utility class for managing the drive and turning <code>SparkMax</code> motor controllers for each wheel.
+ * @see SparkMax
+ */
 public class SwerveModule {
+    /** The driving {@link SparkMax} motor controller. */
     private final SparkMax m_drivingSparkMax;
+    /** The turning {@link SparkMax} motor controller. */
     private final SparkMax m_turningSparkMax;
 
+    /** The drive {@link RelativeEncoder} for reading position and velocity data. */
     private final RelativeEncoder m_drivingEncoder;
+    /** The turning {@link RelativeEncoder} used to forward values from {@link SwerveModule#m_turningAbsoluteEncoder} to the {@link SparkMax}. */
     private final RelativeEncoder m_turningEncoder;
+    /** The turning {@link CANcoder} used for reading position and velocity data. These values are forwared into {@link SwerveModule#m_turningEncoder} */
     private final CANcoder m_turningAbsoluteEncoder;
 
-    private  double m_desiredAngle = 0;
+    /** The current desired angle for the wheel. */
+    private double m_desiredAngle = 0;
 
+    /** The drive {@link SparkClosedLoopController} for managing PID on the {@link SwerveModule#m_drivingSparkMax}. */
     private final SparkClosedLoopController m_drivingPIDController;
+    /** The turning {@link SparkClosedLoopController} for managing PID on the {@link SwerveModule#m_turningSparkMax}. */
     private final SparkClosedLoopController m_turningPIDController;
 
-    private final PIDController m_turningPID = new PIDController(
-        ModuleConstants.kTurningP,
-        ModuleConstants.kTurningI,
-        ModuleConstants.kTurningD
-    );
-
-    // Used to detect when the turning encoders are updated since they're 
-    // not updated as frequently over CAN.
+    /** Used to detect when the turning encoders are updated since they're not updated as frequently over CAN. */
     private double m_mostRecentTurningEncoderValue = 0;
 
     /**
-     * Constructs a Swerve Module and configures the driving and turning motor,
-     * encoder, and PID controllers. This configuration is specific to the MK4 and 
-     * MK4i swerve modules with 2 NEOs, 2 Spark Maxes and an SRX Mag Encoder.
+     * Constructs a Swerve Module and configures the driving and turning <code>SparkMax</code> objects,
+     * the turning <code>CANcoder</code>, and <code>SparkClosedLoopController</code> PID controllers. This configuration is specific to the MK4 and 
+     * MK4i swerve modules with 2 NEOs, 2 Spark Maxes, and an SRX Mag Encoder.
+     * @param drivingCanId The CAN ID of the driving <code>SparkMax</code>
+     * @param turningCanId The CAN ID of the turning <code>SparkMax</code>
+     * @param drivingEncoderId The CAN ID of the turning <code>CANcoder</code>
+     * @param invertDrive Whether or not to invert the drive <code>SparkMax</code>
+     * @see SparkMax
+     * @see CANcoder
+     * @see SparkClosedLoopController
+     * 
      */
-    public SwerveModule(int drivingCANId, int turningCANId, int turningEncoderId, boolean invertDrive) {
-        m_drivingSparkMax = new SparkMax(drivingCANId, MotorType.kBrushless);
-        m_turningSparkMax = new SparkMax(turningCANId, MotorType.kBrushless);
+    public SwerveModule(int drivingCanId, int turningCanId, int turningEncoderId, boolean invertDrive) {
+        m_drivingSparkMax = new SparkMax(drivingCanId, MotorType.kBrushless);
+        m_turningSparkMax = new SparkMax(turningCanId, MotorType.kBrushless);
         m_turningAbsoluteEncoder = new CANcoder(turningEncoderId);
 
         // Configure Driving motor
@@ -100,8 +112,6 @@ public class SwerveModule {
             .positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor)
             .velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
 
-        m_turningPID.enableContinuousInput(-Math.PI, Math.PI);
-
         // Sets PID to use relative encoder
         turningConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -136,7 +146,8 @@ public class SwerveModule {
 
     /**
      * Get the angle that the swerve wheel is facing.
-     * @return The angle as a Rotation2d object.
+     * @return The angle as a <code>Rotation2d</code> object.
+     * @see Rotation2d
      */
     public Rotation2d getTurningAngle() {
         
@@ -144,7 +155,7 @@ public class SwerveModule {
             m_turningAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()
         );
         
-        // Seed the absolute value into the relative encoder if the value is new.
+        // Send the absolute value into the relative encoder if the value is new.
         // If the encoder is not working, the value will default to 0.
         if ((currentEncoderValue != m_mostRecentTurningEncoderValue) && (currentEncoderValue != 0)) {
             m_turningEncoder.setPosition(currentEncoderValue);
@@ -172,9 +183,9 @@ public class SwerveModule {
     }
 
     /**
-     * Returns the current state of the module.
-     *
-     * @return The current state of the module.
+     * Gets the current state of the module.
+     * @return The current state of the module as a <code>SwerveModuleState</code>.
+     * @see SwerveModuleState
      */
     public SwerveModuleState getState() {
         // Apply chassis angular offset to the encoder position to get the position
@@ -184,8 +195,8 @@ public class SwerveModule {
 
     /**
      * Returns the current position of the module.
-     *
-     * @return The current position of the module.
+     * @return The current position of the module as a <code>SwerveModulePosition</code>.
+     * @see SwerveModulePosition
      */
     public SwerveModulePosition getPosition() {
         // Apply chassis angular offset to the encoder position to get the position
@@ -195,8 +206,8 @@ public class SwerveModule {
 
     /**
      * Sets the desired state for the module.
-     *
-     * @param desiredState Desired state with speed and angle.
+     * @param desiredState Desired state with speed and angle as a <code>SwerveModuleState</code>
+     * @see SwerveModuleState
      */
     public void setDesiredState(SwerveModuleState desiredState) {
         // Apply chassis angular offset to the desired state.
@@ -214,19 +225,18 @@ public class SwerveModule {
         m_drivingPIDController.setReference(correctedDesiredState.speedMetersPerSecond, SparkMax.ControlType.kVelocity);
         m_turningPIDController.setReference(correctedDesiredState.angle.getRadians(), SparkMax.ControlType.kPosition);
 
-        // Open-loop PID control for the turning encoders because I 
-        // Couldn't get closed-loop control to work.
         m_desiredAngle = correctedDesiredState.angle.getRadians();
     }
 
-    /** Zeroes all the SwerveModule encoders. */
+    /** Zeroes all the <code>SwerveModule</code> encoders. */
     public void resetEncoders() {
         m_drivingEncoder.setPosition(0);
     }
 
     /**
      * Sets the voltage of the drive motor.
-     * @param volts The voltage to set.
+     * @param volts The voltage to set as a <code>Voltage</code> object.
+     * @see Voltage
      */
     public void setDriveVoltage(Voltage volts) {
         m_drivingPIDController.setReference(volts.in(Volts), ControlType.kVoltage);
@@ -234,9 +244,26 @@ public class SwerveModule {
 
     /**
      * Sets the voltage of the turning motor.
-     * @param volts The voltage to set.
+     * @param volts The voltage to set as a <code>Voltage</code> object.
+     * @see Voltage
      */
     public void setTurningVoltage(Voltage volts) {
         m_drivingPIDController.setReference(volts.in(Volts), ControlType.kVoltage);
+    }
+
+    /**
+     * Sets the voltage of the drive motor.
+     * @param volts The voltage to set.
+     */
+    public void setDriveVoltage(double volts) {
+        m_drivingPIDController.setReference(volts, ControlType.kVoltage);
+    }
+
+    /**
+     * Sets the voltage of the turning motor.
+     * @param volts The voltage to set.
+     */
+    public void setTurningVoltage(double volts) {
+        m_drivingPIDController.setReference(volts, ControlType.kVoltage);
     }
 }
