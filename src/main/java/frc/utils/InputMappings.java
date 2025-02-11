@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * Loads input mappings of the controllers through JSON files.
  */
 public final class InputMappings {
+    private InputMappings() {}
+
     /** The {@link JSONParser} used to parse input mappings. */
     private static final JSONParser m_parser = new JSONParser();
     
@@ -33,8 +35,6 @@ public final class InputMappings {
     private static final Map<String, CommandGenericHID> m_controllers = new HashMap<>();
     /** The {@link Map} of controller IDs and {@link SendableChooser} objects. */
     private static final Map<String, SendableChooser<String>> m_choosers = new HashMap<>();
-
-    private InputMappings() {}
 
     /**
      * Registers a <code>GenericHID</code> object with the specified ID.
