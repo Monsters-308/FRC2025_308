@@ -1,6 +1,7 @@
 package frc.utils;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -53,7 +54,7 @@ public class ThroughBoreEncoder extends DutyCycleEncoder {
      * @return The rotation in radians.
      */
     public double getRadians() {
-        return getDegrees() * (Math.PI/180);
+        return Units.degreesToRadians(getDegrees());
     }
 
     /** 
@@ -61,7 +62,7 @@ public class ThroughBoreEncoder extends DutyCycleEncoder {
      * @return The number of rotations.
      */
     public double getRotations() {
-        return getDegrees() / 360;
+        return Units.degreesToRotations(getDegrees());
     }
 
     /**
@@ -78,7 +79,7 @@ public class ThroughBoreEncoder extends DutyCycleEncoder {
      */
     public Rotation2d getRate() {
         return Rotation2d.fromRotations(
-            (getRotation2D().getRotations() - m_lastMeasurement.getRotations()) /
+            (getRotations() - m_lastMeasurement.getRotations()) /
             (Timer.getTimestamp() - m_lastTime)
         );
     }
