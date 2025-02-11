@@ -232,22 +232,44 @@ public final class Constants {
         private FieldConstants() {}
 
         /** X axis: long side */
-        public static final double kFieldWidthMeters = 16.54175;
+        public static final double kFieldWidthMeters = 17.548225;
         /** Y axis: short side */
-        public static final double kFieldHeightMeters = 8.2;
+        public static final double kFieldHeightMeters = 8.0518;
         
         // Translation2d can be used to store the coordinates of important positions on the field:
         public static final Translation2d kRandomPosition = new Translation2d(
             kFieldWidthMeters/2, kFieldHeightMeters/2
         );
 
-        // TODO: add auto align positions
         /** Auto align positions. */
-        public static final Pose2d[] kAutoAlignPositions = {};
+        public static final Pose2d[] kAutoAlignPositions = {
+            /* Coral positions */
+            // Column 1
+            new Pose2d(3.198, 4.191, new Rotation2d()),
+            new Pose2d(3.198, 3.86, new Rotation2d()),
+            // Column 2
+            new Pose2d(3.685, 5.07, Rotation2d.fromDegrees(-60)),
+            new Pose2d(3.685, 2.98, Rotation2d.fromDegrees(60)),
+            // Column 3
+            new Pose2d(3.968, 5.24, Rotation2d.fromDegrees(-60)),
+            new Pose2d(3.968, 2.81, Rotation2d.fromDegrees(60)),
+            // Column 4
+            new Pose2d(5, 5.24, Rotation2d.fromDegrees(-120)),
+            new Pose2d(5, 2.81, Rotation2d.fromDegrees(120)),
+            // Column 5
+            new Pose2d(5.29, 5.07, Rotation2d.fromDegrees(-60)),
+            new Pose2d(5.29, 2.98, Rotation2d.fromDegrees(60)),
+            // Column 6
+            new Pose2d(5.8, 4.191, Rotation2d.fromDegrees(180)),
+            new Pose2d(5.8, 3.86, Rotation2d.fromDegrees(180)),
 
-        // TODO: add reef position
+            // Processor
+            new Pose2d(5.985, 0.51, Rotation2d.fromDegrees(90)),
+
+        };
+
         /** Reef position for orbit controls. */
-        public static final Translation2d kReefPosition = new Translation2d(0, 0);
+        public static final Translation2d kReefPosition = new Translation2d(4.49, 4.0255);
     }
 
     public static final class AutoConstants {
