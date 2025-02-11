@@ -37,28 +37,39 @@ public final class InputMappings {
     private InputMappings() {}
 
     /**
-     * Registers a {@link GenericHID} object with the specified ID.
-     * @param id The ID to use with the controller.
-     * @param controller The {@link GenericHID} object.
+     * Registers a <code>GenericHID</code> object with the specified ID.
+     * It will be used to create <code>Trigger</code> objects when calling <code>InputMappings.event</code>
+     * @param id The ID for the specified <code>GenericHID</code> object.
+     * @param controller The <code>GenericHID</code> object.
+     * @see GenericHID
+     * @see Trigger
+     * @see InputMappings#event
+     * @see InputMappings#registerController(String, CommandGenericHID)
      */
     public static void registerController(String id, GenericHID controller) {
         m_controllers.put(id, new CommandGenericHID(controller.getPort()));
     }
 
     /**
-     * Registers a {@link CommandGenericHID} object with the specified ID.
-     * @param id The ID to use with the controller.
-     * @param controller The {@link CommandGenericHID} object.
+     * Registers a <code>CommandGenericHID</code> object with the specified ID.
+     * It will be used to create <code>Trigger</code> objects when calling <code>InputMappings.event</code>
+     * @param id The ID for the specified <code>CommandGenericHID</code> object.
+     * @param controller The <code>CommandGenericHID</code> object.
+     * @see CommandGenericHID
+     * @see Trigger
+     * @see InputMappings#event
+     * @see InputMappings#registerController(String, GenericHID)
      */
     public static void registerController(String id, CommandGenericHID controller) {
         m_controllers.put(id, controller);
     }
 
     /**
-     * Creates a {@link Trigger} for the specified event on the specified controller in the currently selected mapping.
-     * @param controllerId The ID for the controller.
-     * @param eventId The ID for the event on the controller.
-     * @return The {@link Trigger} which will trigger with the button defined in the selected mapping.
+     * Creates a <code>Trigger</code> for the specified event on the specified controller in the currently selected mapping.
+     * @param controllerId The ID of the controller.
+     * @param eventId The ID of the event on the controller.
+     * @return The <code>Trigger</code> which will trigger with the button defined in the selected mapping.
+     * @see Trigger
      */
     public static Trigger event(String controllerId, String eventId) {
         final CommandGenericHID controller = m_controllers.get(controllerId);
@@ -141,9 +152,12 @@ public final class InputMappings {
     }
 
     /**
-     * Creates a {@link SendableChooser} with options for each button mapping for the specified controller.
+     * Gets the <code>SendableChooser</code> with options for each button mapping for the specified controller.
+     * Will create one if not already present.
      * @param controllerId The ID for the controller.
-     * @return The {@link SendableChooser}.
+     * @return The <code>SendableChooser</code>.
+     * @see SendableChooser
+     * @see InputMappings#addChoosers
      */
     public static SendableChooser<String> getChooser(String controllerId) {
         SendableChooser<String> chooser = m_choosers.get(controllerId);
@@ -198,9 +212,13 @@ public final class InputMappings {
     }
 
     /**
-     * Adds every mapping {@link SendableChooser} for every controller
-     * to a {@link ShuffleboardLayout} in the specified {@link ShuffleboardTab}.
-     * @param tab The {@link ShuffleboardTab} to add the {@link ShuffleboardLayout} and {@link SendableChooser} objects to.
+     * Adds every mapping <code>SendableChooser</code> for every controller
+     * to a new <code>ShuffleboardLayout</code> in the specified <code>ShuffleboardTab</code>.
+     * @param tab The <code>ShuffleboardTab</code> to add the <code>ShuffleboardLayout</code> and <code>SendableChooser</code> objects to.
+     * @see SendableChooser
+     * @see ShuffleboardTab
+     * @see ShuffleboardLayout
+     * @see InputMappings#getChooser
      */
     public static void addChoosers(ShuffleboardTab tab) {
         final ShuffleboardLayout mappingLayout = tab.getLayout("Mappings");
@@ -211,8 +229,11 @@ public final class InputMappings {
     }
 
     /**
-     * Thrown when {@link InputMappings} cannot find the
+     * Thrown when <code>InputMappings</code> methods cannot find the
      * "mappings" directory in the deploy directory.
+     * @see InputMappings#event
+     * @see InputMappings#getChooser
+     * @see InputMappings#addChoosers
      */
     public static class MappingsDirectoryNotFoundException extends Exception {
         /**
@@ -224,14 +245,17 @@ public final class InputMappings {
     }
 
     /**
-     * Thrown when {@link InputMappings} cannot find the
+     * Thrown when <code>InputMappings</code> methods cannot find the
      * directory for a controller ID in the mappings directory.
+     * @see InputMappings#event
+     * @see InputMappings#getChooser
+     * @see InputMappings#addChoosers
      */
     public static class ControllerNotFoundException extends Exception {
         /**
          * Creates a new {@link ControllerNotFoundException} with the
          * default message for the specified controller ID.
-         * @param controllerId controller ID.
+         * @param controllerId The controller ID that was not found.
          */
         public ControllerNotFoundException(String controllerId) {
             super("The \"" + controllerId + "\" directory was not found. Make sure it is located in the mappings directoy.");
