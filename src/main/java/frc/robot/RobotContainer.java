@@ -174,11 +174,11 @@ public class RobotContainer {
         InputMappings.event("coDriver", "elevator1")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
         InputMappings.event("coDriver", "elevator2")
-            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+            .onTrue(m_elevatorSubsystem.goToLevel(1, true));
         InputMappings.event("coDriver", "elevator3")
-            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+            .onTrue(m_elevatorSubsystem.goToLevel(2, true));
         InputMappings.event("coDriver", "elevator4")
-            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+            .onTrue(m_elevatorSubsystem.goToLevel(3, true));
     }
 
     /**
