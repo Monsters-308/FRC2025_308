@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HeadingConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -91,8 +90,8 @@ public class RobotFacePoint extends Command {
         rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
         
         m_driveSubsystem.drive(
-            -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
-            -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kJoystickDeadband),
+            m_xSpeed.getAsDouble(),
+            m_ySpeed.getAsDouble(),
             rotation,
             true, true
         );

@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 import frc.utils.FieldUtils;
@@ -79,8 +78,8 @@ public class RobotOrbitPoint extends Command {
         rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
         
         m_driveSubsystem.drive(
-            -MathUtil.applyDeadband(m_approachSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
-            -MathUtil.applyDeadband(m_orbitSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
+            m_approachSpeed.getAsDouble(),
+            m_orbitSpeed.getAsDouble(),
             rotation,
             false, true
         );   
