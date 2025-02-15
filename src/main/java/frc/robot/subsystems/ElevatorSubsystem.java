@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -66,7 +67,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** A shuffleboard tab to write elevator properties to the dashboard. */
     private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
     /** A shuffleboard layout that holds the go to level command. */
-    private final ShuffleboardLayout m_goToLevelLayout = m_elevatorTab.getLayout("Go To Level");
+    private final ShuffleboardLayout m_goToLevelLayout = m_elevatorTab.getLayout("Go To Level", BuiltInLayouts.kList);
     /** The network table entry that contains the level to send the robot to when the dashboard button is pressed. */
     private final GenericEntry m_levelNetworkTableEntry;
 
@@ -118,7 +119,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_goToLevelLayout.add(goToLevel(() -> (int)m_levelNetworkTableEntry.getInteger(-1), false));
 
         Utils.configureSysID(
-            m_elevatorTab.getLayout("Elevator SysID"), this, 
+            m_elevatorTab.getLayout("Elevator SysID", BuiltInLayouts.kList), this, 
             voltage -> {
                 m_isPIDMode = false;
                 m_elevatorLeader.setVoltage(voltage);
@@ -210,7 +211,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             double difference = Math.abs(ElevatorConstants.kElevatorLevelHeights[i] - height);
 
             // Check if current height difference is smaller than the previous one or if there is no previous one
-            if (difference < smallestDifference || smallestDifference == null) {
+            if (smallestDifference == null || difference < smallestDifference) {
                 smallestDifference = difference; // Sets new smallest difference if it is
                 index = i; // Sets level index to i because it has a smaller difference
             }

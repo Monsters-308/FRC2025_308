@@ -16,6 +16,7 @@ import org.json.simple.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -221,9 +222,13 @@ public final class InputMappings {
      * @see InputMappings#getChooser
      */
     public static void addChoosers(ShuffleboardTab tab) {
-        final ShuffleboardLayout mappingLayout = tab.getLayout("Mappings");
+        final ShuffleboardLayout mappingLayout = tab.getLayout("Mappings", BuiltInLayouts.kList);
 
         for (final String key : m_controllers.keySet()) {
+            SendableChooser<String> chooser = getChooser(key);
+            if (chooser == null) {
+                continue;
+            }
             mappingLayout.add(WordUtils.capitalize(key), getChooser(key));
         }
     }

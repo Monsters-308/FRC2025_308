@@ -36,31 +36,10 @@ public class FieldUtils {
 
     /**
      * Returns whether or not the robot is on the red alliance.
-     * @return true if on red alliance, false if on blue alliance or invalid.
+     * @return True if on red alliance, false if on blue alliance or invalid.
      */
     public static boolean isRedAlliance() {
-        return getAlliance() == Alliance.Red;
-    }
-
-    /**
-     * Adjusts a Pose2d so that it'll display properly on the Field widget.
-     * This also takes into account the alliance color.
-     * @param pose The pose object relative to the blue side (in meters).
-     * @return The new pose object scaled.
-     */
-    public static Pose2d fieldWidgetScale(Pose2d pose) {
-        pose = flipRed(pose);
-
-        // linearly scale widget x and y
-        // NOTE: We are doing this because shuffleboard's field widget is bugged. You would 
-        // normally never have to do this.
-        pose = new Pose2d(
-            pose.getX() * ((16.9 - 1.05) / 16.54) + 1.05, // 1.05 to 16.9
-            pose.getY() * (7.9 / 8.2) + 0.3, // 0.3 to 8.2
-            pose.getRotation()
-        );
-        
-        return pose;
+        return getAlliance().equals(Alliance.Red);
     }
 
     /**

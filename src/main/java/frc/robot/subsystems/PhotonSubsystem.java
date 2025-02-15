@@ -40,6 +40,10 @@ public class PhotonSubsystem extends SubsystemBase {
             }
         }
 
+        if (latestResult == null) {
+            return Optional.empty();
+        }
+
         return m_photonPoseEstimator.update(latestResult);
     }
 

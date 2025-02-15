@@ -299,7 +299,7 @@ public final class Constants {
         private FieldConstants() {}
 
         /** X axis: long side */
-        public static final double kFieldWidthMeters = 17.548225;
+        public static final double kFieldWidthMeters = 17.5133;
         /** Y axis: short side */
         public static final double kFieldHeightMeters = 8.0518;
 
@@ -399,9 +399,9 @@ public final class Constants {
         private ElevatorConstants() {}
 
         /** CAN ID of the left elevator motor controller. */
-        public static final int kElevatorLeftCanId = 0;
+        public static final int kElevatorLeftCanId = 35;
         /** CAN ID of the right elevator motor controller. */
-        public static final int kElevatorRightCanId = 0;
+        public static final int kElevatorRightCanId = 36;
 
         /** Channel of the elevator bottom limit switch. */
         public static final int kBottomSwitchChannel = 0;
@@ -471,9 +471,9 @@ public final class Constants {
         private AlgaeIntakeConstants() {}
 
         /** CAN ID of the algae intake roller motor. */
-        public static final int kAlgaeIntakeRollerMotorCanId = 0;
+        public static final int kAlgaeIntakeRollerMotorCanId = 33;
         /** CAN ID of the algae intake arm motor. */
-        public static final int kAlgaeIntakeArmMotorCanId = 1;
+        public static final int kAlgaeIntakeArmMotorCanId = 34;
 
         /** Whether or not to invert the algae intake roller motor. */
         public static final boolean kAlgaeIntakeRollerInverted = false;
@@ -506,7 +506,7 @@ public final class Constants {
         private CoralIntakeConstants() {}
 
         /** The CAN ID for the intake motor. */
-        public static final int kCoralIntakeMotorCanId = 0;
+        public static final int kCoralIntakeMotorCanId = 32;
         /** Whether the coral intake is inverted */
         public static final boolean kCoralIntakeInverted = false;
         /** The idle mode of the coral intake motor. */
@@ -528,9 +528,9 @@ public final class Constants {
         private ArmConstants() {}
 
         /** The CAN ID of the arm motor. */
-        public static final int kArmMotorCanId = 0;
+        public static final int kArmMotorCanId = 30;
         /** The channel ID for the motor encoder. */
-        public static final int kArmEncoderId = 0;
+        public static final int kArmEncoderId = 31;
         /** The smart current limit for the motor */
         public static final int kSmartCurrentLimit = 35;
         /** The idle mode of the motor. */

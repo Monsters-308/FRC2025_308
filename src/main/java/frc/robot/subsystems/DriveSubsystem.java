@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -32,6 +33,7 @@ import frc.robot.Constants.ModuleConstants;
 import frc.utils.FieldUtils;
 import frc.utils.SwerveModule;
 import frc.utils.Utils;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -177,7 +179,7 @@ public class DriveSubsystem extends SubsystemBase {
             .withWidget(BuiltInWidgets.kToggleSwitch);
 
         Utils.configureSysID(
-            m_swerveTab.getLayout("Linear SysID"), this,
+            m_swerveTab.getLayout("Linear SysID", BuiltInLayouts.kList), this,
             voltage -> {
                 m_frontLeft.setDriveVoltage(voltage);
                 m_frontRight.setDriveVoltage(voltage);
@@ -187,7 +189,7 @@ public class DriveSubsystem extends SubsystemBase {
         );
 
         Utils.configureSysID(
-            m_swerveTab.getLayout("Angular SysID"), this,
+            m_swerveTab.getLayout("Angular SysID", BuiltInLayouts.kList), this,
             voltage -> {
                 m_frontLeft.setDriveVoltage(voltage);
                 m_frontRight.setDriveVoltage(voltage.times(-1));
@@ -217,29 +219,9 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
         // Update field widget
-        m_field.setRobotPose(FieldUtils.fieldWidgetScale(getPose()));
+        m_field.setRobotPose(FieldUtils.flipRed(getPose()));
     
-        // Widget that shows color of alliance
-        if (FieldUtils.getAlliance(true) == null) {
-            m_allianceWidget.withProperties(Map.of(
-                    "Color when true", "Gray"
-                ));
-        }
-        else {
-            switch (FieldUtils.getAlliance(false)) {
-                case Blue:
-                    m_allianceWidget.withProperties(Map.of(
-                        "Color when true", "Blue"
-                    ));
-                    break;
-                
-                case Red:
-                    m_allianceWidget.withProperties(Map.of(
-                        "Color when true", "Red"
-                    ));
-                    break;
-            }    
-        }
+        m_allianceWidget.getEntry().setBoolean(!FieldUtils.isRedAlliance());
         
     }
 
@@ -247,6 +229,7 @@ public class DriveSubsystem extends SubsystemBase {
      * Returns the currently-estimated positon of the robot.
      * @return The position as a {@link Pose2d} object.
      */
+    @Logged
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
     }
