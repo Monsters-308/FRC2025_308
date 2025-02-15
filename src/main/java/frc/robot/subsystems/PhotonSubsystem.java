@@ -17,7 +17,7 @@ public class PhotonSubsystem extends SubsystemBase {
     /** The {@link PhotonCamera} that represents the robot camera. */
     private PhotonCamera m_camera = new PhotonCamera(PhotonConstants.kCameraName);
     private PhotonPoseEstimator m_photonPoseEstimator = new PhotonPoseEstimator(
-            PhotonConstants.kFeildLayout, 
+            PhotonConstants.kFieldLayout, 
             PhotonConstants.kPoseStrategy, 
             PhotonConstants.kRobotToCamera
         );

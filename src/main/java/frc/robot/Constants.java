@@ -581,7 +581,7 @@ public final class Constants {
         /** The name of the Photon Vision camera. */
         public static final String kCameraName = "jojo bizar";
         /** The april tage layout Photon Vision should use. */
-        public static final AprilTagFieldLayout kFeildLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+        public static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
         /** How Photon Vision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
     }
