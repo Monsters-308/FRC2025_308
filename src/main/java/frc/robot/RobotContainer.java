@@ -16,7 +16,6 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
-import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -27,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.FieldUtils;
 import frc.utils.InputMappings;
 
@@ -39,14 +37,10 @@ import frc.utils.InputMappings;
  */
 public class RobotContainer {
     // The robot's subsystems
-    /** The {@link VisionSubsystem} of the robot. */
-    private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
     /** The {@link PhotonSubsystem} of the robot. */
     private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
     private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(
-        m_visionSubsystem::getRobotPosition,
-        m_visionSubsystem::getTimeStampEstimator,
         m_photonSubsystem::getEstimatedGlobalPose
     );
 
@@ -79,9 +73,6 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
-
-        // Configure limelight default pipeline
-        m_visionSubsystem.setDefaultCommand(new DefaultLimelightPipeline(m_visionSubsystem));
 
         // Configure default commands
         m_driveSubsystem.setDefaultCommand(
