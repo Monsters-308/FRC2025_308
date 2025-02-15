@@ -529,6 +529,9 @@ public final class Constants {
         
         /** The speed the coral intake should be run at when intaking or shooting. */
         public static final double kCoralIntakeSpeed = 0.1;
+
+        /**The channel for the digital input */
+        public static final int kSensorChannel = 0;
     }
 
     /**
