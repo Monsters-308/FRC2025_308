@@ -23,6 +23,7 @@ import org.photonvision.EstimatedRobotPose;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DriveConstants;
@@ -439,5 +440,13 @@ public class DriveSubsystem extends SubsystemBase {
             speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed, 
             false, 
             false);
+    }
+    /*
+     * This sets the idlemode.
+     */
+    public void setIdleMode(IdleMode idleMode) {
+        for (SwerveModule module : new SwerveModule[] { m_frontLeft, m_frontRight, m_rearLeft, m_rearRight }) {
+            module.setIdleMode(idleMode);
+        }
     }
 }

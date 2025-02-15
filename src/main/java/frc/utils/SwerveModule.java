@@ -17,14 +17,18 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 
 import static edu.wpi.first.units.Units.Volts;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.commands.drive.TurningMotorsTest;
 
 /**
  * Utility class for managing the drive and turning <code>SparkMax</code> motor controllers for each wheel.
@@ -67,13 +71,18 @@ public class SwerveModule {
      * @see SparkClosedLoopController
      * 
      */
+        
+
     public SwerveModule(int drivingCanId, int turningCanId, int turningEncoderId, boolean invertDrive) {
         m_drivingSparkMax = new SparkMax(drivingCanId, MotorType.kBrushless);
         m_turningSparkMax = new SparkMax(turningCanId, MotorType.kBrushless);
         m_turningAbsoluteEncoder = new CANcoder(turningEncoderId);
 
-        // Configure Driving motor
+        // Configurations
         SparkMaxConfig drivingConfig = new SparkMaxConfig();
+        SparkMaxConfig turningConfig = new SparkMaxConfig();
+
+        // Configure Driving motor
         drivingConfig
             .idleMode(ModuleConstants.kDrivingMotorIdleMode)
             .smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit)
@@ -98,8 +107,9 @@ public class SwerveModule {
         // Configure driving Spark Max with configuration object
         m_drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        // Configure Turning motor
-        SparkMaxConfig turningConfig = new SparkMaxConfig();
+        
+        
+
         turningConfig
             .idleMode(ModuleConstants.kTurningMotorIdleMode)
             .smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit)
@@ -266,4 +276,15 @@ public class SwerveModule {
     public void setTurningVoltage(double volts) {
         m_drivingPIDController.setReference(volts, ControlType.kVoltage);
     }
+
+    public void setIdleMode(IdleMode idleMode) {
+        SparkMaxConfig config = new SparkMaxConfig();
+
+        config.idleMode(idleMode);
+        m_drivingSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_turningSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+
+        
+    }
+
 }
