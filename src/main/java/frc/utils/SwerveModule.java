@@ -24,13 +24,10 @@ import com.revrobotics.spark.SparkClosedLoopController;
 
 import static edu.wpi.first.units.Units.Volts;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.commands.drive.TurningMotorsTest;
 
 /**
  * Utility class for managing the drive and turning <code>SparkMax</code> motor controllers for each wheel.
