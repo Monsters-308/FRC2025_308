@@ -137,10 +137,10 @@ public class Utils {
             .andThen(dynamicBackward)
             .withName("Run All");
 
-        layout.add(quasistaticForward);
-        layout.add(quasistaticBackward);
-        layout.add(dynamicForward);
-        layout.add(dynamicBackward);
-        layout.add(all);
+        layout.add("Quasistatic Forward", quasistaticForward);
+        layout.add("Quasistatic Backward", quasistaticBackward);
+        layout.add("Dynamic Forward", dynamicForward);
+        layout.add("Dynamic Backward",dynamicBackward);
+        layout.add("Run All", all);
     }
 }

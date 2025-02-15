@@ -46,7 +46,7 @@ public class SwerveModule {
 
     /** The current {@link SwerveDesiredState} for the wheel. */
     @Logged
-    private SwerveModuleState m_desiredState;
+    private SwerveModuleState m_desiredState = new SwerveModuleState();
 
     /** The drive {@link SparkClosedLoopController} for managing PID on the {@link SwerveModule#m_drivingSparkMax}. */
     private final SparkClosedLoopController m_drivingPIDController;

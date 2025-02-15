@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -86,7 +87,7 @@ public class ArmSubsystem extends SubsystemBase {
             Units.rotationsToDegrees(m_angleController.getGoal().velocity));
 
         Utils.configureSysID(
-            m_armTab.getLayout("Arm SysID"), this, 
+            m_armTab.getLayout("Arm SysID", BuiltInLayouts.kList), this, 
             voltage -> {
                 m_isPIDMode = false;
                 m_armMotor.setVoltage(voltage);
