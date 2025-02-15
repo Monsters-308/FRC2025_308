@@ -19,9 +19,11 @@ public class RobotGotoAngle extends Command {
 
     private final DriveSubsystem m_driveSubsystem;
 
-    private final PIDController pidController = new PIDController(HeadingConstants.kHeadingP, 
-                                                                  HeadingConstants.kHeadingI, 
-                                                                  HeadingConstants.kHeadingD);
+    private final PIDController pidController = new PIDController (  
+        HeadingConstants.kHeadingP, 
+        HeadingConstants.kHeadingI, 
+        HeadingConstants.kHeadingD);
+
     private boolean m_complete = false;
 
     private final double m_desiredAngle;
