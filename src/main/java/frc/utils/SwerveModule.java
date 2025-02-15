@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.Faults;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -216,6 +217,12 @@ public class SwerveModule {
         SwerveModuleState correctedDesiredState = new SwerveModuleState();
         correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
         correctedDesiredState.angle = desiredState.angle;
+
+        Faults faults = m_drivingSparkMax.getFaults();
+
+        if (faults.temperature || faults.escEeprom || faults.motorType || faults.gateDriver || faults.sensor) {
+            return;
+        }
 
         // Optimize the reference state to avoid spinning further than 90 degrees.
         correctedDesiredState.optimize(getTurningAngle());
