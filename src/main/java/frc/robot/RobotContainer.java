@@ -41,7 +41,7 @@ public class RobotContainer {
     /** The {@link PhotonSubsystem} of the robot. */
     private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
-    private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(
+    public final DriveSubsystem m_driveSubsystem = new DriveSubsystem(
         m_photonSubsystem::getEstimatedGlobalPose
     );
 
