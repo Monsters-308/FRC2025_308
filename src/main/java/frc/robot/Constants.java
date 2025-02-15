@@ -392,19 +392,6 @@ public final class Constants {
         public static final double kFreeSpeedRps = kFreeSpeedRpm / 60;
     }
 
-    public static final class VisionConstants {
-        private VisionConstants() {}
-
-        // Pipeline constants
-        public static final int kAprilTagPipeline = 0;
-        // public static final int kReflectiveTapePipeline = 3;
-        public static final int kGamePiecePipeline = 2;
-
-        // NOTE: the limelight starts with pipeline 0 by default, so we need to make sure we make that pipeline something 
-        // that doesn't use the green lights so we don't blind everybody.
-        public static final int kDefaultPipeline = kAprilTagPipeline;
-    }
-
     /**
      * Describe how the {@link ElevatorSubsystem} should move the elevator.
      */
