@@ -9,17 +9,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HeadingConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.FieldUtils;
 import frc.utils.Utils;
 
 public class RobotFacePoint extends Command {
 
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
-    final VisionSubsystem m_visionSubsystem;
     final DriveSubsystem m_driveSubsystem;
      
     private final PIDController angleController = new PIDController(
@@ -41,9 +38,8 @@ public class RobotFacePoint extends Command {
      * This command rotates the robot in space using the pose estimation compared to a given point on the field.
      * The driver still has full control over the X and Y of the robot.
      */
-    public RobotFacePoint(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed, Translation2d point, boolean allianceRelative){
+    public RobotFacePoint(DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed, Translation2d point, boolean allianceRelative){
         m_driveSubsystem = driveSubsystem;
-        m_visionSubsystem = visionSubsystem;
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
         m_point = point;
@@ -65,7 +61,6 @@ public class RobotFacePoint extends Command {
     //When not overridden, this function is blank.
     @Override
     public void initialize() {
-        m_visionSubsystem.setPipeline(VisionConstants.kAprilTagPipeline);
         angleController.reset();
         m_complete = false;
     }

@@ -16,7 +16,6 @@ import edu.wpi.first.util.WPIUtilJNI;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.photonvision.EstimatedRobotPose;
@@ -92,15 +91,9 @@ public class DriveSubsystem extends SubsystemBase {
     /** A {@link ShuffleboardTab} for swerve drive. */
     private final ShuffleboardTab m_swerveTab = Shuffleboard.getTab("Swerve");
     /** A widget the gives the current alliance color. */
-    private final SimpleWidget m_allianceWidget = m_swerveTab.add("Alliance", true); 
-    /** {@link SimpleWidget} for toggling limelight data. */
-    private final SimpleWidget m_useLimelightData;
+    private final SimpleWidget m_allianceWidget = m_swerveTab.add("Alliance", true);
     /** {@link SimpleWidget} for toggling Photon Vision data. */
     private final SimpleWidget m_usePhotonData;
-
-    // TODO: remove original limelight
-    private final Supplier<Pose2d> m_visionPose;
-    private final DoubleSupplier m_visionTimestamp;
 
     /** A {@link Supplier} of optional {@link EstimatedRobotPose} objects from Photon Vision */
     private final Supplier<Optional<EstimatedRobotPose>> m_photonEstimation;
@@ -132,9 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
      * Constrcuts a {@link DriveSubsystem} to control all of the {@link SwerveModule} objects, along with the pathplanner setup, the gyro,
      * the odometry, and the use of odometry and vision data to estimate the robot's position.
      */
-    public DriveSubsystem(Supplier<Pose2d> visionPosition, DoubleSupplier visionTimestamp, Supplier<Optional<EstimatedRobotPose>> photonEstimation) {
-        m_visionPose = visionPosition;
-        m_visionTimestamp = visionTimestamp;
+    public DriveSubsystem(Supplier<Optional<EstimatedRobotPose>> photonEstimation) {
         m_photonEstimation = photonEstimation;
 
         m_gyro.enableLogging(true);
@@ -181,9 +172,6 @@ public class DriveSubsystem extends SubsystemBase {
             this // Reference to this subsystem to set requirements
         );
 
-        m_useLimelightData = m_swerveTab.add("Limelight Data", true)
-            .withWidget(BuiltInWidgets.kToggleSwitch);
-
         m_usePhotonData = m_swerveTab.add("Photon Vision Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch);
 
@@ -219,14 +207,6 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearLeft.getPosition(),
                 m_rearRight.getPosition()
             });
-            
-        // Try to add vision data to pose estimation
-        double timestamp = m_visionTimestamp.getAsDouble();
-        Pose2d pose = m_visionPose.get();
-        
-        if((pose != null) && (m_useLimelightData.getEntry().getBoolean(true))){
-            m_odometry.addVisionMeasurement(pose, timestamp);
-        }
         
         Optional<EstimatedRobotPose> estimationOpt = m_photonEstimation.get();
         estimationOpt.ifPresent(estimation -> {
