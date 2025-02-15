@@ -26,7 +26,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -478,7 +478,7 @@ public final class Constants {
     }
 
     /**
-     * Describe how the {@link AlgaeIntakeSubsystem} should intake and shoot algae.
+     * Describe how the {@link AlgaeIntakeRollerSubsystem} should intake and shoot algae.
      */
     public static final class AlgaeIntakeConstants {
         private AlgaeIntakeConstants() {}

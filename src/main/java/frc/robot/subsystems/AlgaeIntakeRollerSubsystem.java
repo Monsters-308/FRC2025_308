@@ -14,13 +14,13 @@ import frc.robot.Constants.AlgaeIntakeConstants;
 /**
  * Subsystem that controls the algae intake.
  */
-public class AlgaeIntakeSubsystem extends SubsystemBase {
+public class AlgaeIntakeRollerSubsystem extends SubsystemBase {
     /** The {@link SparkMax} controller for the algae intake roller. */
     private final SparkMax m_algaeIntakeRoller = new SparkMax(AlgaeIntakeConstants.kAlgaeIntakeArmMotorCanId, MotorType.kBrushless);
 
 
     /** Constructs an {@link AlageIntakeSubsystem} that controls the algae intake. */
-    public AlgaeIntakeSubsystem() {
+    public AlgaeIntakeRollerSubsystem() {
         SparkMaxConfig rollerMotorConf = new SparkMaxConfig();
         
         // sets the configation of the motors

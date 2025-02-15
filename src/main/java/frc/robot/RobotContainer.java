@@ -16,7 +16,8 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
-import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
+import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PhotonSubsystem;
@@ -46,8 +47,10 @@ public class RobotContainer {
 
     /** The {@link ElevatorSubsystem} of the robot. */
     private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-    /** The {@link AlgaeIntakeSubsystem} of the robot. */
-    private final AlgaeIntakeSubsystem m_algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
+    /** The {@link AlgaeIntakeRollerSubsystem} of the robot. */
+    private final AlgaeIntakeRollerSubsystem m_algaeIntakeRollerSubsystem = new AlgaeIntakeRollerSubsystem();
+    /** The {@link AlgaeIntakeArmSubsystem} of the robot. */
+    private final AlgaeIntakeArmSubsystem m_algaeIntakeArmSubsystem = new AlgaeIntakeArmSubsystem();
 
     // Controllers
     /** The {@link CommandXboxContoller} object that represents the driver controller. */
@@ -156,11 +159,11 @@ public class RobotContainer {
         //------------------------------------------- coDriver buttons -------------------------------------------
 
         InputMappings.event("coDriver", "alageIntake")
-            .onTrue(m_algaeIntakeSubsystem.intakeAlgae());
+            .onTrue(m_algaeIntakeRollerSubsystem.intakeAlgae());
         InputMappings.event("coDriver", "alageShoot")
-            .onTrue(m_algaeIntakeSubsystem.shootAlgae());
+            .onTrue(m_algaeIntakeRollerSubsystem.shootAlgae());
         InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
-            .onTrue(m_algaeIntakeSubsystem.armToggle());
+            .onTrue(m_algaeIntakeArmSubsystem.armToggle());
 
         InputMappings.event("coDriver", "elevator1")
             .onTrue(m_elevatorSubsystem.goToLevel(0, true));
