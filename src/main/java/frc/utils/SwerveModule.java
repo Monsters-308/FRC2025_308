@@ -4,6 +4,7 @@
 
 package frc.utils;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -43,8 +44,9 @@ public class SwerveModule {
     /** The turning {@link CANcoder} used for reading position and velocity data. These values are forwared into {@link SwerveModule#m_turningEncoder} */
     private final CANcoder m_turningAbsoluteEncoder;
 
-    /** The current desired angle for the wheel. */
-    private double m_desiredAngle = 0;
+    /** The current {@link SwerveDesiredState} for the wheel. */
+    @Logged
+    private SwerveModuleState m_desiredState;
 
     /** The drive {@link SparkClosedLoopController} for managing PID on the {@link SwerveModule#m_drivingSparkMax}. */
     private final SparkClosedLoopController m_drivingPIDController;
@@ -179,7 +181,7 @@ public class SwerveModule {
      * @return The angle in degrees.
      */
     public double getDesiredAngle() {
-        return Units.radiansToDegrees(m_desiredAngle);
+        return m_desiredState.angle.getDegrees();
     }
 
     /**
@@ -225,7 +227,7 @@ public class SwerveModule {
         m_drivingPIDController.setReference(correctedDesiredState.speedMetersPerSecond, SparkMax.ControlType.kVelocity);
         m_turningPIDController.setReference(correctedDesiredState.angle.getRadians(), SparkMax.ControlType.kPosition);
 
-        m_desiredAngle = correctedDesiredState.angle.getRadians();
+        m_desiredState = correctedDesiredState;
     }
 
     /** Zeroes all the <code>SwerveModule</code> encoders. */
