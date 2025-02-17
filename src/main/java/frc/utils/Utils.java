@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
 
 /**
- * General untilies used throughout the code.
+ * General utilities used throughout the code.
  */
 public class Utils {
     private Utils() {}
