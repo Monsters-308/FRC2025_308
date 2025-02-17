@@ -46,7 +46,7 @@ public class SwerveModule {
     /** The turning {@link CANcoder} used for reading position and velocity data. These values are forwared into {@link SwerveModule#m_turningEncoder} */
     private final CANcoder m_turningAbsoluteEncoder;
 
-    /** The current {@link SwerveDesiredState} for the wheel. */
+    /** The current {@link SwerveModuleState} for the wheel. */
     @Logged
     private SwerveModuleState m_desiredState = new SwerveModuleState();
 
@@ -71,8 +71,6 @@ public class SwerveModule {
      * @see SparkClosedLoopController
      * 
      */
-        
-
     public SwerveModule(int drivingCanId, int turningCanId, int turningEncoderId, boolean invertDrive) {
         m_drivingSparkMax = new SparkMax(drivingCanId, MotorType.kBrushless);
         m_turningSparkMax = new SparkMax(turningCanId, MotorType.kBrushless);
@@ -106,9 +104,6 @@ public class SwerveModule {
 
         // Configure driving Spark Max with configuration object
         m_drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        
-        
 
         turningConfig
             .idleMode(ModuleConstants.kTurningMotorIdleMode)
@@ -283,14 +278,15 @@ public class SwerveModule {
         m_drivingPIDController.setReference(volts, ControlType.kVoltage);
     }
 
+    /**
+     * Sets the idle mode of both the drive motor and the turning motor.
+     * @param idleMode Either KCoast or KBrake.
+     */
     public void setIdleMode(IdleMode idleMode) {
         SparkMaxConfig config = new SparkMaxConfig();
 
         config.idleMode(idleMode);
         m_drivingSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         m_turningSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-
-        
     }
-
 }
