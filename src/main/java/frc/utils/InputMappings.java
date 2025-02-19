@@ -87,11 +87,11 @@ public final class InputMappings {
                 throw new ControllerNotFoundException(controllerId);
             }
         } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
-            DriverStation.reportError(e.getLocalizedMessage(), true);
+            DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
             return new Trigger(() -> false);
         }
 
-        final File[] mappings = mappingsDirectory.listFiles();
+        final File[] mappings = controllerDirectoy.listFiles();
         final Trigger[] triggers = new Trigger[mappings.length];
 
         for (int i = 0; i < mappings.length; i++) {
@@ -100,7 +100,7 @@ public final class InputMappings {
             try {
                 obj = (JSONObject)m_parser.parse(new FileReader(mappings[i]));
             } catch (IOException | ParseException e) {
-                DriverStation.reportError(e.getLocalizedMessage(), true);
+                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
                 return new Trigger(() -> false);
             }
 
@@ -114,17 +114,17 @@ public final class InputMappings {
                 final Method triggerMethod;
 
                 if ((triggerType.equals("leftTrigger") || triggerType.equals("rightTrigger")) && threshold != null) {
-                    triggerMethod = controller.getClass().getDeclaredMethod(triggerType, double.class);
+                    triggerMethod = controller.getClass().getMethod(triggerType, double.class);
                     triggers[i] = (Trigger)triggerMethod.invoke(controller, threshold);
                 } else {
-                    triggerMethod = controller.getClass().getDeclaredMethod(triggerType);
+                    triggerMethod = controller.getClass().getMethod(triggerType);
                     triggers[i] = (Trigger)triggerMethod.invoke(controller);
                 }
             } catch (NoSuchMethodException | SecurityException e) {
-                DriverStation.reportError(e.getLocalizedMessage(), true);
+                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
                 return new Trigger(() -> false);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                DriverStation.reportError(e.getLocalizedMessage(), true);
+                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
                 return new Trigger(() -> false);
             }
         }
@@ -175,11 +175,11 @@ public final class InputMappings {
                 throw new ControllerNotFoundException(controllerId);
             }
         } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
-            DriverStation.reportError(e.getLocalizedMessage(), true);
+            DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
             return chooser;
         }
 
-        final File[] mappings = mappingsDirectory.listFiles();
+        final File[] mappings = controllerDirectoy.listFiles();
 
         for (final File mapping : mappings) {
             String displayName;
@@ -187,7 +187,7 @@ public final class InputMappings {
             try {
                 displayName = (String)((JSONObject)m_parser.parse(new FileReader(mapping))).get("displayName");
             } catch (IOException | ParseException e) {
-                DriverStation.reportError(e.getLocalizedMessage(), true);
+                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
                 return null;
             }
 
@@ -225,7 +225,7 @@ public final class InputMappings {
             if (chooser == null) {
                 continue;
             }
-            mappingLayout.add(WordUtils.capitalize(key), getChooser(key));
+            mappingLayout.add(WordUtils.capitalize(key), chooser);
         }
     }
 
