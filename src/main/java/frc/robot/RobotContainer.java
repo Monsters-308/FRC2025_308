@@ -158,9 +158,9 @@ public class RobotContainer {
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
-        InputMappings.event("coDriver", "alageIntake")
+        InputMappings.event("coDriver", "algaeIntake")
             .onTrue(m_algaeIntakeRollerSubsystem.intakeAlgae());
-        InputMappings.event("coDriver", "alageShoot")
+        InputMappings.event("coDriver", "algaeShoot")
             .onTrue(m_algaeIntakeRollerSubsystem.shootAlgae());
         InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
             .onTrue(m_algaeIntakeArmSubsystem.armToggle());
