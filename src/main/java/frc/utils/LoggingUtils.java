@@ -97,15 +97,16 @@ public class LoggingUtils {
         // lambdas below can use it.
         @SuppressWarnings("resource")
         PowerDistribution pdh = new PowerDistribution(PDHConstants.kPDHCanID, ModuleType.kRev);
-       
+        
         // Clear any sticky faults that may already exist.
         pdh.clearStickyFaults();
-
-        PowerDistributionFaults faults = pdh.getFaults();
         
         // Log if the pdh is having any faults
         loggingTab.addBoolean("PDH faults",
-            () -> faults.Brownout || faults.CanWarning || faults.HardwareFault
+            () -> {
+                PowerDistributionFaults faults = pdh.getFaults();
+                return faults.Brownout || faults.CanWarning || faults.HardwareFault;
+            }
         );
 
         // Log if any of the channels have breaker faults
