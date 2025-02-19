@@ -41,7 +41,7 @@ public class RobotContainer {
     /** The {@link PhotonSubsystem} of the robot. */
     private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
-    public final DriveSubsystem m_driveSubsystem = new DriveSubsystem(
+    public final DriveSubsystem driveSubsystem = new DriveSubsystem(
         m_photonSubsystem::getEstimatedGlobalPose
     );
 
@@ -78,16 +78,16 @@ public class RobotContainer {
         configureButtonBindings();
 
         // Configure default commands
-        m_driveSubsystem.setDefaultCommand(
+        driveSubsystem.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
             new RunCommand(
-                () -> m_driveSubsystem.drive(
+                () -> driveSubsystem.drive(
                     -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                     -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                     -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
                     true, true),
-                m_driveSubsystem));
+                driveSubsystem));
         
         // Adding options to the sendable choosers
         applyCommands(m_autonFirstAction);
@@ -99,17 +99,17 @@ public class RobotContainer {
 
         // DEBUG: widgets for testing swerve modules
         Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
-            () -> m_driveSubsystem.drive(
+            () -> driveSubsystem.drive(
                 0.03,
                 0,
                 0,
                 false, true),
-                m_driveSubsystem));
-        Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(m_driveSubsystem));
+                driveSubsystem));
+        Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(driveSubsystem));
 
         // FAILSAFE: widgets for manually setting robot position if the limelight is not working or can't view the april tags.
         Shuffleboard.getTab("Autonomous").add("Set Amp Side",
-            new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
+            new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
                 new Pose2d(
                     0.73, 
                     6.73, 
@@ -119,7 +119,7 @@ public class RobotContainer {
         );
 
         Shuffleboard.getTab("Autonomous").add("Set Middle",
-            new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
+            new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
                 new Pose2d(
                     1.5,
                     5.55,
@@ -129,7 +129,7 @@ public class RobotContainer {
         );
 
         Shuffleboard.getTab("Autonomous").add("Set Source Side",
-            new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
+            new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
                 new Pose2d(
                     0.73, 
                     4.39, 
@@ -147,10 +147,10 @@ public class RobotContainer {
         //------------------------------------------- Driver buttons -------------------------------------------
 
         InputMappings.event("driver", "autoAlign")
-            .onTrue(new AutoAlign(m_driveSubsystem));
+            .onTrue(new AutoAlign(driveSubsystem));
 
         InputMappings.event("driver", "orbitReef")
-            .whileTrue(new RobotOrbitPoint(m_driveSubsystem,
+            .whileTrue(new RobotOrbitPoint(driveSubsystem,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
                 FieldConstants.kReefPosition)
