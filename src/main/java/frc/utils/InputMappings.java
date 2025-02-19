@@ -110,21 +110,19 @@ public final class InputMappings {
 
             final Double threshold = (Double)triggerData.get("threshold");
 
-            final Method triggerMethod;
-
             try {
-                if (triggerType.equals("leftTrigger") || triggerType.equals("rightTrigger") && threshold != null) {
+                final Method triggerMethod;
+
+                if ((triggerType.equals("leftTrigger") || triggerType.equals("rightTrigger")) && threshold != null) {
                     triggerMethod = controller.getClass().getDeclaredMethod(triggerType, double.class);
+                    triggers[i] = (Trigger)triggerMethod.invoke(controller, threshold);
                 } else {
                     triggerMethod = controller.getClass().getDeclaredMethod(triggerType);
+                    triggers[i] = (Trigger)triggerMethod.invoke(controller);
                 }
             } catch (NoSuchMethodException | SecurityException e) {
                 DriverStation.reportError(e.getLocalizedMessage(), true);
                 return new Trigger(() -> false);
-            }
-            
-            try {
-                triggers[i] = (Trigger)triggerMethod.invoke(controller);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 DriverStation.reportError(e.getLocalizedMessage(), true);
                 return new Trigger(() -> false);
@@ -161,53 +159,51 @@ public final class InputMappings {
      * @see InputMappings#addChoosers
      */
     public static SendableChooser<String> getChooser(String controllerId) {
-        SendableChooser<String> chooser = m_choosers.get(controllerId);
+        if (m_choosers.containsKey(controllerId)) return m_choosers.get(controllerId);
 
-        if (chooser == null) {
-            chooser = new SendableChooser<>();
+        final SendableChooser<String> chooser = new SendableChooser<>();
 
-            final File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
-            final File controllerDirectoy = mappingsDirectory.toPath().resolve(controllerId).toFile();
+        final File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
+        final File controllerDirectoy = mappingsDirectory.toPath().resolve(controllerId).toFile();
+
+        try {
+            if (!mappingsDirectory.exists()) {
+                throw new MappingsDirectoryNotFoundException();
+            }
+
+            if(!controllerDirectoy.exists()) {
+                throw new ControllerNotFoundException(controllerId);
+            }
+        } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
+            DriverStation.reportError(e.getLocalizedMessage(), true);
+            return chooser;
+        }
+
+        final File[] mappings = mappingsDirectory.listFiles();
+
+        for (final File mapping : mappings) {
+            String displayName;
 
             try {
-                if (!mappingsDirectory.exists()) {
-                    throw new MappingsDirectoryNotFoundException();
-                }
-    
-                if(!controllerDirectoy.exists()) {
-                    throw new ControllerNotFoundException(controllerId);
-                }
-            } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
+                displayName = (String)((JSONObject)m_parser.parse(new FileReader(mapping))).get("displayName");
+            } catch (IOException | ParseException e) {
                 DriverStation.reportError(e.getLocalizedMessage(), true);
-                return chooser;
+                return null;
             }
 
-            final File[] mappings = mappingsDirectory.listFiles();
-
-            for (final File mapping : mappings) {
-                String displayName;
-
-                try {
-                    displayName = (String)((JSONObject)m_parser.parse(new FileReader(mapping))).get("displayName");
-                } catch (IOException | ParseException e) {
-                    DriverStation.reportError(e.getLocalizedMessage(), true);
-                    return null;
-                }
-
-                if (displayName == null) {
-                    displayName = WordUtils.capitalize(mapping.getName().replace(".json", ""));
-                }
-
-                if (mapping.getName().equals("default.json")) {
-                    chooser.setDefaultOption(displayName, mapping.getAbsolutePath());
-                    continue;
-                }
-
-                chooser.addOption(displayName, mapping.getAbsolutePath());
+            if (displayName == null) {
+                displayName = WordUtils.capitalize(mapping.getName().replace(".json", ""));
             }
 
-            m_choosers.put(controllerId, chooser);
+            if (mapping.getName().equals("default.json")) {
+                chooser.setDefaultOption(displayName, mapping.getAbsolutePath());
+                continue;
+            }
+
+            chooser.addOption(displayName, mapping.getAbsolutePath());
         }
+
+        m_choosers.put(controllerId, chooser);
 
         return chooser;
     }
