@@ -124,7 +124,7 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     /**
-     * Constrcuts a {@link DriveSubsystem} to control all of the {@link SwerveModule} objects, along with the pathplanner setup, the gyro,
+     * Constructs a {@link DriveSubsystem} to control all of the {@link SwerveModule} objects, along with the pathplanner setup, the gyro,
      * the odometry, and the use of odometry and vision data to estimate the robot's position.
      */
     public DriveSubsystem(Supplier<Optional<EstimatedRobotPose>> photonEstimation) {
