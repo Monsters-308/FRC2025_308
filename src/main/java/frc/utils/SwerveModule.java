@@ -19,6 +19,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 
 import static edu.wpi.first.units.Units.Volts;
@@ -45,7 +46,7 @@ public class SwerveModule {
     /** The turning {@link CANcoder} used for reading position and velocity data. These values are forwared into {@link SwerveModule#m_turningEncoder} */
     private final CANcoder m_turningAbsoluteEncoder;
 
-    /** The current {@link SwerveDesiredState} for the wheel. */
+    /** The current {@link SwerveModuleState} for the wheel. */
     @Logged
     private SwerveModuleState m_desiredState = new SwerveModuleState();
 
@@ -75,8 +76,11 @@ public class SwerveModule {
         m_turningSparkMax = new SparkMax(turningCanId, MotorType.kBrushless);
         m_turningAbsoluteEncoder = new CANcoder(turningEncoderId);
 
-        // Configure Driving motor
+        // Configurations
         SparkMaxConfig drivingConfig = new SparkMaxConfig();
+        SparkMaxConfig turningConfig = new SparkMaxConfig();
+
+        // Configure Driving motor
         drivingConfig
             .idleMode(ModuleConstants.kDrivingMotorIdleMode)
             .smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit)
@@ -101,8 +105,6 @@ public class SwerveModule {
         // Configure driving Spark Max with configuration object
         m_drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        // Configure Turning motor
-        SparkMaxConfig turningConfig = new SparkMaxConfig();
         turningConfig
             .idleMode(ModuleConstants.kTurningMotorIdleMode)
             .smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit)
@@ -274,5 +276,17 @@ public class SwerveModule {
      */
     public void setTurningVoltage(double volts) {
         m_drivingPIDController.setReference(volts, ControlType.kVoltage);
+    }
+
+    /**
+     * Sets the idle mode of both the drive motor and the turning motor.
+     * @param idleMode Either KCoast or KBrake.
+     */
+    public void setIdleMode(IdleMode idleMode) {
+        SparkMaxConfig config = new SparkMaxConfig();
+
+        config.idleMode(idleMode);
+        m_drivingSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_turningSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 }

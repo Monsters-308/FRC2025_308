@@ -6,6 +6,8 @@ package frc.robot;
 
 import org.littletonrobotics.urcl.URCL;
 
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -52,13 +54,19 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        //
+        m_robotContainer.m_driveSubsystem.setIdleMode(IdleMode.kCoast);
+    }
 
     @Override
     public void disabledPeriodic() {}
 
     @Override
     public void autonomousInit() {
+        // Set drivetrain to Brake mode when enabled.
+        m_robotContainer.m_driveSubsystem.setIdleMode(IdleMode.kBrake);
+
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
@@ -72,6 +80,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        // Set drivetrain to Brake mode when enabled.
+        m_robotContainer.m_driveSubsystem.setIdleMode(IdleMode.kBrake);
+
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
@@ -88,6 +99,7 @@ public class Robot extends TimedRobot {
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
+
     }
 
     @Override

@@ -26,6 +26,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.utils.LoggingUtils;
 import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
@@ -581,8 +582,18 @@ public final class Constants {
         /** The name of the Photon Vision camera. */
         public static final String kCameraName = "jojo bizar";
         /** The april tage layout Photon Vision should use. */
-        public static final AprilTagFieldLayout kFeildLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+        public static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
         /** How Photon Vision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+    }
+
+    /**
+     * Used by {@link LoggingUtils} to log data from the PDH.
+     */
+    public static final class PDHConstants {
+        private PDHConstants() {}
+
+        /** The CAN ID of the PDH */
+        public static final int kPDHCanID = 10;
     }
 }
