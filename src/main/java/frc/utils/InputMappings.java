@@ -76,14 +76,14 @@ public final class InputMappings {
         final CommandGenericHID controller = m_controllers.get(controllerId);
 
         final File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
-        final File controllerDirectoy = mappingsDirectory.toPath().resolve(controllerId).toFile();
+        final File controllerDirectory = mappingsDirectory.toPath().resolve(controllerId).toFile();
 
         try {
             if (!mappingsDirectory.exists()) {
                 throw new MappingsDirectoryNotFoundException();
             }
 
-            if(!controllerDirectoy.exists()) {
+            if(!controllerDirectory.exists()) {
                 throw new ControllerNotFoundException(controllerId);
             }
         } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
@@ -91,7 +91,7 @@ public final class InputMappings {
             return new Trigger(() -> false);
         }
 
-        final File[] mappings = controllerDirectoy.listFiles();
+        final File[] mappings = controllerDirectory.listFiles();
         final Trigger[] triggers = new Trigger[mappings.length];
 
         for (int i = 0; i < mappings.length; i++) {
@@ -164,14 +164,14 @@ public final class InputMappings {
         final SendableChooser<String> chooser = new SendableChooser<>();
 
         final File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
-        final File controllerDirectoy = mappingsDirectory.toPath().resolve(controllerId).toFile();
+        final File controllerDirectory = mappingsDirectory.toPath().resolve(controllerId).toFile();
 
         try {
             if (!mappingsDirectory.exists()) {
                 throw new MappingsDirectoryNotFoundException();
             }
 
-            if(!controllerDirectoy.exists()) {
+            if(!controllerDirectory.exists()) {
                 throw new ControllerNotFoundException(controllerId);
             }
         } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
@@ -179,7 +179,7 @@ public final class InputMappings {
             return chooser;
         }
 
-        final File[] mappings = controllerDirectoy.listFiles();
+        final File[] mappings = controllerDirectory.listFiles();
 
         for (final File mapping : mappings) {
             String displayName;
