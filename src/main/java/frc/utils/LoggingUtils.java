@@ -80,7 +80,7 @@ public class LoggingUtils {
     }
 
     /** Helper function to see if any of the pdh channels have breaker faults. */
-    private static boolean getBreakerFaults(PowerDistributionFaults faults) {
+    private static boolean hasBreakerFaults(PowerDistributionFaults faults) {
         for (int i = 0; i <= 23; i++) {
             if (faults.getBreakerFault(i))
                 return true;
@@ -109,6 +109,6 @@ public class LoggingUtils {
         );
 
         // Log if any of the channels have breaker faults
-        loggingTab.addBoolean("Breaker faults", () -> getBreakerFaults(pdh.getFaults()));
+        loggingTab.addBoolean("Breaker faults", () -> hasBreakerFaults(pdh.getFaults()));
     }
 }
