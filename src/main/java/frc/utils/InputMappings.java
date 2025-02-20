@@ -104,20 +104,40 @@ public final class InputMappings {
                 return new Trigger(() -> false);
             }
 
-            final JSONObject mappingTriggers = (JSONObject)obj.get("events");
-            final JSONObject triggerData = (JSONObject)mappingTriggers.get(eventId);
-            final String triggerType = (String)triggerData.get("button");
+            final String eventButton;
+            final Double threshold;
 
-            final Double threshold = (Double)triggerData.get("threshold");
+            try {
+                final JSONObject mappingTriggers = (JSONObject)obj.get("events");
+                final Object eventData = mappingTriggers.get(eventId);
+                if (eventData == null) {
+                    throw new EventNotFoundException(eventId, mappings[i].getAbsolutePath());
+                }
+
+                if (eventData.getClass() == String.class) {
+                    eventButton = (String)eventData;
+                    threshold = null;
+                } else {
+                    final JSONObject eventJsonObject = (JSONObject)eventData;
+                    eventButton = (String)eventJsonObject.get("button");
+                    threshold = (Double)eventJsonObject.get("threshold");
+                }
+            } catch (EventNotFoundException e) {
+                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
+                return new Trigger(() -> false);
+            }
+
+            System.out.println(eventButton);
+            System.out.println(threshold);
 
             try {
                 final Method triggerMethod;
 
-                if ((triggerType.equals("leftTrigger") || triggerType.equals("rightTrigger")) && threshold != null) {
-                    triggerMethod = controller.getClass().getMethod(triggerType, double.class);
+                if ((eventButton.equals("leftTrigger") || eventButton.equals("rightTrigger")) && threshold != null) {
+                    triggerMethod = controller.getClass().getMethod(eventButton, double.class);
                     triggers[i] = (Trigger)triggerMethod.invoke(controller, threshold);
                 } else {
-                    triggerMethod = controller.getClass().getMethod(triggerType);
+                    triggerMethod = controller.getClass().getMethod(eventButton);
                     triggers[i] = (Trigger)triggerMethod.invoke(controller);
                 }
             } catch (NoSuchMethodException | SecurityException e) {
@@ -260,6 +280,21 @@ public final class InputMappings {
          */
         public ControllerNotFoundException(String controllerId) {
             super("The \"" + controllerId + "\" directory was not found. Make sure it is located in the mappings directoy.");
+        }
+    }
+
+    /**
+     * Thrown when {@link InputMappings#event} methods cannot find an
+     * event with the specified ID in a mapping
+     */
+    public static class EventNotFoundException extends Exception {
+        /**
+         * Creates a new {@link MappingsDirectoryNotFoundException} with the default message.
+         * @param eventId The event ID which was not found.
+         * @param mappingPath The path of the mapping JSON file in which the event was not found.
+         */
+        public EventNotFoundException(String eventId, String mappingPath) {
+            super("No key \"" + eventId + "\" was found in \"" + mappingPath + "\". Make sure it is located in the \"events\" object in the root of the file.");
         }
     }
 }
