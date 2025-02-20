@@ -103,7 +103,6 @@ public class LoggingUtils {
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle("SparkMax Faults Detected!")
                 .withDescription(description)
-                .withAutomaticHeight()
                 .withNoAutoDismiss();
             
             Elastic.sendNotification(notification);
@@ -152,7 +151,6 @@ public class LoggingUtils {
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle(title)
                 .withDescription(description)
-                .withAutomaticHeight()
                 .withNoAutoDismiss();
             
             Elastic.sendNotification(notification);
@@ -213,7 +211,6 @@ public class LoggingUtils {
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle("PDH Faults Detected!")
                 .withDescription(description)
-                .withAutomaticHeight()
                 .withNoAutoDismiss();
             
             Elastic.sendNotification(notification);
@@ -234,7 +231,6 @@ public class LoggingUtils {
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle("Breaker Faults Detected!")
                 .withDescription(description)
-                .withAutomaticHeight()
                 .withNoAutoDismiss();
             
             Elastic.sendNotification(notification);
@@ -254,7 +250,6 @@ public class LoggingUtils {
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle("NavX Disconnected!")
                 .withDescription("The NaxX as been disconnected.")
-                .withAutomaticHeight()
                 .withNoAutoDismiss();
             
             Elastic.sendNotification(notification);
