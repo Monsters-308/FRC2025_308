@@ -56,15 +56,15 @@ public class RobotContainer {
 
     // Controllers
     /** The {@link CommandXboxContoller} object that represents the driver controller. */
-    final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+    private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     /** The {@link CommandXboxContoller} object that represents the coDriver controller. */
-    final CommandXboxController m_coDriverController = new CommandXboxController(OIConstants.kCoDriverControllerPort);
+    private final CommandXboxController m_coDriverController = new CommandXboxController(OIConstants.kCoDriverControllerPort);
 
     // Sendable choosers to dictate what the robot does during auton
     /** The {@link SendableChooser} send to Elastic for the first auton path to follow. */
-    SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
+    private final SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
     /** The {@link SendableChooser} send to Elastic for the second auton path to follow. */
-    SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
+    private final SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
 
 
     /**
