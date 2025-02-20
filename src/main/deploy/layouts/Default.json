@@ -8,31 +8,14 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Spark8",
-            "x": 896.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/Shuffleboard/Logging/Spark8",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "Spark1",
+            "title": "Spark #1",
             "x": 0.0,
             "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/Spark1",
+              "topic": "/Shuffleboard/Logging/Spark #1",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -42,31 +25,14 @@
             }
           },
           {
-            "title": "Spark3",
-            "x": 256.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/Shuffleboard/Logging/Spark3",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "Spark2",
+            "title": "Spark #2",
             "x": 128.0,
             "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/Spark2",
+              "topic": "/Shuffleboard/Logging/Spark #2",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -76,14 +42,31 @@
             }
           },
           {
-            "title": "Spark4",
+            "title": "Spark #3",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark #3",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spark #4",
             "x": 384.0,
             "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/Spark4",
+              "topic": "/Shuffleboard/Logging/Spark #4",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -93,14 +76,14 @@
             }
           },
           {
-            "title": "Spark5",
+            "title": "Spark #5",
             "x": 512.0,
             "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/Spark5",
+              "topic": "/Shuffleboard/Logging/Spark #5",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -110,14 +93,14 @@
             }
           },
           {
-            "title": "Spark6",
+            "title": "Spark #6",
             "x": 640.0,
             "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/Spark6",
+              "topic": "/Shuffleboard/Logging/Spark #6",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -127,14 +110,14 @@
             }
           },
           {
-            "title": "Spark7",
+            "title": "Spark #7",
             "x": 768.0,
             "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/Spark7",
+              "topic": "/Shuffleboard/Logging/Spark #7",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -144,14 +127,31 @@
             }
           },
           {
-            "title": "CANcoder11",
+            "title": "Spark #8",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark #8",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "CANcoder #11",
             "x": 0.0,
             "y": 128.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/CANcoder11",
+              "topic": "/Shuffleboard/Logging/CANcoder #11",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -161,14 +161,14 @@
             }
           },
           {
-            "title": "CANcoder12",
+            "title": "CANcoder #12",
             "x": 128.0,
             "y": 128.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/CANcoder12",
+              "topic": "/Shuffleboard/Logging/CANcoder #12",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -178,14 +178,14 @@
             }
           },
           {
-            "title": "CANcoder13",
+            "title": "CANcoder #13",
             "x": 256.0,
             "y": 128.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/CANcoder13",
+              "topic": "/Shuffleboard/Logging/CANcoder #13",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -195,14 +195,14 @@
             }
           },
           {
-            "title": "CANcoder14",
+            "title": "CANcoder #14",
             "x": 384.0,
             "y": 128.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Shuffleboard/Logging/CANcoder14",
+              "topic": "/Shuffleboard/Logging/CANcoder #14",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
