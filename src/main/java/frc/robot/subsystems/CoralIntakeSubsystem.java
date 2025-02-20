@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.CoralIntakeConstants;
 
 
@@ -66,7 +67,7 @@ public class CoralIntakeSubsystem extends SubsystemBase{
      */
     public Command intakeCoral(boolean stopWhenDetected) {
         return runOnce(() -> setCoralSpeed(0.1))
-            .onlyWhile(() -> !isCoralDetected() && stopWhenDetected)
+            .andThen(new WaitUntilCommand(() -> !isCoralDetected() && stopWhenDetected))
             .finallyDo(() -> {
                 if (!stopWhenDetected) return;
                 setCoralSpeed(0);
