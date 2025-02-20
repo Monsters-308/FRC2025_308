@@ -56,9 +56,9 @@ public class RobotContainer {
     // private final CoralIntakeSubsystem m_coralIntakeSubsystem = new CoralIntakeSubsystem();
 
     // Controllers
-    /** The {@link CommandXboxContoller} object that represents the driver controller. */
+    /** The {@link CommandXboxController} object that represents the driver controller. */
     private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
-    /** The {@link CommandXboxContoller} object that represents the coDriver controller. */
+    /** The {@link CommandXboxController} object that represents the coDriver controller. */
     private final CommandXboxController m_coDriverController = new CommandXboxController(OIConstants.kCoDriverControllerPort);
 
     // Sendable choosers to dictate what the robot does during auton
