@@ -38,9 +38,9 @@ public class ArmSubsystem extends SubsystemBase {
 
     /** The {@link ProfiledPIDController} for the arm motor. */
     private final ProfiledPIDController m_angleController = new ProfiledPIDController(
-        ArmConstants.KArmP,
-        ArmConstants.KArmI,
-        ArmConstants.KArmD,
+        ArmConstants.kArmP,
+        ArmConstants.kArmI,
+        ArmConstants.kArmD,
         new TrapezoidProfile.Constraints(
             ArmConstants.kArmMaxSpeedRPS,
             ArmConstants.kArmMaxAccelerationRPSSquared

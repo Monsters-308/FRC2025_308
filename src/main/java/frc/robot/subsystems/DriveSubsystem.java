@@ -50,28 +50,28 @@ public class DriveSubsystem extends SubsystemBase {
     private final SwerveModule m_frontLeft = new SwerveModule(
         DriveConstants.kFrontLeftDrivingCanId,
         DriveConstants.kFrontLeftTurningCanId,
-        DriveConstants.KFrontLeftTurningEncoderId,
+        DriveConstants.kFrontLeftTurningEncoderId,
         ModuleConstants.kLeftFrontInverted);
 
     /** The {@link SwerveModule} for the front right wheel. */
     private final SwerveModule m_frontRight = new SwerveModule(
         DriveConstants.kFrontRightDrivingCanId,
         DriveConstants.kFrontRightTurningCanId,
-        DriveConstants.KFrontRightTurningEncoderId,
+        DriveConstants.kFrontRightTurningEncoderId,
         ModuleConstants.kRightFrontInverted);
 
     /** The {@link SwerveModule} for the rear left wheel. */
     private final SwerveModule m_rearLeft = new SwerveModule(
         DriveConstants.kRearLeftDrivingCanId,
         DriveConstants.kRearLeftTurningCanId,
-        DriveConstants.KRearLeftTurningEncoderId,
+        DriveConstants.kRearLeftTurningEncoderId,
         ModuleConstants.kLeftRearInverted);
 
     /** The {@link SwerveModule} for the rear right wheel. */
     private final SwerveModule m_rearRight = new SwerveModule(
         DriveConstants.kRearRightDrivingCanId,
         DriveConstants.kRearRightTurningCanId,
-        DriveConstants.KRearRightTurningEncoderId,
+        DriveConstants.kRearRightTurningEncoderId,
         ModuleConstants.kRightRearInverted);
 
     /** An {@link AHRS} object that represents the robot gyro. */

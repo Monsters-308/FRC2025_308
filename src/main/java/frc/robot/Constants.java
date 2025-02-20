@@ -126,13 +126,13 @@ public final class Constants {
         // Encoder CAN Ids
 
         /** CAN ID of the front left turning {@link CANcoder}. */
-        public static final int KFrontLeftTurningEncoderId = 14;
+        public static final int kFrontLeftTurningEncoderId = 14;
         /** CAN ID of the front right turning {@link CANcoder}. */
-        public static final int KFrontRightTurningEncoderId = 12;
+        public static final int kFrontRightTurningEncoderId = 12;
         /** CAN ID of the rear left turning {@link CANcoder}. */
-        public static final int KRearLeftTurningEncoderId = 13;
+        public static final int kRearLeftTurningEncoderId = 13;
         /** CAN ID of the rear right turning {@link CANcoder}. */
-        public static final int KRearRightTurningEncoderId = 11;
+        public static final int kRearRightTurningEncoderId = 11;
 
         /**
          * Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
@@ -566,11 +566,12 @@ public final class Constants {
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
-        public static final double KArmP = 1;
+        public static final double kArmP = 1;
         /** The I for the arm PID controller. */
-        public static final double KArmI = 0;
+        public static final double kArmI = 0;
         /** The D for the arm PID controller. */
-        public static final double KArmD = 0;
+        public static final double kArmD = 0;
+        
         /** The S gain for the arm feedforward. */
         public static final double kArmS = 0;
         /** The gravity gain for the arm feedforward. */
