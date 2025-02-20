@@ -4,7 +4,6 @@
 
 package frc.utils;
 
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -47,7 +46,6 @@ public class SwerveModule {
     private final CANcoder m_turningAbsoluteEncoder;
 
     /** The current {@link SwerveModuleState} for the wheel. */
-    @Logged
     private SwerveModuleState m_desiredState = new SwerveModuleState();
 
     /** The drive {@link SparkClosedLoopController} for managing PID on the {@link SwerveModule#m_drivingSparkMax}. */

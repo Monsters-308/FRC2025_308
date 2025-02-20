@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -229,7 +228,6 @@ public class DriveSubsystem extends SubsystemBase {
      * Returns the currently-estimated positon of the robot.
      * @return The position as a {@link Pose2d} object.
      */
-    @Logged
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
     }
