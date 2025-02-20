@@ -229,7 +229,7 @@ public final class InputMappings {
     }
 
     /**
-     * Adds every mapping <code>SendableChooser</code> for every controller
+     * Adds every mapping <code>SendableChooser</code> for every controller.
      * to a new <code>ShuffleboardLayout</code> in the specified <code>ShuffleboardTab</code>.
      * @param tab The <code>ShuffleboardTab</code> to add the <code>ShuffleboardLayout</code> and <code>SendableChooser</code> objects to.
      * @see SendableChooser
