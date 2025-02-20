@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.utils.Elastic.Notification;
+import frc.robot.utils.Elastic.Notification.NotificationLevel;
 
 /**
  * Loads input mappings of the controllers through JSON files.
@@ -87,7 +89,7 @@ public final class InputMappings {
                 throw new ControllerNotFoundException(controllerId);
             }
         } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
-            DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
+            reportError(e);
             return new Trigger(() -> false);
         }
 
@@ -100,7 +102,7 @@ public final class InputMappings {
             try {
                 obj = (JSONObject)m_parser.parse(new FileReader(mappings[i]));
             } catch (IOException | ParseException e) {
-                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
+                reportError(e);
                 return new Trigger(() -> false);
             }
 
@@ -123,7 +125,7 @@ public final class InputMappings {
                     threshold = (Double)eventJsonObject.get("threshold");
                 }
             } catch (EventNotFoundException e) {
-                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
+                reportError(e);
                 return new Trigger(() -> false);
             }
 
@@ -138,10 +140,10 @@ public final class InputMappings {
                     triggers[i] = (Trigger)triggerMethod.invoke(controller);
                 }
             } catch (NoSuchMethodException | SecurityException e) {
-                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
+                reportError(e);
                 return new Trigger(() -> false);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
+                reportError(e);
                 return new Trigger(() -> false);
             }
         }
@@ -192,7 +194,7 @@ public final class InputMappings {
                 throw new ControllerNotFoundException(controllerId);
             }
         } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
-            DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
+            reportError(e);
             return chooser;
         }
 
@@ -204,7 +206,7 @@ public final class InputMappings {
             try {
                 displayName = (String)((JSONObject)m_parser.parse(new FileReader(mapping))).get("displayName");
             } catch (IOException | ParseException e) {
-                DriverStation.reportError(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), true);
+                reportError(e);
                 return null;
             }
 
@@ -260,6 +262,23 @@ public final class InputMappings {
         public MappingsDirectoryNotFoundException() {
             super("The \"mappings\" directory was not found. Make sure it is located in the deploy directoy.");
         }
+    }
+
+    /**
+     * Reports an error to the {@link DriverStation} and sends a notification to {@link Elastic}.
+     * @param throwable A {@link Throwable} object that represents the error.
+     */
+    private static void reportError(Throwable throwable) {
+        DriverStation.reportError(throwable.getClass().getSimpleName() + ": " + throwable.getLocalizedMessage(), true);
+
+        Notification notification = new Notification()
+            .withLevel(NotificationLevel.ERROR)
+            .withTitle(throwable.getClass().getSimpleName())
+            .withDescription(throwable.getLocalizedMessage())
+            .withAutomaticHeight()
+            .withNoAutoDismiss();
+        
+        Elastic.sendNotification(notification);
     }
 
     /**
