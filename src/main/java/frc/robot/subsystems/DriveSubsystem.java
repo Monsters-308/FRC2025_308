@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -111,16 +110,8 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         },
         new Pose2d(),
-        /*
-         * VecBuilder -> Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
-         * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
-        */
-        VecBuilder.fill(0.1, 0.1, .05),
-        /*
-         * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
-         * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
-        */
-        VecBuilder.fill(2, 2, 3)
+        DriveConstants.kStateStandardDeviations,
+        DriveConstants.kVisionStandardDeviations
     );
 
     /**

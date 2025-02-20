@@ -17,6 +17,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -24,6 +26,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.utils.LoggingUtils;
@@ -130,6 +133,17 @@ public final class Constants {
         public static final int KRearLeftTurningEncoderId = 13;
         /** CAN ID of the rear right turning {@link CANcoder}. */
         public static final int KRearRightTurningEncoderId = 11;
+
+        /**
+         * Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
+         * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
+         */
+        public static final Vector<N3> kStateStandardDeviations = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+        /**
+         * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
+         * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
+         */
+        public static final Vector<N3> kVisionStandardDeviations = VecBuilder.fill(2, 2, 3);
     }
 
     /**
