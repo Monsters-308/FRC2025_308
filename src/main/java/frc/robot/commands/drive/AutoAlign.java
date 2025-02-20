@@ -70,7 +70,7 @@ public class AutoAlign extends Command {
         boolean flipPose = robotPose.getY() > FieldConstants.kFieldHeightMeters / 2;
 
         for (Pose2d pose : FieldConstants.kAutoAlignPositions) {
-            pose = flipPose ? FieldUtils.flip(pose) : pose;
+            pose = flipPose ? FieldUtils.flipBlue(pose) : FieldUtils.flipRed(pose);
             double dst = Utils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
             if (smallestDst == null || dst < smallestDst) {
                 smallestDst = dst;
