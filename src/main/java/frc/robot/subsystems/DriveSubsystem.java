@@ -29,6 +29,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.utils.FieldUtils;
+import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.SwerveModule;
 import frc.robot.utils.Utils;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -164,6 +165,8 @@ public class DriveSubsystem extends SubsystemBase {
             FieldUtils::isRedAlliance, // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
             this // Reference to this subsystem to set requirements
         );
+
+        LoggingUtils.logNavX(m_gyro);
 
         m_usePhotonData = m_swerveTab.add("Photon Vision Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch);
