@@ -289,7 +289,7 @@ public class SwerveModule {
         SparkMaxConfig config = new SparkMaxConfig();
 
         config.idleMode(idleMode);
-        m_drivingSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-        m_turningSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        m_drivingSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_turningSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 }
