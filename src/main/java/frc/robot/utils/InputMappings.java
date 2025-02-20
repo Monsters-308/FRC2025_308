@@ -93,7 +93,7 @@ public final class InputMappings {
             return new Trigger(() -> false);
         }
 
-        final File[] mappings = controllerDirectory.listFiles();
+        final File[] mappings = mappingsDirectory.listFiles();
         final Trigger[] triggers = new Trigger[mappings.length];
 
         for (int i = 0; i < mappings.length; i++) {
@@ -250,6 +250,22 @@ public final class InputMappings {
     }
 
     /**
+     * Reports an error to the {@link DriverStation} and sends a notification to {@link Elastic}.
+     * @param throwable A {@link Throwable} object that represents the error.
+     */
+    private static void reportError(Throwable throwable) {
+        DriverStation.reportError(throwable.getClass().getSimpleName() + ": " + throwable.getLocalizedMessage(), true);
+
+        Notification notification = new Notification()
+            .withLevel(NotificationLevel.ERROR)
+            .withTitle(throwable.getClass().getSimpleName())
+            .withDescription(throwable.getLocalizedMessage())
+            .withNoAutoDismiss();
+        
+        Elastic.sendNotification(notification);
+    }
+
+    /**
      * Thrown when <code>InputMappings</code> methods cannot find the
      * "mappings" directory in the deploy directory.
      * @see InputMappings#event
@@ -263,23 +279,6 @@ public final class InputMappings {
         public MappingsDirectoryNotFoundException() {
             super("The \"mappings\" directory was not found. Make sure it is located in the deploy directoy.");
         }
-    }
-
-    /**
-     * Reports an error to the {@link DriverStation} and sends a notification to {@link Elastic}.
-     * @param throwable A {@link Throwable} object that represents the error.
-     */
-    private static void reportError(Throwable throwable) {
-        DriverStation.reportError(throwable.getClass().getSimpleName() + ": " + throwable.getLocalizedMessage(), true);
-
-        Notification notification = new Notification()
-            .withLevel(NotificationLevel.ERROR)
-            .withTitle(throwable.getClass().getSimpleName())
-            .withDescription(throwable.getLocalizedMessage())
-            .withAutomaticHeight()
-            .withNoAutoDismiss();
-        
-        Elastic.sendNotification(notification);
     }
 
     /**
