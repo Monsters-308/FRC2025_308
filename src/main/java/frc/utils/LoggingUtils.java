@@ -2,6 +2,7 @@ package frc.utils;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -57,7 +58,7 @@ public class LoggingUtils {
         sparkMax.clearFaults();
 
         // Log faults and warnings
-        loggingTab.addBoolean("Spark" + sparkMax.getDeviceId(), () -> sparkMax.hasActiveFault() || sparkMax.hasActiveWarning());
+        loggingTab.addBoolean("Spark" + sparkMax.getDeviceId(), () -> !sparkMax.hasActiveFault() && !sparkMax.hasActiveWarning());
     }
 
     /**
@@ -70,12 +71,12 @@ public class LoggingUtils {
         canCoder.clearStickyFaults();
 
         loggingTab.addBoolean("CANcoder" + canCoder.getDeviceID(), () -> 
-            canCoder.isConnected() ||
-            canCoder.getFault_BadMagnet(false).getValue() ||
-            canCoder.getFault_BootDuringEnable(false).getValue() ||
-            canCoder.getFault_Hardware(false).getValue() ||
-            canCoder.getFault_Undervoltage(false).getValue() ||
-            canCoder.getFault_UnlicensedFeatureInUse(false).getValue()
+            canCoder.isConnected() &&
+            !canCoder.getFault_BadMagnet(false).getValue() &&
+            !canCoder.getFault_BootDuringEnable(false).getValue() &&
+            !canCoder.getFault_Hardware(false).getValue() &&
+            !canCoder.getFault_Undervoltage(false).getValue() &&
+            !canCoder.getFault_UnlicensedFeatureInUse(false).getValue()
         );
     }
 
@@ -105,11 +106,11 @@ public class LoggingUtils {
         loggingTab.addBoolean("PDH faults",
             () -> {
                 PowerDistributionFaults faults = pdh.getFaults();
-                return faults.Brownout || faults.CanWarning || faults.HardwareFault;
+                return !faults.Brownout && !faults.CanWarning && !faults.HardwareFault;
             }
         );
 
         // Log if any of the channels have breaker faults
-        loggingTab.addBoolean("Breaker faults", () -> hasBreakerFaults(pdh.getFaults()));
+        loggingTab.addBoolean("Breaker faults", () -> !hasBreakerFaults(pdh.getFaults()));
     }
 }
