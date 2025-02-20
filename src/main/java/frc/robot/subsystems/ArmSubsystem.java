@@ -123,6 +123,16 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     /**
+     * Creates a command the moves the arm to the specified angle.
+     * @param index The index of the level the arm should move to.
+     * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the angle.
+     * @return The runnable command.
+     */
+    public Command goToLevel(int index, boolean endImmediately) {
+        return goToAngle(ArmConstants.kArmLevelAngles[index], endImmediately);
+    }
+
+    /**
      * Gets the current angle of the coral arm.
      * @return The current angle of the arm.
      */
