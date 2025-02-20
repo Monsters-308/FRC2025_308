@@ -16,10 +16,11 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
-import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
-import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
+// import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
+// import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
+// import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+// import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PhotonSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -45,12 +46,14 @@ public class RobotContainer {
         m_photonSubsystem::getEstimatedGlobalPose
     );
 
-    /** The {@link ElevatorSubsystem} of the robot. */
-    private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-    /** The {@link AlgaeIntakeRollerSubsystem} of the robot. */
-    private final AlgaeIntakeRollerSubsystem m_algaeIntakeRollerSubsystem = new AlgaeIntakeRollerSubsystem();
-    /** The {@link AlgaeIntakeArmSubsystem} of the robot. */
-    private final AlgaeIntakeArmSubsystem m_algaeIntakeArmSubsystem = new AlgaeIntakeArmSubsystem();
+    // /** The {@link ElevatorSubsystem} of the robot. */
+    // private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+    // /** The {@link AlgaeIntakeRollerSubsystem} of the robot. */
+    // private final AlgaeIntakeRollerSubsystem m_algaeIntakeRollerSubsystem = new AlgaeIntakeRollerSubsystem();
+    // /** The {@link AlgaeIntakeArmSubsystem} of the robot. */
+    // private final AlgaeIntakeArmSubsystem m_algaeIntakeArmSubsystem = new AlgaeIntakeArmSubsystem();
+    // /** The {@link CoralIntakeSubsystem} of the robot. */
+    // private final CoralIntakeSubsystem m_coralIntakeSubsystem = new CoralIntakeSubsystem();
 
     // Controllers
     /** The {@link CommandXboxContoller} object that represents the driver controller. */
@@ -158,21 +161,26 @@ public class RobotContainer {
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
-        InputMappings.event("coDriver", "algaeIntake")
-            .onTrue(m_algaeIntakeRollerSubsystem.intakeAlgae());
-        InputMappings.event("coDriver", "algaeShoot")
-            .onTrue(m_algaeIntakeRollerSubsystem.shootAlgae());
-        InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
-            .onTrue(m_algaeIntakeArmSubsystem.armToggle());
+        // InputMappings.event("coDriver", "algaeIntake")
+        //     .onTrue(m_algaeIntakeRollerSubsystem.intakeAlgae());
+        // InputMappings.event("coDriver", "algaeShoot")
+        //     .onTrue(m_algaeIntakeRollerSubsystem.shootAlgae());
+        // InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
+        //     .onTrue(m_algaeIntakeArmSubsystem.armToggle());
 
-        InputMappings.event("coDriver", "elevator1")
-            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-        InputMappings.event("coDriver", "elevator2")
-            .onTrue(m_elevatorSubsystem.goToLevel(1, true));
-        InputMappings.event("coDriver", "elevator3")
-            .onTrue(m_elevatorSubsystem.goToLevel(2, true));
-        InputMappings.event("coDriver", "elevator4")
-            .onTrue(m_elevatorSubsystem.goToLevel(3, true));
+        // InputMappings.event("coDriver", "coralIntake")
+        //     .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
+        // InputMappings.event("coDriver", "coralShoot")
+        //     .whileTrue(m_coralIntakeSubsystem.shootCoral());
+
+        // InputMappings.event("coDriver", "elevator1")
+        //     .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+        // InputMappings.event("coDriver", "elevator2")
+        //     .onTrue(m_elevatorSubsystem.goToLevel(1, true));
+        // InputMappings.event("coDriver", "elevator3")
+        //     .onTrue(m_elevatorSubsystem.goToLevel(2, true));
+        // InputMappings.event("coDriver", "elevator4")
+        //     .onTrue(m_elevatorSubsystem.goToLevel(3, true));
     }
 
     /**
