@@ -15,7 +15,6 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotOrbitPoint;
-import frc.robot.commands.drive.TurningMotorsTest;
 // import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
 // import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
 // import frc.robot.subsystems.CoralIntakeSubsystem;
@@ -99,16 +98,6 @@ public class RobotContainer {
         // Put choosers on the dashboard
         Shuffleboard.getTab("Autonomous").add("First Action", m_autonFirstAction).withSize(2, 1);
         Shuffleboard.getTab("Autonomous").add("Second Action", m_autonSecondAction).withSize(2, 1);
-
-        // DEBUG: widgets for testing swerve modules
-        Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
-            () -> driveSubsystem.drive(
-                0.03,
-                0,
-                0,
-                false, true),
-                driveSubsystem));
-        Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(driveSubsystem));
 
         // FAILSAFE: widgets for manually setting robot position if the limelight is not working or can't view the april tags.
         Shuffleboard.getTab("Autonomous").add("Set Amp Side",
