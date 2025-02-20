@@ -1,0 +1,487 @@
+{
+  "version": 1.0,
+  "grid_size": 64,
+  "tabs": [
+    {
+      "name": "Logging",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Spark8",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark8",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spark1",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark1",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spark3",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark3",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spark2",
+            "x": 128.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark2",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spark4",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark4",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spark5",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark5",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spark6",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark6",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spark7",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/Spark7",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "CANcoder11",
+            "x": 0.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/CANcoder11",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "CANcoder12",
+            "x": 128.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/CANcoder12",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "CANcoder13",
+            "x": 256.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/CANcoder13",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "CANcoder14",
+            "x": 384.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Logging/CANcoder14",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Swerve",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Alliance",
+            "x": 0.0,
+            "y": 192.0,
+            "width": 192.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/Alliance",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4278212607,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Field",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 1024.0,
+            "height": 512.0,
+            "type": "Field",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/Field",
+              "period": 0.06,
+              "field_game": "Reefscape",
+              "robot_width": 0.85,
+              "robot_length": 0.85,
+              "show_other_objects": true,
+              "show_trajectories": true,
+              "field_rotation": 0.0,
+              "robot_color": 4294198070,
+              "trajectory_color": 4294967295
+            }
+          },
+          {
+            "title": "Photon Vision Data",
+            "x": 384.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/Photon Vision Data",
+              "period": 0.06,
+              "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Robot Heading",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 192.0,
+            "height": 192.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/Robot Heading",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "frontLeft angle",
+            "x": 192.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/frontLeft angle",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "frontRight angle",
+            "x": 320.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/frontRight angle",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "rearLeft angle",
+            "x": 192.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/rearLeft angle",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "rearRight angle",
+            "x": 320.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/rearRight angle",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "robot X",
+            "x": 0.0,
+            "y": 320.0,
+            "width": 192.0,
+            "height": 192.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/robot X",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "robot Y",
+            "x": 192.0,
+            "y": 320.0,
+            "width": 192.0,
+            "height": 192.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve/robot Y",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Input",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Mappings",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Driver",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "ComboBox Chooser",
+                "properties": {
+                  "topic": "/Shuffleboard/Input/Mappings/Driver",
+                  "period": 0.06,
+                  "sort_options": false
+                }
+              },
+              {
+                "title": "CoDriver",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "ComboBox Chooser",
+                "properties": {
+                  "topic": "/Shuffleboard/Input/Mappings/CoDriver",
+                  "period": 0.06,
+                  "sort_options": false
+                }
+              }
+            ]
+          }
+        ],
+        "containers": []
+      }
+    },
+    {
+      "name": "Autonomous",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "First Action",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 192.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/Shuffleboard/Autonomous/First Action",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Second Action",
+            "x": 0.0,
+            "y": 192.0,
+            "width": 256.0,
+            "height": 192.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/Shuffleboard/Autonomous/Second Action",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Set Amp Side",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/Shuffleboard/Autonomous/Set Amp Side",
+              "period": 0.06,
+              "show_type": false
+            }
+          },
+          {
+            "title": "Set Middle",
+            "x": 256.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/Shuffleboard/Autonomous/Set Middle",
+              "period": 0.06,
+              "show_type": false
+            }
+          },
+          {
+            "title": "Set Source Side",
+            "x": 256.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/Shuffleboard/Autonomous/Set Source Side",
+              "period": 0.06,
+              "show_type": false
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
