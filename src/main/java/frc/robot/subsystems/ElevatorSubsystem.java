@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -36,9 +37,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         MotorType.kBrushless);
 
     /** The right motor controller of the elevator. */
-    private final SparkMax m_elevatorFollower = new SparkMax(
-        ElevatorConstants.kElevatorRightCanId,
-        MotorType.kBrushless);
+    // private final SparkMax m_elevatorFollower = new SparkMax(
+    //     ElevatorConstants.kElevatorRightCanId,
+    //     MotorType.kBrushless);
 
     /** Encoder that represents the elevator motors. */
     private final RelativeEncoder m_elevatorEncoder;
@@ -91,21 +92,21 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         m_elevatorLeader.configure(leaderMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
+        // SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
 
-        followerMotorConfig
-            .idleMode(ElevatorConstants.kElevatorIdleMode)
-            .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
-            .inverted(ElevatorConstants.kElevatorRightInverted)
-            .follow(m_elevatorLeader);
+        // followerMotorConfig
+        //     .idleMode(ElevatorConstants.kElevatorIdleMode)
+        //     .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
+        //     .inverted(ElevatorConstants.kElevatorRightInverted)
+        //     .follow(m_elevatorLeader);
 
-        m_elevatorFollower.configure(followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        // m_elevatorFollower.configure(followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
 
-        m_elevatorTab.addDouble("Elevator Height", this::getElevatorHeight);
+        m_elevatorTab.addDouble("Elevator Height", () -> Units.metersToInches(getElevatorHeight()));
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
-        m_elevatorTab.addDouble("Elevator Speed", this::getElevatorVelocity);
+        m_elevatorTab.addDouble("Elevator Speed", () -> Units.metersToInches(getElevatorVelocity()));
 
         m_elevatorTab.add("Zero Elevator", zeroElevator());
 
