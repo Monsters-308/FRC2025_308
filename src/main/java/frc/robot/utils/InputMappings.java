@@ -180,8 +180,6 @@ public final class InputMappings {
     public static SendableChooser<String> getChooser(String controllerId) {
         if (m_choosers.containsKey(controllerId)) return m_choosers.get(controllerId);
 
-        final SendableChooser<String> chooser = new SendableChooser<>();
-
         final File mappingsDirectory = Filesystem.getDeployDirectory().toPath().resolve("mappings").toFile();
         final File controllerDirectory = mappingsDirectory.toPath().resolve(controllerId).toFile();
 
@@ -195,9 +193,12 @@ public final class InputMappings {
             }
         } catch (MappingsDirectoryNotFoundException | ControllerNotFoundException e) {
             reportError(e);
-            return chooser;
+            return null;
         }
 
+        @SuppressWarnings("resource")
+        final SendableChooser<String> chooser = new SendableChooser<>();
+        
         final File[] mappings = controllerDirectory.listFiles();
 
         for (final File mapping : mappings) {
