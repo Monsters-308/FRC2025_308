@@ -93,7 +93,7 @@ public final class InputMappings {
             return new Trigger(() -> false);
         }
 
-        final File[] mappings = mappingsDirectory.listFiles();
+        final File[] mappings = controllerDirectory.listFiles();
         final Trigger[] triggers = new Trigger[mappings.length];
 
         for (int i = 0; i < mappings.length; i++) {
