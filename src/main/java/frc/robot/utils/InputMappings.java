@@ -127,9 +127,6 @@ public final class InputMappings {
                 return new Trigger(() -> false);
             }
 
-            System.out.println(eventButton);
-            System.out.println(threshold);
-
             try {
                 final Method triggerMethod;
 
