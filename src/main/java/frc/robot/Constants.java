@@ -475,8 +475,9 @@ public final class Constants {
         /** The preferences key for the elevator height. */
         public static final String kPhysicalHeightLimitKey = "physical_elevator_height";
 
+        // TODO: add heights
         /** The heights, in meters, of every elevator level. */
-        public static final double[] kElevatorLevelHeights = { 0, 0.2, 0.4 };
+        public static final double[] kElevatorLevelHeights = {};
     }
 
     /**
@@ -580,6 +581,10 @@ public final class Constants {
         public static final double kArmV = 0;
         /** The A gain for the arm feedforward. */
         public static final double kArmA = 0;
+
+        // TODO: add angles
+        /** The angles of the arm for each elevator level. */
+        public static final Rotation2d[] kArmLevelAngles = {};
     }
 
     /**
