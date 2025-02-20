@@ -19,6 +19,7 @@ import frc.robot.Constants.CoralIntakeConstants;
 public class CoralIntakeSubsystem extends SubsystemBase{
     /** The motor controller for the coral intake motor. */
     private final SparkMax m_coralIntakeMotor = new SparkMax(CoralIntakeConstants.kCoralIntakeMotorCanId, MotorType.kBrushless);
+    /** The senser that detects whether or not coral is in the intake. */
     private final DigitalInput m_sensor = new DigitalInput(CoralIntakeConstants.kSensorChannel);
 
     /**
@@ -35,14 +36,15 @@ public class CoralIntakeSubsystem extends SubsystemBase{
 
         m_coralIntakeMotor.configure(coralIntakeMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
-    /*
+
+    /**
      * sets the speed of the flywheels depending on the what you pass into the pramader.
      */
     public void setCoralSpeed(double speed) {
         m_coralIntakeMotor.set(speed);
     }
 
-    /*
+    /**
      * This returns a true or false if the coral is detected.
      */
     public boolean isCoralDetected() {
