@@ -58,9 +58,9 @@ public class FieldUtils {
     }
 
     /**
-     * Mirrors a pose2d object's Y value and angle to line up on the red side if the robot is on the red alliance.
+     * Mirrors a Pose2d object's Y value and angle to line up on the red side if the robot is on the red alliance.
      * @param position A pose2d object for the blue side.
-     * @return The translation object mirrored for the red side.
+     * @return The Pose2d object mirrored for the red side.
      */
     public static Pose2d flipRed(Pose2d position) {
         if (isRedAlliance()) {
@@ -69,6 +69,26 @@ public class FieldUtils {
                 flipRedAngle(position.getRotation())
             );
         }
+        return position;
+    }
+
+    /**
+     * Flips a translation object's Y value to line up on the red side if the robot is on the red alliance.
+     * @param position A translation object for the blue side.
+     * @return The translation object mirrored for the red side.
+     */
+    public static Translation2d flipBlue(Translation2d position) {
+        flip(flipRed(position));
+        return position;
+    }
+
+    /**
+     * Mirrors a pose2d object's Y value and angle to line up on the red side if the robot is on the red alliance.
+     * @param position A pose2d object for the blue side.
+     * @return The position object mirrored for the red side.
+     */
+    public static Pose2d flipBlue(Pose2d position) {
+        flip(flipRed(position));
         return position;
     }
 
