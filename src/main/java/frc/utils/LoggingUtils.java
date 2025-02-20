@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.studica.frc.AHRS;
 
 import edu.wpi.first.hal.PowerDistributionFaults;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -112,5 +113,14 @@ public class LoggingUtils {
 
         // Log if any of the channels have breaker faults
         loggingTab.addBoolean("Breaker faults", () -> !hasBreakerFaults(pdh.getFaults()));
+    }
+
+    /**
+     * Creates a boolean on the Logging tab that indicates 
+     * whether or not the NavX is connected.
+     * @param navX The NavX
+     */
+    public static void logNavX(AHRS navX) {
+        loggingTab.addBoolean("NavX", navX::isConnected);
     }
 }
