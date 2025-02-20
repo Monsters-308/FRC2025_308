@@ -43,6 +43,14 @@ public class FieldUtils {
     }
 
     /**
+     * Returns whether or not the robot is on the blue alliance.
+     * @return True if on blue alliance or invalid, false if on red alliance.
+     */
+    public static boolean isBlueAlliance() {
+        return getAlliance().equals(Alliance.Blue);
+    }
+
+    /**
      * Flips a translation object's Y value to line up on the red side if the robot is on the red alliance.
      * @param position A translation object for the blue side.
      * @return The translation object mirrored for the red side.
@@ -59,7 +67,7 @@ public class FieldUtils {
 
     /**
      * Mirrors a Pose2d object's Y value and angle to line up on the red side if the robot is on the red alliance.
-     * @param position A pose2d object for the blue side.
+     * @param position A Pose2d object for the blue side.
      * @return The Pose2d object mirrored for the red side.
      */
     public static Pose2d flipRed(Pose2d position) {
@@ -73,9 +81,9 @@ public class FieldUtils {
     }
 
     /**
-     * Flips a translation object's Y value to line up on the red side if the robot is on the red alliance.
-     * @param position A translation object for the blue side.
-     * @return The translation object mirrored for the red side.
+     * Flips a translation object's Y value to line up on the blue side if the robot is on the blue alliance.
+     * @param position A translation object for the red side.
+     * @return The translation object mirrored for the blue side.
      */
     public static Translation2d flipBlue(Translation2d position) {
         flip(flipRed(position));
@@ -83,9 +91,9 @@ public class FieldUtils {
     }
 
     /**
-     * Mirrors a pose2d object's Y value and angle to line up on the red side if the robot is on the red alliance.
-     * @param position A pose2d object for the blue side.
-     * @return The position object mirrored for the red side.
+     * Mirrors a pose2d object's Y value and angle to line up on the blue side if the robot is on the blue alliance.
+     * @param position A pose2d object for the red side.
+     * @return The position object mirrored for the blue side.
      */
     public static Pose2d flipBlue(Pose2d position) {
         flip(flipRed(position));
