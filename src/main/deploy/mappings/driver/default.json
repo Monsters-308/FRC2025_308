@@ -1,11 +1,7 @@
 {
     "displayName": "Default",
     "events": {
-        "orbitReef": {
-            "button": "rightBumper"
-        },
-        "autoAlign": {
-            "button": "leftBumper"
-        }
+        "orbitReef": "rightBumper",
+        "autoAlign": "leftBumper"
     }
 }

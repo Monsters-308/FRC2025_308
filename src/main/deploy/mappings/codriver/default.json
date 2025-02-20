@@ -1,34 +1,20 @@
 {
     "displayName": "Default",
     "events": {
-        "algaeIntake": {
-            "button": "leftBumper"
-        },
+        "algaeIntake": "leftBumper",
         "algaeShoot": {
             "button": "leftTrigger",
             "threshold": 0.1
         },
-        "toggleAlgaeIntakeArm": {
-            "button": "x"
-        },
-        "elevator1": {
-            "button": "povDown"
-        },
-        "elevator2": {
-            "button": "povLeft"
-        },
-        "elevator3": {
-            "button": "povRight"
-        },
-        "elevator4": {
-            "button": "povUp"
-        },
-        "coralIntake": {
-            "button": "rightBumper"
-        },
+        "coralIntake": "rightBumper",
         "coralShoot": {
             "button": "rightTrigger",
             "threshold": 0.1
-        }
+        },
+        "toggleAlgaeIntakeArm": "x",
+        "elevator1": "povDown",
+        "elevator2": "povLeft",
+        "elevator3": "povRight",
+        "elevator4": "povUp"
     }
 }
