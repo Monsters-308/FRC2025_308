@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utils.LoggingUtils;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -46,6 +47,8 @@ public class Robot extends TimedRobot {
         URCL.start();
 
         WebServer.start(5800, Filesystem.getDeployDirectory().toPath().resolve("layouts").toString());
+
+        LoggingUtils.logPDH();
     }
 
     @Override
