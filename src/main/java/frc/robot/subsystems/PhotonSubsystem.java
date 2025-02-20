@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 import java.util.List;
 import java.util.Optional;
+
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.EstimatedRobotPose;
@@ -34,7 +35,7 @@ public class PhotonSubsystem extends SubsystemBase {
 
         for (int i = 0; i < results.size(); i++) {
             double timestamp = results.get(i).getTimestampSeconds();
-            if (timestamp > latestTimestamp || latestTimestamp == null) {
+            if (latestTimestamp == null || timestamp > latestTimestamp) {
                 latestResult = results.get(i);
                 latestTimestamp = timestamp;
             }
