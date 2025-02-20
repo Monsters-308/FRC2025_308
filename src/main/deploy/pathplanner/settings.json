@@ -3,6 +3,7 @@
   "robotLength": 0.895,
   "holonomicMode": true,
   "pathFolders": [
+    "go to human",
     "place coral"
   ],
   "autoFolders": [],
