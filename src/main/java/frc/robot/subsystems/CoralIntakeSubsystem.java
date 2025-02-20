@@ -49,26 +49,26 @@ public class CoralIntakeSubsystem extends SubsystemBase{
         return m_sensor.get();
     }
     
-    /*
-     * This sets the speed of the Coral flywheels to shoot.
+    /**
+     * Creates a {@link Command} that shoots the coral.
+     * @return The <code>Command</code> object.
      */
     public Command shootCoral() {
         return runOnce(() -> setCoralSpeed(CoralIntakeConstants.kCoralIntakeSpeed));
     }
-    /*
-     * This sets the speed of the Coral flywheels to intake.
-     */
-    public Command ReverseCoral() {
-        return runOnce(() -> setCoralSpeed(-CoralIntakeConstants.kCoralIntakeSpeed));
-    }
 
-    /*
-     * only runs when coral is detected.
+    /**
+     * Creates a {@link Command} that intakes the coral.
+     * @param stopWhenDetected Whether or not to stop the coral intake when coral is detected inside.
+     * @return The <code>Command</code> object.
      */
-    public Command intakeCoral() {
+    public Command intakeCoral(boolean stopWhenDetected) {
         return runOnce(() -> setCoralSpeed(0.1))
-            .onlyWhile(() -> !isCoralDetected())
-            .finallyDo(() -> setCoralSpeed(0));
+            .onlyWhile(() -> !isCoralDetected() && stopWhenDetected)
+            .finallyDo(() -> {
+                if (!stopWhenDetected) return;
+                setCoralSpeed(0);
+            });
     }
 
 }
