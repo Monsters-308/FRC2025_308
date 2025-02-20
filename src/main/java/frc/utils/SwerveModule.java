@@ -147,6 +147,11 @@ public class SwerveModule {
 
         // m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());
         m_drivingEncoder.setPosition(0);
+
+        LoggingUtils.logSparkMax(m_drivingSparkMax);
+        LoggingUtils.logSparkMax(m_turningSparkMax);
+
+        LoggingUtils.logCANcoder(m_turningAbsoluteEncoder);
     }
 
     /**
