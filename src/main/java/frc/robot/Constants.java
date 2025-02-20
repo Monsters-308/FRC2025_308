@@ -421,9 +421,9 @@ public final class Constants {
         public static final boolean kElevatorRightInverted = false;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
-        public static final double kElevatorReduction = 1;
+        public static final double kElevatorReduction = 40;
         /** The diameter of the gear/wheel that moves the elevator. */
-        public static final double kGearDiameter = 1;
+        public static final double kGearDiameter = Units.inchesToMeters(1);
         /** The circumference of the gear/wheel that moves the elevator. */
         public static final double kGearCircumference = kGearDiameter * Math.PI;
         /** The conversion factor that converts from motor rotations to meters. */
