@@ -12,8 +12,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.utils.FieldUtils;
-import frc.utils.Utils;
+import frc.robot.utils.FieldUtils;
+import frc.robot.utils.Utils;
 
 public class RobotGotoFieldPos extends Command {
     private final DriveSubsystem m_driveSubsystem;

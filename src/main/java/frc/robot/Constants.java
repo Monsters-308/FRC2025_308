@@ -29,14 +29,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import frc.utils.LoggingUtils;
 import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PhotonSubsystem;
-import frc.utils.SwerveModule;
+import frc.robot.utils.LoggingUtils;
+import frc.robot.utils.SwerveModule;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
