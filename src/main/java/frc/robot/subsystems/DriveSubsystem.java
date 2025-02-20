@@ -215,7 +215,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_field.setRobotPose(FieldUtils.flipRed(getPose()));
     
         m_allianceWidget.getEntry().setBoolean(FieldUtils.isBlueAlliance());
-        
     }
 
     /**
