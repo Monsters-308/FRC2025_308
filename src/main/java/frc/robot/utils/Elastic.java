@@ -14,6 +14,8 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StringTopic;
 
 public final class Elastic {
+    private Elastic() {}
+
     private static final StringTopic notificationTopic =
             NetworkTableInstance.getDefault().getStringTopic("/Elastic/RobotNotifications");
     private static final StringPublisher notificationPublisher =
