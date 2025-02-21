@@ -96,7 +96,7 @@ public class LoggingUtils {
             if (sparkWarnings.sensor) faultList.add("sensor warning");
             if (sparkWarnings.stall) faultList.add("stall warning");
 
-            final String description = "A " + joinArray((String[])faultList.toArray()) +
+            final String description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
                 (faultList.size() == 1 ? " has" : " have") + " been detected in SparkMax #" + sparkMax.getDeviceId() + ".";
 
             Notification notification = new Notification()
@@ -143,7 +143,7 @@ public class LoggingUtils {
                 description = "CANcoder #" + canCoder.getDeviceID() +" has been disconnected.";
             } else {
                 title = "CANcoder Faults Detected!";
-                description = "A " + joinArray((String[])faultList.toArray()) +
+                description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
                     (faultList.size() == 1 ? " has" : " have") + " been detected in CANcoder #" + canCoder.getDeviceID() + ".";
             }
 
@@ -173,7 +173,7 @@ public class LoggingUtils {
             if (faults.getBreakerFault(i))
                 faultChannels.add(i);
         }
-        return (Integer[])faultChannels.toArray();
+        return faultChannels.toArray(new Integer[faultChannels.size()]);
     }
 
     /** 
@@ -204,7 +204,7 @@ public class LoggingUtils {
             if (faults.CanWarning) faultList.add("CAN warning");
             if (faults.HardwareFault) faultList.add("hardware fault");
 
-            String description = "A " + joinArray((String[])faultList.toArray()) +
+            String description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
                 (faultList.size() == 1 ? " has" : " have") + " been detected.";
 
             Notification notification = new Notification()
