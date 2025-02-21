@@ -223,7 +223,7 @@ public class DriveSubsystem extends SubsystemBase {
                     result.getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
                 );
 
-                m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds);
+                m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds, stdDev);
             }
         }
 
