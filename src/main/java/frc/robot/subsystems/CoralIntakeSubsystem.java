@@ -67,7 +67,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
      */
     public Command intakeCoral(boolean stopWhenDetected) {
         return runOnce(() -> setCoralSpeed(0.1))
-            .andThen(new WaitUntilCommand(() -> !isCoralDetected() && stopWhenDetected))
+            .andThen(new WaitUntilCommand(() -> isCoralDetected() || !stopWhenDetected))
             .finallyDo(() -> {
                 if (!stopWhenDetected) return;
                 setCoralSpeed(0);
