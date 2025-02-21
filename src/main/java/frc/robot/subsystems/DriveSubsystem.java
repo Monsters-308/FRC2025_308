@@ -17,10 +17,10 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
 
-import java.util.List;
 import java.util.Map;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
@@ -208,14 +208,22 @@ public class DriveSubsystem extends SubsystemBase {
             });
         
         if (m_usePhotonData.getEntry().getBoolean(true)) {
-            List<EstimatedRobotPose> estimations = m_photonSubsystem.getEstimatedGlobalPose();
-            for (int i = 0; i < estimations.size(); i++) {
+            EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimations();
+
+            for (int i = 0; i < estimations.length; i++) {
+                if (estimations[i] == null) {
+                    continue;
+                }
+
                 Matrix<N3, N1> stdDev = DriveConstants.kVisionStandardDeviations;
+                PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
+
                 stdDev = stdDev.times(
                     DriveConstants.kVisionStandardDeviationMultipler *
-                    m_photonSubsystem.getResult(i).getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
+                    result.getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
                 );
-                m_odometry.addVisionMeasurement(estimations.get(i).estimatedPose.toPose2d(), estimations.get(i).timestampSeconds);
+
+                m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds);
             }
         }
 
