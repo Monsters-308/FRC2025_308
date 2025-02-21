@@ -206,6 +206,18 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
+     * Creates a command that moves the elevator to the bottom.
+     * @return The runnable Command.
+     */
+    public Command zeroElevator() {
+        return runOnce(() -> {
+            setElevatorVelocity(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
+        })
+        .andThen(new WaitUntilCommand(() -> m_bottomSwitch.get()))
+        .withName("Zero Elevator");
+    }
+
+    /**
      * Sets the velocity of the elevator.
      * @param velocity The velocity to set in meters per second.
      */
@@ -257,18 +269,6 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public void stop() {
         setElevatorHeight(getElevatorHeight());
-    }
-
-    /**
-     * Creates a command that zeros the elevator.
-     * @return The runnable Command.
-     */
-    public Command zeroElevator() {
-        return runOnce(() -> {
-            setElevatorVelocity(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
-        })
-        .andThen(new WaitUntilCommand(() -> getElevatorVelocity() == 0))
-        .withName("Zero Elevator");
     }
 
     @Override
