@@ -134,16 +134,16 @@ public final class Constants {
         /** CAN ID of the rear right turning {@link CANcoder}. */
         public static final int kRearRightTurningEncoderId = 11;
 
-        /**
-         * Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
-         * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
-         */
+        /** Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
+         * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians. */
         public static final Vector<N3> kStateStandardDeviations = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
-        /**
-         * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
-         * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
-         */
+
+        /** Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
+         * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians. */
         public static final Vector<N3> kVisionStandardDeviations = VecBuilder.fill(2, 2, 3);
+
+        /** A multipler that controls how much the distance should scale the {@link DriveConstants#kVisionStandardDeviations}. */
+        public static final double kVisionStandardDeviationMultipler = 1;
     }
 
     /**
