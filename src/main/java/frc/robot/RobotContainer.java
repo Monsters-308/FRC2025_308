@@ -44,7 +44,6 @@ public class RobotContainer {
     private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
     public final DriveSubsystem driveSubsystem = new DriveSubsystem(m_photonSubsystem);
-
     /** The {@link ElevatorSubsystem} of the robot. */
     private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
     /** The {@link AlgaeIntakeRollerSubsystem} of the robot. */
