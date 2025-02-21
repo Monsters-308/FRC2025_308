@@ -4,13 +4,17 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
 
 import java.util.Map;
@@ -18,6 +22,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
@@ -97,8 +102,8 @@ public class DriveSubsystem extends SubsystemBase {
     /** {@link SimpleWidget} for toggling Photon Vision data. */
     private final SimpleWidget m_usePhotonData;
 
-    /** A {@link Supplier} of optional {@link EstimatedRobotPose} objects from Photon Vision */
-    private final Supplier<Optional<EstimatedRobotPose>> m_photonEstimation;
+    /** The {@link PhotonSubsystem} of the robot. */
+    private final PhotonSubsystem m_photonSubsystem;
 
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -119,8 +124,8 @@ public class DriveSubsystem extends SubsystemBase {
      * Constructs a {@link DriveSubsystem} to control all of the {@link SwerveModule} objects, along with the pathplanner setup, the gyro,
      * the odometry, and the use of odometry and vision data to estimate the robot's position.
      */
-    public DriveSubsystem(Supplier<Optional<EstimatedRobotPose>> photonEstimation) {
-        m_photonEstimation = photonEstimation;
+    public DriveSubsystem(PhotonSubsystem photonSubsystem) {
+        m_photonSubsystem = photonSubsystem;
 
         m_gyro.enableLogging(true);
     
@@ -204,12 +209,17 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearRight.getPosition()
             });
         
-        Optional<EstimatedRobotPose> estimationOpt = m_photonEstimation.get();
-        estimationOpt.ifPresent(estimation -> {
-            if (m_usePhotonData.getEntry().getBoolean(true)) {
-                m_odometry.addVisionMeasurement(estimation.estimatedPose.toPose2d(), estimation.timestampSeconds);
+        if (m_usePhotonData.getEntry().getBoolean(true)) {
+            EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimatedGlobalPose();
+            for (int i = 0; i < estimations.length; i++) {
+                Matrix<N3, N1> stdDev = DriveConstants.kVisionStandardDeviations;
+                stdDev.times(
+                    DriveConstants.kVisionStandardDeviationMultipler *
+                    m_photonSubsystem.getResult(i).getBestTarget().bestCameraToTarget.getTranslation().getDistance(new Translation3d())
+                );
+                m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds);
             }
-        });
+        }
 
         // Update field widget
         m_field.setRobotPose(FieldUtils.flipRed(getPose()));
