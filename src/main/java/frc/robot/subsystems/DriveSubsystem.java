@@ -209,9 +209,7 @@ public class DriveSubsystem extends SubsystemBase {
             EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimations();
 
             for (int i = 0; i < estimations.length; i++) {
-                if (estimations[i] == null) {
-                    continue;
-                }
+                if (estimations[i] == null) continue;
 
                 Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
                 PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
