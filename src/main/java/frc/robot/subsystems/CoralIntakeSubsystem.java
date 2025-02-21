@@ -17,7 +17,7 @@ import frc.robot.Constants.CoralIntakeConstants;
 /**
  * The subsystem that controls the coral intake.
  */
-public class CoralIntakeSubsystem extends SubsystemBase{
+public class CoralIntakeSubsystem extends SubsystemBase {
     /** The motor controller for the coral intake motor. */
     private final SparkMax m_coralIntakeMotor = new SparkMax(CoralIntakeConstants.kCoralIntakeMotorCanId, MotorType.kBrushless);
     /** The senser that detects whether or not coral is in the intake. */
