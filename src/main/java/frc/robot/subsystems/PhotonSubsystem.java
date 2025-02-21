@@ -34,8 +34,9 @@ public class PhotonSubsystem extends SubsystemBase {
      * @return An optional {@link EstimatedRobotPose} that contains an estimated {@link Pose2d} and timestamp if present.
      */
     public List<EstimatedRobotPose> getEstimatedGlobalPose() {
-        m_results = m_cameras[0].getAllUnreadResults();
-        for (int i = 1; i < m_cameras.length; i++) {
+        m_results = new ArrayList<>();
+        
+        for (int i = 0; i < m_cameras.length; i++) {
             m_results.addAll(m_cameras[i].getAllUnreadResults());
         }
 
