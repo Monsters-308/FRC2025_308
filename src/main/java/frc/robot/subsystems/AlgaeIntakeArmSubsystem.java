@@ -9,6 +9,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AlgaeIntakeConstants;
 
 /**
@@ -53,7 +54,7 @@ public class AlgaeIntakeArmSubsystem extends SubsystemBase {
      */
     public Command armIn() {
         return runOnce(() -> setArmSpeed(-AlgaeIntakeConstants.kArmSpeed))
-            .withTimeout(AlgaeIntakeConstants.kArmTimeout)
+            .andThen(new WaitCommand(AlgaeIntakeConstants.kArmTimeout))
             .finallyDo(() -> setArmSpeed(0));
     }
 
@@ -64,7 +65,7 @@ public class AlgaeIntakeArmSubsystem extends SubsystemBase {
      */
     public Command armOut() {
         return runOnce(() -> setArmSpeed(AlgaeIntakeConstants.kArmSpeed))
-            .withTimeout(AlgaeIntakeConstants.kArmTimeout)
+            .andThen(new WaitCommand(AlgaeIntakeConstants.kArmTimeout))
             .finallyDo(() -> setArmSpeed(0));
     }
 
@@ -74,9 +75,6 @@ public class AlgaeIntakeArmSubsystem extends SubsystemBase {
      * @see Command
      */
     public Command armToggle() {
-        return runOnce(() -> setArmSpeed(
-            m_algaeIntakeArmEncoder.getPosition() < AlgaeIntakeConstants.kArmErrorThreshold ? AlgaeIntakeConstants.kArmSpeed : -AlgaeIntakeConstants.kArmSpeed))
-            .withTimeout(AlgaeIntakeConstants.kArmTimeout)
-            .finallyDo(() -> setArmSpeed(0));
+        return m_algaeIntakeArmEncoder.getPosition() < AlgaeIntakeConstants.kArmErrorThreshold ? armOut() : armIn();
     }
 }
