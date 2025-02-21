@@ -17,6 +17,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
 
+import java.util.List;
 import java.util.Map;
 
 import org.photonvision.EstimatedRobotPose;
@@ -207,14 +208,14 @@ public class DriveSubsystem extends SubsystemBase {
             });
         
         if (m_usePhotonData.getEntry().getBoolean(true)) {
-            EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimatedGlobalPose();
-            for (int i = 0; i < estimations.length; i++) {
+            List<EstimatedRobotPose> estimations = m_photonSubsystem.getEstimatedGlobalPose();
+            for (int i = 0; i < estimations.size(); i++) {
                 Matrix<N3, N1> stdDev = DriveConstants.kVisionStandardDeviations;
                 stdDev.times(
                     DriveConstants.kVisionStandardDeviationMultipler *
                     m_photonSubsystem.getResult(i).getBestTarget().bestCameraToTarget.getTranslation().getDistance(new Translation3d())
                 );
-                m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds);
+                m_odometry.addVisionMeasurement(estimations.get(i).estimatedPose.toPose2d(), estimations.get(i).timestampSeconds);
             }
         }
 
