@@ -18,11 +18,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 import org.photonvision.EstimatedRobotPose;
-import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
