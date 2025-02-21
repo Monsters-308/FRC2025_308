@@ -593,14 +593,17 @@ public final class Constants {
     public static final class PhotonConstants {
         private PhotonConstants() {}
 
-        /** The transformation that describes how to move from the center of the robot to the Photon Vision camera. */
-        public static final Transform3d kRobotToCamera = new Transform3d(
-            new Translation3d(0,0,0),
-            new Rotation3d(0,0,0)
-        );
+        // TODO: set names and transformations
+        /** The name of the Photon Vision cameras. */
+        public static final String[] kCameraNames = { "jojo bizar" };
+        /** The transformations that describe how to move from the center of the robot to the Photon Vision cameras. */
+        public static final Transform3d[] kRobotToCameraTransformations = {
+            new Transform3d(
+                new Translation3d(0,0,0),
+                new Rotation3d(0,0,0)
+            )
+        };
 
-        /** The name of the Photon Vision camera. */
-        public static final String kCameraName = "jojo bizar";
         /** The april tage layout Photon Vision should use. */
         public static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
         /** How Photon Vision should use april tag data to determine position. */
