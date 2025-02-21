@@ -213,7 +213,7 @@ public class DriveSubsystem extends SubsystemBase {
                 Matrix<N3, N1> stdDev = DriveConstants.kVisionStandardDeviations;
                 stdDev.times(
                     DriveConstants.kVisionStandardDeviationMultipler *
-                    m_photonSubsystem.getResult(i).getBestTarget().bestCameraToTarget.getTranslation().getDistance(new Translation3d())
+                    m_photonSubsystem.getResult(i).getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
                 );
                 m_odometry.addVisionMeasurement(estimations.get(i).estimatedPose.toPose2d(), estimations.get(i).timestampSeconds);
             }
