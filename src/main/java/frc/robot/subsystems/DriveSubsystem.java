@@ -211,7 +211,7 @@ public class DriveSubsystem extends SubsystemBase {
             List<EstimatedRobotPose> estimations = m_photonSubsystem.getEstimatedGlobalPose();
             for (int i = 0; i < estimations.size(); i++) {
                 Matrix<N3, N1> stdDev = DriveConstants.kVisionStandardDeviations;
-                stdDev.times(
+                stdDev = stdDev.times(
                     DriveConstants.kVisionStandardDeviationMultipler *
                     m_photonSubsystem.getResult(i).getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
                 );
