@@ -30,7 +30,7 @@ public class PhotonSubsystem extends SubsystemBase {
      * Gets the current position estimation from Photon Vision.
      * @return An optional {@link EstimatedRobotPose} that contains an estimated {@link Pose2d} and timestamp if present.
      */
-    public EstimatedRobotPose[] getEstimatedGlobalPose() {
+    public List<EstimatedRobotPose> getEstimatedGlobalPose() {
         m_results = m_camera.getAllUnreadResults();
         ArrayList<EstimatedRobotPose> poses = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class PhotonSubsystem extends SubsystemBase {
             }
         }
 
-        return (EstimatedRobotPose[])poses.toArray();
+        return poses;
     }
 
     /**
