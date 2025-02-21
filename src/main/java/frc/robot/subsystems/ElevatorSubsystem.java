@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.Map;
+import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
 import com.revrobotics.RelativeEncoder;
@@ -13,7 +14,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -31,12 +31,12 @@ import frc.robot.utils.Utils;
  * Subsystem that controls the robot's elevator.
  */
 public class ElevatorSubsystem extends SubsystemBase {
-    /** The left motor controller of the elevator. */
+    /** The leader motor controller of the elevator. */
     private final SparkMax m_elevatorLeader = new SparkMax(
         ElevatorConstants.kElevatorLeftCanId,
         MotorType.kBrushless);
 
-    /** The right motor controller of the elevator. */
+    /** The follower motor controller of the elevator. */
     // private final SparkMax m_elevatorFollower = new SparkMax(
     //     ElevatorConstants.kElevatorRightCanId,
     //     MotorType.kBrushless);
@@ -65,12 +65,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** Elevator bottom limit switch. */
     private final DigitalInput m_bottomSwitch = new DigitalInput(ElevatorConstants.kBottomSwitchChannel);
 
-    /** A shuffleboard tab to write elevator properties to the dashboard. */
+    /** A {@link ShuffleboardTab} to write elevator properties to the dashboard. */
     private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
-    /** A shuffleboard layout that holds the go to level command. */
-    private final ShuffleboardLayout m_goToLevelLayout = m_elevatorTab.getLayout("Go To Level", BuiltInLayouts.kList);
-    /** The network table entry that contains the level to send the robot to when the dashboard button is pressed. */
-    private final GenericEntry m_levelNetworkTableEntry;
+    /** A {@link ShuffleboardLayout} that holds the go to level command. */
+    private final ShuffleboardLayout m_goToHeightLayout = m_elevatorTab.getLayout("Go To Height", BuiltInLayouts.kList);
+    /** The {@link GenericEntry} that contains the level to send the robot to when the dashboard button is pressed. */
+    private GenericEntry m_goToHeightEntry = null;
 
     /** Whether or not the elevator is currently using PID or setting the speed directly. */
     private boolean m_isPIDMode = false;
@@ -79,7 +79,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * Initializes an ElevatorSubsystem to control the robot's elevator.
      */
     public ElevatorSubsystem() {
-        SparkMaxConfig leaderMotorConfig = new SparkMaxConfig();
+        final SparkMaxConfig leaderMotorConfig = new SparkMaxConfig();
 
         leaderMotorConfig
             .idleMode(ElevatorConstants.kElevatorIdleMode)
@@ -104,20 +104,26 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
 
-        m_elevatorTab.addDouble("Elevator Height", () -> Units.metersToInches(getElevatorHeight()));
+        m_elevatorTab.addDouble("Elevator Height", () -> getElevatorHeight());
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
-        m_elevatorTab.addDouble("Elevator Speed", () -> Units.metersToInches(getElevatorVelocity()));
+        m_elevatorTab.addDouble("Elevator Speed", () -> getElevatorVelocity());
 
         m_elevatorTab.add("Zero Elevator", zeroElevator());
 
-        m_levelNetworkTableEntry = m_goToLevelLayout.add("Level", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("Min", 1,
-                "Max", ElevatorConstants.kElevatorLevelHeights.length,
-                "Block Increment", 1))
-            .getEntry();
+        m_goToHeightLayout.add(goToHeight(() -> { 
+            if (m_goToHeightEntry != null) {
+                return m_goToHeightEntry.getDouble(0);
+            } else {
+                return 0;
+            }
+        }, false));
 
-        m_goToLevelLayout.add(goToLevel(() -> (int)m_levelNetworkTableEntry.getInteger(-1), false));
+        m_goToHeightEntry = m_goToHeightLayout.add("Height", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of(
+                "Min", 0,
+                "Max", ElevatorConstants.kElevatorMaxHeight
+            )).getEntry();
 
         Utils.configureSysID(
             m_elevatorTab.getLayout("Elevator SysID", BuiltInLayouts.kList), this, 
@@ -152,42 +158,51 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Creates a Command that moves to elevator to the specified level.
+     * Creates a {@link Command} that moves to elevator to the specified level.
      * @param index The index of the level.
      * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the level.
-     * @return The runnable Command.
+     * @return The runnable <code>Command</code>.
      */
     public Command goToLevel(int index, boolean endImmediately) {
-        return runOnce(() -> setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]))
-            .andThen(new WaitUntilCommand(() -> m_elevatorPIDController.atGoal() || endImmediately))
-            .withName("Go To Level #" + (index + 1));
+        return goToHeight(ElevatorConstants.kElevatorLevelHeights[index], endImmediately)
+            .withName("Go To Level #" + index);
     }
 
     /**
-     * Creates a Command that moves to elevator to the level returned from the index supplier.
+     * Creates a {@link Command} that moves to elevator to the level returned from the index supplier.
      * @param indexSupplier The supplier of the index of the level.
      * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the level.
-     * @return The runnable Command.
+     * @return The runnable <code>Command</code>.
      */
     public Command goToLevel(IntSupplier indexSupplier, boolean endImmediately) {
-        return runOnce(() -> {
-            int index = indexSupplier.getAsInt();
-            if (index < 0) { return; }
-            setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]);
-        })
-        .andThen(new WaitUntilCommand(()-> m_elevatorPIDController.atGoal() || endImmediately))
-        .withName("Go");
+        return goToHeight(
+            () -> ElevatorConstants.kElevatorLevelHeights[indexSupplier.getAsInt()],
+            endImmediately
+        );
     }
 
     /**
-     * Creates a command that moves the elevator to the specified height.
+     * Creates a {@link Command} that moves the elevator to the specified height.
      * @param height The height to move the elevator to in meters.
      * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the height.
-     * @return The runnable Command.
+     * @return The runnable <code>Command</code>.
      */
     public Command goToHeight(double height, boolean endImmediately) {
         return runOnce(() -> setElevatorHeight(height))
-            .andThen(new WaitUntilCommand(()-> m_elevatorPIDController.atGoal() || endImmediately));
+            .andThen(new WaitUntilCommand(()-> m_elevatorPIDController.atGoal() || endImmediately))
+            .withName("Go To " + height +" Meters");
+    }
+
+    /**
+     * Creates a {@link Command} that moves the elevator to the height returned from the specified supplier.
+     * @param height The supplier of the height to move the elevator to.
+     * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the height.
+     * @return The runnable <code>Command</code>.
+     */
+    public Command goToHeight(DoubleSupplier height, boolean endImmediately) {
+        return runOnce(() -> setElevatorHeight(height.getAsDouble()))
+            .andThen(new WaitUntilCommand(()-> m_elevatorPIDController.atGoal() || endImmediately))
+            .withName("Go");
     }
 
     /**
@@ -265,9 +280,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             m_elevatorPIDController.reset(0, 0);
         }
         
-        if (getElevatorHeight() >= ElevatorConstants.kPhysicalHeightLimit) {
+        if (getElevatorHeight() >= ElevatorConstants.kElevatorMaxHeight) {
             stop();
-            m_elevatorPIDController.reset(ElevatorConstants.kPhysicalHeightLimit, 0);
+            m_elevatorPIDController.reset(ElevatorConstants.kElevatorMaxHeight, 0);
         }
 
         if (m_isPIDMode) {
@@ -280,10 +295,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
 
         // Prevent level in shuffleboard go to level layout from being non-integer
-        double value = m_levelNetworkTableEntry.getDouble(-1);
-        long roundedValue = Math.round(value);
-        if (roundedValue != value) {
-            m_levelNetworkTableEntry.setInteger(roundedValue);
-        }
+        // double value = m_levelNetworkTableEntry.getDouble(-1);
+        // long roundedValue = Math.round(value);
+        // if (roundedValue != value) {
+        //     m_levelNetworkTableEntry.setInteger(roundedValue);
+        // }
     }
 }
