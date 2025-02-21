@@ -534,7 +534,7 @@ public final class Constants {
         public static final double kCoralIntakeSpeed = 0.1;
 
         /**The channel for the digital input */
-        public static final int kSensorChannel = 0;
+        public static final int kSensorChannel = 1;
     }
 
     /**
