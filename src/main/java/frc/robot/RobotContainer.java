@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
@@ -16,11 +17,11 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
-// import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
-// import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
-// import frc.robot.subsystems.CoralIntakeSubsystem;
+import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
+import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
+import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-// import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PhotonSubsystem;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.InputMappings;
@@ -42,18 +43,16 @@ public class RobotContainer {
     /** The {@link PhotonSubsystem} of the robot. */
     private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
-    public final DriveSubsystem driveSubsystem = new DriveSubsystem(
-        m_photonSubsystem::getEstimatedGlobalPose
-    );
+    public final DriveSubsystem driveSubsystem = new DriveSubsystem(m_photonSubsystem);
 
-    // /** The {@link ElevatorSubsystem} of the robot. */
-    // private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-    // /** The {@link AlgaeIntakeRollerSubsystem} of the robot. */
-    // private final AlgaeIntakeRollerSubsystem m_algaeIntakeRollerSubsystem = new AlgaeIntakeRollerSubsystem();
-    // /** The {@link AlgaeIntakeArmSubsystem} of the robot. */
-    // private final AlgaeIntakeArmSubsystem m_algaeIntakeArmSubsystem = new AlgaeIntakeArmSubsystem();
-    // /** The {@link CoralIntakeSubsystem} of the robot. */
-    // private final CoralIntakeSubsystem m_coralIntakeSubsystem = new CoralIntakeSubsystem();
+    /** The {@link ElevatorSubsystem} of the robot. */
+    private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+    /** The {@link AlgaeIntakeRollerSubsystem} of the robot. */
+    private final AlgaeIntakeRollerSubsystem m_algaeIntakeRollerSubsystem = new AlgaeIntakeRollerSubsystem();
+    /** The {@link AlgaeIntakeArmSubsystem} of the robot. */
+    private final AlgaeIntakeArmSubsystem m_algaeIntakeArmSubsystem = new AlgaeIntakeArmSubsystem();
+    /** The {@link CoralIntakeSubsystem} of the robot. */
+    private final CoralIntakeSubsystem m_coralIntakeSubsystem = new CoralIntakeSubsystem();
 
     // Controllers
     /** The {@link CommandXboxController} object that represents the driver controller. */
@@ -79,6 +78,9 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+
+        // Configure named commands for pathplanner
+        configureNamedCommands();
 
         // Configure default commands
         driveSubsystem.setDefaultCommand(
@@ -140,7 +142,6 @@ public class RobotContainer {
             )))
             .ignoringDisable(true)
         );
-
     }
 
     /**
@@ -161,26 +162,26 @@ public class RobotContainer {
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
-        // InputMappings.event("coDriver", "algaeIntake")
-        //     .onTrue(m_algaeIntakeRollerSubsystem.intakeAlgae());
-        // InputMappings.event("coDriver", "algaeShoot")
-        //     .onTrue(m_algaeIntakeRollerSubsystem.shootAlgae());
-        // InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
-        //     .onTrue(m_algaeIntakeArmSubsystem.armToggle());
+        InputMappings.event("coDriver", "algaeIntake")
+            .onTrue(m_algaeIntakeRollerSubsystem.intakeAlgae());
+        InputMappings.event("coDriver", "algaeShoot")
+            .onTrue(m_algaeIntakeRollerSubsystem.shootAlgae());
+        InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
+            .onTrue(m_algaeIntakeArmSubsystem.armToggle());
 
-        // InputMappings.event("coDriver", "coralIntake")
-        //     .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
-        // InputMappings.event("coDriver", "coralShoot")
-        //     .whileTrue(m_coralIntakeSubsystem.shootCoral());
+        InputMappings.event("coDriver", "coralIntake")
+            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
+        InputMappings.event("coDriver", "coralShoot")
+            .whileTrue(m_coralIntakeSubsystem.shootCoral());
 
-        // InputMappings.event("coDriver", "elevator1")
-        //     .onTrue(m_elevatorSubsystem.goToLevel(0, true));
-        // InputMappings.event("coDriver", "elevator2")
-        //     .onTrue(m_elevatorSubsystem.goToLevel(1, true));
-        // InputMappings.event("coDriver", "elevator3")
-        //     .onTrue(m_elevatorSubsystem.goToLevel(2, true));
-        // InputMappings.event("coDriver", "elevator4")
-        //     .onTrue(m_elevatorSubsystem.goToLevel(3, true));
+        InputMappings.event("coDriver", "elevator1")
+            .onTrue(m_elevatorSubsystem.goToLevel(0, true));
+        InputMappings.event("coDriver", "elevator2")
+            .onTrue(m_elevatorSubsystem.goToLevel(1, true));
+        InputMappings.event("coDriver", "elevator3")
+            .onTrue(m_elevatorSubsystem.goToLevel(2, true));
+        InputMappings.event("coDriver", "elevator4")
+            .onTrue(m_elevatorSubsystem.goToLevel(3, true));
     }
 
     /**
@@ -191,6 +192,13 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
         autonChooser.addOption("Move One Meter", new PathPlannerAuto("Move One Meter"));
         autonChooser.addOption("Two Meter Spin", new PathPlannerAuto("Two Meter Spin"));
+    }
+
+    private void configureNamedCommands() {
+        NamedCommands.registerCommand("Coral 1", m_elevatorSubsystem.goToLevel(0, true));
+        NamedCommands.registerCommand("Coral 2", getAutonomousCommand());
+        NamedCommands.registerCommand("Coral 3", getAutonomousCommand());
+        NamedCommands.registerCommand("Coral 4", getAutonomousCommand());
     }
 
     /**
