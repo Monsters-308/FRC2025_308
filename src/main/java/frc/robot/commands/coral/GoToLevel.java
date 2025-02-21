@@ -5,15 +5,18 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 
-/*
- * This command will set the elevator to the 4th level.
+/**
+ * Moves the elevator and arm to the specified level.
  */
 public class GoToLevel extends SequentialCommandGroup {
-    
+    /**
+     * Moves the elevator and arm to the specified level.
+     * @param armSubsystem The {@link ArmSubsystem} of the robot.
+     * @param elevatorSubsystem The {@link ELevatorSubsystem} of the robot.
+     * @param index The index of the level to move the elevator and arm to.
+     */
     public GoToLevel(ArmSubsystem armSubsystem, ElevatorSubsystem elevatorSubsystem, int index) {
-
         super(armSubsystem.goToLevel(index, false), elevatorSubsystem.goToLevel(index, false));
-
     }
 
 }
