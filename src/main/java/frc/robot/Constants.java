@@ -322,8 +322,8 @@ public final class Constants {
         public static final Pose2d[] kAutoAlignPositions = {
             /* Coral human player station positions */
             // Column 1
-            new Pose2d(3.198, 4.191, new Rotation2d()),
-            new Pose2d(3.198, 3.86, new Rotation2d()),
+            new Pose2d(3.198, 4.191, Rotation2d.kZero),
+            new Pose2d(3.198, 3.86, Rotation2d.kZero),
             // Column 2
             new Pose2d(3.685, 5.07, Rotation2d.fromDegrees(-60)),
             new Pose2d(3.685, 2.98, Rotation2d.fromDegrees(60)),
@@ -342,7 +342,6 @@ public final class Constants {
 
             // Processor position
             new Pose2d(5.985, 0.51, Rotation2d.fromDegrees(90)),
-
         };
 
         /** Reef position for orbital controls. */
@@ -470,14 +469,12 @@ public final class Constants {
         /** The maximum allowed acceleration of the elevator. */
         public static final double kElevatorMaxAccelerationMetersPerSecondSquared = 0.1;
 
-        /** The physical height of the elevator. */
-        public static final double kPhysicalHeightLimit = 1;
-        /** The preferences key for the elevator height. */
-        public static final String kPhysicalHeightLimitKey = "physical_elevator_height";
+        /** The physical height of the elevator in meters. */
+        public static final double kElevatorMaxHeight = 1;
 
         // TODO: add heights
         /** The heights, in meters, of every elevator level. */
-        public static final double[] kElevatorLevelHeights = {};
+        public static final double[] kElevatorLevelHeights = { 0, 0, 0, 0, 0 };
     }
 
     /**
@@ -584,7 +581,13 @@ public final class Constants {
 
         // TODO: add angles
         /** The angles of the arm for each elevator level. */
-        public static final Rotation2d[] kArmLevelAngles = {};
+        public static final Rotation2d[] kArmLevelAngles = {
+            Rotation2d.kZero,
+            Rotation2d.kZero,
+            Rotation2d.kZero,
+            Rotation2d.kZero,
+            Rotation2d.kZero
+        };
     }
 
     /**
