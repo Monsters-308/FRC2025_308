@@ -50,9 +50,7 @@ public class PhotonSubsystem extends SubsystemBase {
         for (int i = 0; i < m_cameras.length; i++) {
             PhotonPipelineResult result = m_results[i];
 
-            if (result == null) {
-                continue;
-            }
+            if (result == null) continue;
 
             Optional<EstimatedRobotPose> estimation = m_photonPoseEstimators[i].update(result);
             
