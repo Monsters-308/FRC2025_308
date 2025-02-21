@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,34 +19,40 @@ public class PhotonSubsystem extends SubsystemBase {
     /** The {@link PhotonCamera} that represents the robot camera. */
     private PhotonCamera m_camera = new PhotonCamera(PhotonConstants.kCameraName);
     private PhotonPoseEstimator m_photonPoseEstimator = new PhotonPoseEstimator(
-            PhotonConstants.kFieldLayout, 
-            PhotonConstants.kPoseStrategy, 
-            PhotonConstants.kRobotToCamera
-        );
+        PhotonConstants.kFieldLayout, 
+        PhotonConstants.kPoseStrategy, 
+        PhotonConstants.kRobotToCamera
+    );
+
+    private List<PhotonPipelineResult> m_results;
 
     /**
      * Gets the current position estimation from Photon Vision.
      * @return An optional {@link EstimatedRobotPose} that contains an estimated {@link Pose2d} and timestamp if present.
      */
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
-        List<PhotonPipelineResult> results = m_camera.getAllUnreadResults();
-        Double latestTimestamp = null;
+    public EstimatedRobotPose[] getEstimatedGlobalPose() {
+        m_results = m_camera.getAllUnreadResults();
+        ArrayList<EstimatedRobotPose> poses = new ArrayList<>();
 
-        PhotonPipelineResult latestResult = null;
-
-        for (int i = 0; i < results.size(); i++) {
-            double timestamp = results.get(i).getTimestampSeconds();
-            if (latestTimestamp == null || timestamp > latestTimestamp) {
-                latestResult = results.get(i);
-                latestTimestamp = timestamp;
+        for (int i = 0; i < m_results.size(); i++) {
+            Optional<EstimatedRobotPose> estimationOpt = m_photonPoseEstimator.update(m_results.get(i));
+            if (estimationOpt.isPresent()) {
+                poses.add(estimationOpt.get());
+            } else {
+                m_results.remove(i);
             }
         }
 
-        if (latestResult == null) {
-            return Optional.empty();
-        }
+        return (EstimatedRobotPose[])poses.toArray();
+    }
 
-        return m_photonPoseEstimator.update(latestResult);
+    /**
+     * Gets the {@link PhotonPipelineResult} at the specified index.
+     * @param index The index.
+     * @return The {@link PhotonPipelienResult}.
+     */
+    public PhotonPipelineResult getResult(int index) {
+        return m_results.get(index);
     }
 
     /**
