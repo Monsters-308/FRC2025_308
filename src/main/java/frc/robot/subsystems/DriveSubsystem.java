@@ -94,8 +94,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     /** A {@link ShuffleboardTab} for swerve drive. */
     private final ShuffleboardTab m_swerveTab = Shuffleboard.getTab("Swerve");
-    /** A widget the gives the current alliance color. */
-    private final SimpleWidget m_allianceWidget = m_swerveTab.add("Alliance", true);
     /** {@link SimpleWidget} for toggling Photon Vision data. */
     private final SimpleWidget m_usePhotonData;
 
@@ -125,6 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_photonSubsystem = photonSubsystem;
 
         m_gyro.enableLogging(true);
+        LoggingUtils.logNavX(m_gyro);
     
         // Widgets for swerve module angles 
         m_swerveTab.addDouble("frontLeft angle", () -> Utils.angleConstrain(m_frontLeft.getTurningAngle().getDegrees()));
@@ -152,9 +151,11 @@ public class DriveSubsystem extends SubsystemBase {
         m_swerveTab.addDouble("robot X", () -> getPose().getX());
         m_swerveTab.addDouble("robot Y", () -> getPose().getY());
 
+        m_swerveTab.addBoolean("Alliance", FieldUtils::isBlueAlliance);
+
         // // Gyro values for testing
-        // swerveTab.addDouble("gyro pitch", () -> m_gyro.getPitch());
-        // swerveTab.addDouble("gyro roll", () -> m_gyro.getRoll());
+        m_swerveTab.addDouble("gyro pitch", () -> m_gyro.getPitch());
+        m_swerveTab.addDouble("gyro roll", () -> m_gyro.getRoll());
         
         // Configure the AutoBuilder
         AutoBuilder.configure(
@@ -167,8 +168,6 @@ public class DriveSubsystem extends SubsystemBase {
             FieldUtils::isRedAlliance, // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
             this // Reference to this subsystem to set requirements
         );
-
-        LoggingUtils.logNavX(m_gyro);
 
         m_usePhotonData = m_swerveTab.add("Photon Vision Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch);
@@ -228,8 +227,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Update field widget
         m_field.setRobotPose(FieldUtils.flipRed(getPose()));
-    
-        m_allianceWidget.getEntry().setBoolean(FieldUtils.isBlueAlliance());
     }
 
     /**
