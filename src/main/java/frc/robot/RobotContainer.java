@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
+// import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
@@ -195,10 +195,10 @@ public class RobotContainer {
     }
 
     private void configureNamedCommands() {
-        NamedCommands.registerCommand("Coral 1", m_elevatorSubsystem.goToLevel(0, true));
-        NamedCommands.registerCommand("Coral 2", getAutonomousCommand());
-        NamedCommands.registerCommand("Coral 3", getAutonomousCommand());
-        NamedCommands.registerCommand("Coral 4", getAutonomousCommand());
+        // NamedCommands.registerCommand("Coral 1", m_elevatorSubsystem.goToLevel(0, true));
+        // NamedCommands.registerCommand("Coral 2", getAutonomousCommand());
+        // NamedCommands.registerCommand("Coral 3", getAutonomousCommand());
+        // NamedCommands.registerCommand("Coral 4", getAutonomousCommand());
     }
 
     /**
