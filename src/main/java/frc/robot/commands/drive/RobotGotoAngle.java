@@ -1,8 +1,8 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.commands.drive;
-/*
- * The template code does not have a function for setting the robot to face a certain way, so we're just gonna have to implement that
- * ourselves using the drive function, the getHeading function, and a pid controller that we'll have to tune.
- */
 
 import edu.wpi.first.wpilibj2.command.Command;
 
