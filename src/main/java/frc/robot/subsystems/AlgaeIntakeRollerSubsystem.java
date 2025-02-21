@@ -46,7 +46,10 @@ public class AlgaeIntakeRollerSubsystem extends SubsystemBase {
      * @see Command
      */
     public Command intakeAlgae() {
-        return runOnce(() -> setRollerSpeed(AlgaeIntakeConstants.kRollerSpeed));
+        return runEnd(
+            () -> setRollerSpeed(AlgaeIntakeConstants.kRollerSpeed),
+            () -> setRollerSpeed(0)
+        );
     }
 
     /**
@@ -55,8 +58,9 @@ public class AlgaeIntakeRollerSubsystem extends SubsystemBase {
      * @see Command
      */
     public Command shootAlgae() {
-        return runOnce(() -> setRollerSpeed(-AlgaeIntakeConstants.kRollerSpeed));
+        return runEnd(
+            () -> setRollerSpeed(-AlgaeIntakeConstants.kRollerSpeed),
+            () -> setRollerSpeed(0)
+        );
     }
-
-
 }
