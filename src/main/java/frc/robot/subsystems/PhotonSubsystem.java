@@ -37,15 +37,18 @@ public class PhotonSubsystem extends SubsystemBase {
         m_results = new ArrayList<>();
         
         for (int i = 0; i < m_cameras.length; i++) {
-            m_results.addAll(m_cameras[i].getAllUnreadResults());
+            List<PhotonPipelineResult> results = m_cameras[i].getAllUnreadResults();
+            if (!results.isEmpty()) {
+                m_results.add(results.get(results.size() - 1));
+            }
         }
 
         ArrayList<EstimatedRobotPose> estimations = new ArrayList<>();
 
         for (int i = 0; i < m_results.size(); i++) {
-            Optional<EstimatedRobotPose> estimationOpt = m_photonPoseEstimator.update(m_results.get(i));
-            if (estimationOpt.isPresent()) {
-                estimations.add(estimationOpt.get());
+            Optional<EstimatedRobotPose> estimation = m_photonPoseEstimator.update(m_results.get(i));
+            if (estimation.isPresent()) {
+                estimations.add(estimation.get());
             } else {
                 m_results.remove(i);
                 i--;
