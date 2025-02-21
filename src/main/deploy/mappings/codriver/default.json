@@ -12,9 +12,10 @@
             "threshold": 0.1
         },
         "toggleAlgaeIntakeArm": "x",
-        "elevator1": "povDown",
-        "elevator2": "povLeft",
-        "elevator3": "povRight",
-        "elevator4": "povUp"
+        "coralL0": "start",
+        "coralL1": "povDown",
+        "coralL2": "povLeft",
+        "coralL3": "povRight",
+        "coralL4": "povUp"
     }
 }
