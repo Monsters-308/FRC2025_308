@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,7 +13,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
 
@@ -215,7 +214,7 @@ public class DriveSubsystem extends SubsystemBase {
                     continue;
                 }
 
-                Matrix<N3, N1> stdDev = DriveConstants.kVisionStandardDeviations;
+                Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
                 PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
 
                 stdDev = stdDev.times(
