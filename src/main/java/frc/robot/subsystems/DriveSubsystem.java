@@ -184,6 +184,19 @@ public class DriveSubsystem extends SubsystemBase {
 
         Utils.configureSysID(
             m_swerveTab.getLayout("Angular SysID", BuiltInLayouts.kList), this,
+            () -> {
+                SwerveModuleState turningLeftState = new SwerveModuleState();
+                turningLeftState.angle = Rotation2d.fromDegrees(-45);
+                SwerveModuleState turningRightState = new SwerveModuleState();
+                turningRightState.angle = Rotation2d.fromDegrees(45);
+
+                setModuleStates(new SwerveModuleState[] {
+                    turningLeftState,
+                    turningRightState,
+                    turningLeftState,
+                    turningRightState
+                });
+            },
             voltage -> {
                 m_frontLeft.setDriveVoltage(voltage);
                 m_frontRight.setDriveVoltage(voltage.times(-1));
