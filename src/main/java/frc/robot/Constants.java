@@ -525,7 +525,7 @@ public final class Constants {
         /** The idle mode of the coral intake motor. */
         public static final IdleMode kCoralIntakeIdleMode = IdleMode.kBrake;
         /** The current limit for the coral intake motor. */
-        public static final int kSmartCurrentLimit = 35;
+        public static final int kSmartCurrentLimit = 20;
         
         /** The speed the coral intake should be run at when intaking or shooting. */
         public static final double kCoralIntakeSpeed = 0.1;

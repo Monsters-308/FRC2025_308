@@ -38,7 +38,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** The leader motor controller of the elevator. */
     private final SparkMax m_elevatorLeader = new SparkMax(
         ElevatorConstants.kElevatorLeftCanId,
-        MotorType.kBrushless);
+        MotorType.kBrushed);
 
     /** The follower motor controller of the elevator. */
     // private final SparkMax m_elevatorFollower = new SparkMax(
@@ -87,10 +87,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         leaderMotorConfig
             .idleMode(ElevatorConstants.kElevatorIdleMode)
-            .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
+            // .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
             .inverted(ElevatorConstants.kElevatorLeftInverted);
 
-        leaderMotorConfig.encoder
+        leaderMotorConfig.alternateEncoder
             .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
             .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
@@ -106,7 +106,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         // m_elevatorFollower.configure(followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        m_elevatorEncoder = m_elevatorLeader.getEncoder();
+        m_elevatorEncoder = m_elevatorLeader.getAlternateEncoder();
 
         m_elevatorTab.addDouble("Elevator Height", () -> getElevatorHeight());
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
