@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
@@ -113,13 +114,14 @@ public class Utils {
     /**
      * Configures SysID for a <code>Subsystem</code> on a <code>ShuffleboardLayout</code>.
      * @param layout The layout to add the <code>Command</code> buttons to.
+     * @param initialize Runs before any SysID <code>Command</code> runs.
      * @param driveAtVoltage Drive the motors being tested at the given voltage.
      * @param subsystem The <code>Subsystem</code> that controls the motors.
      * @see Subsystem
      * @see ShuffleboardLayout
      * @see Command
      */
-    public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Consumer<Voltage> driveAtVoltage) {
+    public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Runnable initialize, Consumer<Voltage> driveAtVoltage) {
         SysIdRoutine sysIdRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(),
             new SysIdRoutine.Mechanism(
@@ -129,22 +131,39 @@ public class Utils {
             )
         );
 
-        // The methods below return Command objects
-        Command quasistaticForward = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-        Command quasistaticBackward = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-        Command dynamicForward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-        Command dynamicBackward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+        Command initialization = new InstantCommand(initialize);
 
-        Command all = quasistaticForward
-            .andThen(quasistaticBackward)
-            .andThen(dynamicForward)
-            .andThen(dynamicBackward)
-            .withName("Run All");
+        // The methods below return Command objects
+        Command quasistaticForward = initialization.andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
+        Command quasistaticBackward = initialization.andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
+        Command dynamicForward = initialization.andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
+        Command dynamicBackward = initialization.andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
+
+        Command all = initialization
+            .andThen(
+                quasistaticForward,
+                quasistaticBackward,
+                dynamicForward,
+                dynamicBackward
+            ).withName("Run All");
 
         layout.add("Quasistatic Forward", quasistaticForward);
         layout.add("Quasistatic Backward", quasistaticBackward);
         layout.add("Dynamic Forward", dynamicForward);
         layout.add("Dynamic Backward",dynamicBackward);
         layout.add("Run All", all);
+    }
+
+    /**
+     * Configures SysID for a <code>Subsystem</code> on a <code>ShuffleboardLayout</code>.
+     * @param layout The layout to add the <code>Command</code> buttons to.
+     * @param driveAtVoltage Drive the motors being tested at the given voltage.
+     * @param subsystem The <code>Subsystem</code> that controls the motors.
+     * @see Subsystem
+     * @see ShuffleboardLayout
+     * @see Command
+     */
+    public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Consumer<Voltage> driveAtVoltage) {
+        configureSysID(layout, subsystem, () -> {}, driveAtVoltage);
     }
 }
