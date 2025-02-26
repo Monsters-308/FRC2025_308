@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -23,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.utils.ThroughBoreEncoder;
 import frc.robot.utils.Utils;
 
 /**
@@ -33,12 +33,7 @@ public class ArmSubsystem extends SubsystemBase {
     /** The motor controller for the coral arm. */
     private final SparkMax m_armMotor = new SparkMax(ArmConstants.kArmMotorCanId, MotorType.kBrushless);
     /** The encoder for measuring the position and velocity of the motor. */
-    private final ThroughBoreEncoder m_armEncoder = new ThroughBoreEncoder(
-        ArmConstants.kArmEncoderId,
-        ArmConstants.kEncoderInverted,
-        ArmConstants.kEncoderAngleOffset,
-        ArmConstants.kArmDutyCyclePeriod
-    );
+    private final AbsoluteEncoder m_armEncoder;
 
     /** The {@link ProfiledPIDController} for the arm motor. */
     private final ProfiledPIDController m_angleController = new ProfiledPIDController(
@@ -76,6 +71,8 @@ public class ArmSubsystem extends SubsystemBase {
             .idleMode(ArmConstants.kIdleMode);
 
         m_armMotor.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        m_armEncoder = m_armMotor.getAbsoluteEncoder();
 
         m_armTab.addDouble("Arm Angle", () -> getAngle().getDegrees());
         m_armTab.addDouble("Arm Velocity", () -> getVelocity().getDegrees());
@@ -141,7 +138,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return The current angle of the arm.
      */
     public Rotation2d getAngle() {
-        return m_armEncoder.getRotation2D();
+        return Rotation2d.fromRotations(m_armEncoder.getPosition());
     }
 
     /**
@@ -149,7 +146,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return The velocity of the arm as a {@link Rotation2d} object.
      */
     public Rotation2d getVelocity() {
-        return m_armEncoder.getRate();
+        return Rotation2d.fromRotations(m_armEncoder.getVelocity());
     }
 
     /**
@@ -166,7 +163,7 @@ public class ArmSubsystem extends SubsystemBase {
             double velocitySetpoint = Units.rotationsToRadians(setpoint.velocity);
 
             m_armMotor.setVoltage(
-                m_angleController.calculate(m_armEncoder.getRotations()) +
+                m_angleController.calculate(getAngle().getRotations()) +
                 m_armFeedforward.calculateWithVelocities(getAngle().getRadians(), getVelocity().getRadians(), velocitySetpoint)
             );
         }
