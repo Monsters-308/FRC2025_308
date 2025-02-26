@@ -541,9 +541,7 @@ public final class Constants {
         private ArmConstants() {}
 
         /** The CAN ID of the arm motor. */
-        public static final int kArmMotorCanId = 30;
-        /** The channel ID for the motor encoder. */
-        public static final int kArmEncoderId = 31;
+        public static final int kArmMotorCanId = 21;
         /** The smart current limit for the motor */
         public static final int kSmartCurrentLimit = 35;
         /** The idle mode of the motor. */
