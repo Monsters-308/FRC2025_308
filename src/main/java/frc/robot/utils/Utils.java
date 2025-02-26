@@ -131,21 +131,18 @@ public class Utils {
             )
         );
 
-        Command initialization = new InstantCommand(initialize);
-
         // The methods below return Command objects
-        Command quasistaticForward = initialization.andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
-        Command quasistaticBackward = initialization.andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
-        Command dynamicForward = initialization.andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
-        Command dynamicBackward = initialization.andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
+        Command quasistaticForward = new InstantCommand(initialize).andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
+        Command quasistaticBackward = new InstantCommand(initialize).andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
+        Command dynamicForward = new InstantCommand(initialize).andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
+        Command dynamicBackward = new InstantCommand(initialize).andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
 
-        Command all = initialization
-            .andThen(
-                quasistaticForward,
-                quasistaticBackward,
-                dynamicForward,
-                dynamicBackward
-            ).withName("Run All");
+        Command all = new InstantCommand(initialize)
+            .andThen(quasistaticForward)
+            .andThen(quasistaticBackward)
+            .andThen(dynamicForward)
+            .andThen(dynamicBackward)
+            .withName("Run All");
 
         layout.add("Quasistatic Forward", quasistaticForward);
         layout.add("Quasistatic Backward", quasistaticBackward);
