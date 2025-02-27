@@ -19,7 +19,6 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -40,11 +39,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         ElevatorConstants.kElevatorMotorCanId,
         MotorType.kBrushless);
 
-    /** The follower motor controller of the elevator. */
-    // private final SparkMax m_elevatorFollower = new SparkMax(
-    //     ElevatorConstants.kElevatorRightCanId,
-    //     MotorType.kBrushless);
-
     /** Encoder that represents the elevator motors. */
     private final RelativeEncoder m_elevatorEncoder;
 
@@ -59,15 +53,15 @@ public class ElevatorSubsystem extends SubsystemBase {
         )
     );
 
-    private final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(
-        ElevatorConstants.kElevatorS,
-        ElevatorConstants.kElevatorG,
-        ElevatorConstants.kElevatorV,
-        ElevatorConstants.kElevatorA
-    );
+    // private final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(
+    //     ElevatorConstants.kElevatorS,
+    //     ElevatorConstants.kElevatorG,
+    //     ElevatorConstants.kElevatorV,
+    //     ElevatorConstants.kElevatorA
+    // );
 
     /** Elevator bottom limit switch. */
-    private final DigitalInput m_bottomSwitch = new DigitalInput(ElevatorConstants.kBottomSwitchChannel);
+    // private final DigitalInput m_bottomSwitch = new DigitalInput(ElevatorConstants.kBottomSwitchChannel);
 
     /** A {@link ShuffleboardTab} to write elevator properties to the dashboard. */
     private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
@@ -90,7 +84,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
             .inverted(ElevatorConstants.kElevatorLeftInverted);
 
-        leaderMotorConfig.alternateEncoder
+        leaderMotorConfig.encoder
             .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
             .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
@@ -106,7 +100,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         // m_elevatorFollower.configure(followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        m_elevatorEncoder = m_elevatorLeader.getAlternateEncoder();
+        m_elevatorEncoder = m_elevatorLeader.getEncoder();
 
         m_elevatorTab.addDouble("Elevator Height", () -> getElevatorHeight());
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
@@ -214,11 +208,12 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @return The runnable Command.
      */
     public Command zeroElevator() {
-        return runOnce(() -> {
-            setElevatorVelocity(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
-        })
-        .andThen(new WaitUntilCommand(() -> m_bottomSwitch.get()))
-        .withName("Zero Elevator");
+        // return runOnce(() -> {
+        //     setElevatorVelocity(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
+        // })
+        // .andThen(new WaitUntilCommand(() -> m_bottomSwitch.get()))
+        // .withName("Zero Elevator");
+        return runOnce(() -> m_elevatorEncoder.setPosition(0));
     }
 
     /**
@@ -286,17 +281,17 @@ public class ElevatorSubsystem extends SubsystemBase {
         
         if (getElevatorHeight() >= ElevatorConstants.kElevatorMaxHeight) {
             stop();
-            m_elevatorPIDController.reset(ElevatorConstants.kElevatorMaxHeight, 0);
+            // m_elevatorPIDController.reset(ElevatorConstants.kElevatorMaxHeight, 0);
         }
 
-        // if (m_isPIDMode) {
-        //     double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
+        if (m_isPIDMode) {
+            // double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
             
-        //     m_elevatorLeader.setVoltage(
-        //         m_elevatorPIDController.calculate(getElevatorHeight()) + 
-        //         m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
-        //     );
-        // }
+            m_elevatorLeader.set(
+                m_elevatorPIDController.calculate(getElevatorHeight())
+                // m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
+            );
+        }
 
         // Prevent level in shuffleboard go to level layout from being non-integer
         // double value = m_levelNetworkTableEntry.getDouble(-1);
