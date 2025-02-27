@@ -21,7 +21,7 @@ import frc.robot.commands.drive.TurningMotorsTest;
 // import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
 // import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
-// import frc.robot.subsystems.CoralIntakeSubsystem;
+import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PhotonSubsystem;
@@ -55,7 +55,7 @@ public class RobotContainer {
     // /** The {@link AlgaeIntakeArmSubsystem} of the robot. */
     // private final AlgaeIntakeArmSubsystem m_algaeIntakeArmSubsystem = new AlgaeIntakeArmSubsystem();
     // /** The {@link CoralIntakeSubsystem} of the robot. */
-    // private final CoralIntakeSubsystem m_coralIntakeSubsystem = new CoralIntakeSubsystem();
+    private final CoralIntakeSubsystem m_coralIntakeSubsystem = new CoralIntakeSubsystem();
 
     // Controllers
     /** The {@link CommandXboxController} object that represents the driver controller. */
@@ -152,35 +152,35 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         m_driverController.a()
-            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0.1)))
-            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
-            m_driverController.b()
-            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-0.1)))
-            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
-        // m_driverController.b()
-        //     .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(0), false));
-            // .whileTrue(
-            //     new InstantCommand(() -> m_armSubsystem.setSpeed(0.3), m_armSubsystem))
-            // .onFalse(
-            //     new InstantCommand(() -> m_armSubsystem.setSpeed(0), m_armSubsystem));
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(1), m_elevatorSubsystem))
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
+        m_driverController.b()
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-1), m_elevatorSubsystem))
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
 
-        // m_driverController.b()
-        //     .whileTrue(
-        //         new InstantCommand(() -> m_armSubsystem.setSpeed(-0.3), m_armSubsystem))
-        //     .onFalse(
-        //         new InstantCommand(() -> m_armSubsystem.setSpeed(0), m_armSubsystem));
+        m_driverController.x()
+            .onTrue(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0.5), m_coralIntakeSubsystem))
+            .onFalse(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0), m_coralIntakeSubsystem));
+        m_driverController.y()
+            .onTrue(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(-0.5), m_coralIntakeSubsystem))
+            .onFalse(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0), m_coralIntakeSubsystem));
+        m_driverController.rightBumper()
+            .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(0), true));
+
+        m_driverController.leftBumper()
+            .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(32.4), true));
 
         //------------------------------------------- Driver buttons -------------------------------------------
 
-        InputMappings.event("driver", "autoAlign")
-            .onTrue(new AutoAlign(driveSubsystem));
+        // InputMappings.event("driver", "autoAlign")
+        //     .onTrue(new AutoAlign(driveSubsystem));
 
-        InputMappings.event("driver", "orbitReef")
-            .whileTrue(new RobotOrbitPoint(driveSubsystem,
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-                FieldConstants.kReefPosition)
-            );
+        // InputMappings.event("driver", "orbitReef")
+        //     .whileTrue(new RobotOrbitPoint(driveSubsystem,
+        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+        //         () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+        //         FieldConstants.kReefPosition)
+        //     );
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
