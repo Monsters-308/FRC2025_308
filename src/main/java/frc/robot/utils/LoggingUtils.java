@@ -21,6 +21,7 @@ import com.studica.frc.AHRS;
 
 import edu.wpi.first.hal.PowerDistributionFaults;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -40,7 +41,7 @@ import frc.robot.utils.Elastic.Notification.NotificationLevel;
 public class LoggingUtils {
     private LoggingUtils() {}
 
-    public static final ShuffleboardTab loggingTab = Shuffleboard.getTab("Faults");
+    public static final ShuffleboardTab loggingTab = Shuffleboard.getTab("Devices");
 
     /**
      * Turns off unused telemetry on the spark max to reduce canbus usage.
@@ -249,7 +250,7 @@ public class LoggingUtils {
     public static void logNavX(AHRS navX) {
         loggingTab.addBoolean("NavX", navX::isConnected);
 
-        new Trigger(navX::isConnected).onFalse(new InstantCommand(() -> {
+        new Trigger(navX::isConnected).debounce(2).onFalse(new InstantCommand(() -> {
             Notification notification = new Notification()
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle("NavX Disconnected!")
@@ -292,4 +293,18 @@ public class LoggingUtils {
     //     String[] a = Arrays.toString(array).split("[\\[\\]]")[1].split(", "); 
     //     return joinArray(a);
     // }
+
+    public static void logBattery() {
+        loggingTab.addDouble("Battery Voltage", RobotController::getBatteryVoltage);
+
+        new Trigger(() -> RobotController.getBatteryVoltage() > 15).onFalse(new InstantCommand(() -> {
+            Notification notification = new Notification()
+                .withLevel(NotificationLevel.WARNING)
+                .withTitle("Battery Low!")
+                .withDescription("The output battery voltage is below 11 volts.")
+                .withNoAutoDismiss();
+            
+            Elastic.sendNotification(notification);
+        }));
+    }
 }
