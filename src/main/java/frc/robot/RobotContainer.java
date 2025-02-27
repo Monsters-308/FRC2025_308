@@ -154,7 +154,7 @@ public class RobotContainer {
         m_driverController.a()
             .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0.1)))
             .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
-            m_driverController.b()
+        m_driverController.b()
             .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-0.1)))
             .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
         // m_driverController.b()
