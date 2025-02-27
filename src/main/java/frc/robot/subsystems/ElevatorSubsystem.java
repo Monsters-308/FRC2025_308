@@ -37,8 +37,8 @@ import frc.robot.utils.Utils;
 public class ElevatorSubsystem extends SubsystemBase {
     /** The leader motor controller of the elevator. */
     private final SparkMax m_elevatorLeader = new SparkMax(
-        ElevatorConstants.kElevatorLeftCanId,
-        MotorType.kBrushed);
+        ElevatorConstants.kElevatorMotorCanId,
+        MotorType.kBrushless);
 
     /** The follower motor controller of the elevator. */
     // private final SparkMax m_elevatorFollower = new SparkMax(
@@ -87,7 +87,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         leaderMotorConfig
             .idleMode(ElevatorConstants.kElevatorIdleMode)
-            // .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
+            .smartCurrentLimit(ElevatorConstants.kElevatorCurrentLimit)
             .inverted(ElevatorConstants.kElevatorLeftInverted);
 
         leaderMotorConfig.alternateEncoder
@@ -227,7 +227,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public void setElevatorVelocity(double velocity) {
         m_isPIDMode = false;
-        m_elevatorLeader.set(velocity / ElevatorConstants.kElevatorFreeSpeedMetersPerSecond);
+        m_elevatorLeader.set(velocity);
     }
 
     /** 
@@ -278,25 +278,25 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // Prevent elevator motors from moving after the elevator cannot move any further
-        if (m_bottomSwitch.get()) {
-            stop();
-            m_elevatorEncoder.setPosition(0); // Reset encoder position to 0 at the bottom
-            m_elevatorPIDController.reset(0, 0);
-        }
+        // if (m_bottomSwitch.get()) {
+        //     stop();
+        //     m_elevatorEncoder.setPosition(0); // Reset encoder position to 0 at the bottom
+        //     m_elevatorPIDController.reset(0, 0);
+        // }
         
         if (getElevatorHeight() >= ElevatorConstants.kElevatorMaxHeight) {
             stop();
             m_elevatorPIDController.reset(ElevatorConstants.kElevatorMaxHeight, 0);
         }
 
-        if (m_isPIDMode) {
-            double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
+        // if (m_isPIDMode) {
+        //     double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
             
-            m_elevatorLeader.setVoltage(
-                m_elevatorPIDController.calculate(getElevatorHeight()) + 
-                m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
-            );
-        }
+        //     m_elevatorLeader.setVoltage(
+        //         m_elevatorPIDController.calculate(getElevatorHeight()) + 
+        //         m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
+        //     );
+        // }
 
         // Prevent level in shuffleboard go to level layout from being non-integer
         // double value = m_levelNetworkTableEntry.getDouble(-1);

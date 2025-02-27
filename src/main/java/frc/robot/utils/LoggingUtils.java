@@ -161,24 +161,24 @@ public class LoggingUtils {
         }));
     }
 
-    /** Helper function to see if any of the pdh channels have breaker faults. */
-    private static boolean hasBreakerFaults(PowerDistributionFaults faults) {
-        for (int i = 0; i <= 23; i++) {
-            if (faults.getBreakerFault(i))
-                return true;
-        }
-        return false;
-    }
+    // /** Helper function to see if any of the pdh channels have breaker faults. */
+    // private static boolean hasBreakerFaults(PowerDistributionFaults faults) {
+    //     for (int i = 0; i <= 23; i++) {
+    //         if (faults.getBreakerFault(i))
+    //             return true;
+    //     }
+    //     return false;
+    // }
 
-    /** Helper function to see if any of the pdh channels have breaker faults. */
-    private static Integer[] getBreakerFaults(PowerDistributionFaults faults) {
-        ArrayList<Integer> faultChannels = new ArrayList<>();
-        for (int i = 0; i <= 23; i++) {
-            if (faults.getBreakerFault(i))
-                faultChannels.add(i);
-        }
-        return faultChannels.toArray(new Integer[faultChannels.size()]);
-    }
+    // /** Helper function to see if any of the pdh channels have breaker faults. */
+    // private static Integer[] getBreakerFaults(PowerDistributionFaults faults) {
+    //     ArrayList<Integer> faultChannels = new ArrayList<>();
+    //     for (int i = 0; i <= 23; i++) {
+    //         if (faults.getBreakerFault(i))
+    //             faultChannels.add(i);
+    //     }
+    //     return faultChannels.toArray(new Integer[faultChannels.size()]);
+    // }
 
     /** 
      * Creates an instance of the PDH and uses it to log important information, such as 
@@ -195,7 +195,7 @@ public class LoggingUtils {
 
         final BooleanSupplier hasNoPDHFaults = () -> {
             PowerDistributionFaults faults = pdh.getFaults();
-            return !faults.Brownout && !faults.CanWarning && !faults.HardwareFault;
+            return !faults.Brownout && !faults.CanWarning;
         };
         
         // Log if the pdh is having any faults
@@ -220,25 +220,25 @@ public class LoggingUtils {
             Elastic.sendNotification(notification);
         }));
 
-        final BooleanSupplier hasNoBreakerFaults = () -> !hasBreakerFaults(pdh.getFaults());
+        // final BooleanSupplier hasNoBreakerFaults = () -> !hasBreakerFaults(pdh.getFaults());
 
-        // Log if any of the channels have breaker faults
-        loggingTab.addBoolean("PDH Breakers", hasNoBreakerFaults);
+        // // Log if any of the channels have breaker faults
+        // loggingTab.addBoolean("PDH Breakers", hasNoBreakerFaults);
 
-        // Send notification to Elastic when a breaker fault is detected
-        new Trigger(hasNoBreakerFaults).onFalse(new InstantCommand(() -> {
-            Integer[] faultChannels = getBreakerFaults(pdh.getFaults());
-            String description = "A breaker fault has been detected on channel" +
-                (faultChannels.length == 1 ? " ": "s ") + joinArray(faultChannels) + ".";
+        // // Send notification to Elastic when a breaker fault is detected
+        // new Trigger(hasNoBreakerFaults).onFalse(new InstantCommand(() -> {
+        //     Integer[] faultChannels = getBreakerFaults(pdh.getFaults());
+        //     String description = "A breaker fault has been detected on channel" +
+        //         (faultChannels.length == 1 ? " ": "s ") + joinArray(faultChannels) + ".";
 
-            Notification notification = new Notification()
-                .withLevel(NotificationLevel.ERROR)
-                .withTitle("Breaker Faults Detected!")
-                .withDescription(description)
-                .withNoAutoDismiss();
+        //     Notification notification = new Notification()
+        //         .withLevel(NotificationLevel.ERROR)
+        //         .withTitle("Breaker Faults Detected!")
+        //         .withDescription(description)
+        //         .withNoAutoDismiss();
             
-            Elastic.sendNotification(notification);
-        }));
+        //     Elastic.sendNotification(notification);
+        // }));
     }
 
     /**
@@ -283,13 +283,13 @@ public class LoggingUtils {
         return allButLast.concat(" and ").concat(array[array.length - 1]);
     }
 
-    /**
-     * Joins an array with commas and an "and".
-     * @param array The array to join.
-     * @return The joined array as a string.
-     */
-    private static String joinArray(Integer[] array) {
-        String[] a = Arrays.toString(array).split("[\\[\\]]")[1].split(", "); 
-        return joinArray(a);
-    }
+    // /**
+    //  * Joins an array with commas and an "and".
+    //  * @param array The array to join.
+    //  * @return The joined array as a string.
+    //  */
+    // private static String joinArray(Integer[] array) {
+    //     String[] a = Arrays.toString(array).split("[\\[\\]]")[1].split(", "); 
+    //     return joinArray(a);
+    // }
 }

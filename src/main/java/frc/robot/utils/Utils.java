@@ -132,10 +132,10 @@ public class Utils {
         );
 
         // The methods below return Command objects
-        Command quasistaticForward = new InstantCommand(initialize).andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
-        Command quasistaticBackward = new InstantCommand(initialize).andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
-        Command dynamicForward = new InstantCommand(initialize).andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
-        Command dynamicBackward = new InstantCommand(initialize).andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
+        Command quasistaticForward = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+        Command quasistaticBackward = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+        Command dynamicForward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+        Command dynamicBackward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
 
         Command all = new InstantCommand(initialize)
             .andThen(quasistaticForward)
@@ -144,10 +144,10 @@ public class Utils {
             .andThen(dynamicBackward)
             .withName("Run All");
 
-        layout.add("Quasistatic Forward", quasistaticForward);
-        layout.add("Quasistatic Backward", quasistaticBackward);
-        layout.add("Dynamic Forward", dynamicForward);
-        layout.add("Dynamic Backward",dynamicBackward);
+        layout.add("Quasistatic Forward", new InstantCommand(initialize).andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward)));
+        layout.add("Quasistatic Backward", new InstantCommand(initialize).andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse)));
+        layout.add("Dynamic Forward", new InstantCommand(initialize).andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward)));
+        layout.add("Dynamic Backward", new InstantCommand(initialize).andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse)));
         layout.add("Run All", all);
     }
 

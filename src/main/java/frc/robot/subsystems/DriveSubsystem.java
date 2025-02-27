@@ -122,7 +122,6 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem(PhotonSubsystem photonSubsystem) {
         m_photonSubsystem = photonSubsystem;
 
-        m_gyro.enableLogging(true);
         LoggingUtils.logNavX(m_gyro);
     
         // Widgets for swerve module angles 

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
-// import frc.robot.commands.coral.GoToLevel;
+import frc.robot.commands.coral.GoToLevel;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
@@ -23,7 +23,7 @@ import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.subsystems.ArmSubsystem;
 // import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-// import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PhotonSubsystem;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.InputMappings;
@@ -46,8 +46,8 @@ public class RobotContainer {
     private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
     public final DriveSubsystem driveSubsystem = new DriveSubsystem(m_photonSubsystem);
-    // /** The {@link ElevatorSubsystem} of the robot. */
-    // private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+    /** The {@link ElevatorSubsystem} of the robot. */
+    private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
     /** The {@link ArmSubsystem} of the robot. */
     private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
     // /** The {@link AlgaeIntakeRollerSubsystem} of the robot. */
@@ -151,6 +151,25 @@ public class RobotContainer {
      * Use this method to define your button -> <code>Command</code> mappings.
      */
     private void configureButtonBindings() {
+        m_driverController.a()
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0.1)))
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+            m_driverController.b()
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-0.1)))
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
+        // m_driverController.b()
+        //     .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(0), false));
+            // .whileTrue(
+            //     new InstantCommand(() -> m_armSubsystem.setSpeed(0.3), m_armSubsystem))
+            // .onFalse(
+            //     new InstantCommand(() -> m_armSubsystem.setSpeed(0), m_armSubsystem));
+
+        // m_driverController.b()
+        //     .whileTrue(
+        //         new InstantCommand(() -> m_armSubsystem.setSpeed(-0.3), m_armSubsystem))
+        //     .onFalse(
+        //         new InstantCommand(() -> m_armSubsystem.setSpeed(0), m_armSubsystem));
+
         //------------------------------------------- Driver buttons -------------------------------------------
 
         InputMappings.event("driver", "autoAlign")
@@ -177,16 +196,16 @@ public class RobotContainer {
         // InputMappings.event("coDriver", "coralShoot")
         //     .whileTrue(m_coralIntakeSubsystem.shootCoral());
 
-        // InputMappings.event("coDriver", "coralL0")
-        //     .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
-        // InputMappings.event("coDriver", "coralL1")
-        //     .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
-        // InputMappings.event("coDriver", "coralL2")
-        //     .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
-        // InputMappings.event("coDriver", "coralL3")
-        //     .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
-        // InputMappings.event("coDriver", "coralL4")
-        //     .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 4));
+        InputMappings.event("coDriver", "coralL0")
+            .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
+        InputMappings.event("coDriver", "coralL1")
+            .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
+        InputMappings.event("coDriver", "coralL2")
+            .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
+        InputMappings.event("coDriver", "coralL3")
+            .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
+        InputMappings.event("coDriver", "coralL4")
+            .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 4));
 
         InputMappings.event("coDriver", "coralL0")
             .onTrue(m_armSubsystem.goToLevel(0, false));
