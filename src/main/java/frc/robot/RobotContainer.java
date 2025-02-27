@@ -12,11 +12,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
-import frc.robot.commands.drive.AutoAlign;
-import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
 // import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
 // import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
@@ -206,17 +203,6 @@ public class RobotContainer {
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 4));
-
-        InputMappings.event("coDriver", "coralL0")
-            .onTrue(m_armSubsystem.goToLevel(0, false));
-        InputMappings.event("coDriver", "coralL1")
-            .onTrue(m_armSubsystem.goToLevel(0, false));
-        InputMappings.event("coDriver", "coralL2")
-            .onTrue(m_armSubsystem.goToLevel(0, false));
-        InputMappings.event("coDriver", "coralL3")
-            .onTrue(m_armSubsystem.goToLevel(0, false));
-        InputMappings.event("coDriver", "coralL4")
-            .onTrue(m_armSubsystem.goToLevel(0, false));
     }
 
     /**
