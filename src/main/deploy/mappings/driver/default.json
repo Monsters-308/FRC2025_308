@@ -3,11 +3,11 @@
     "events": {
         "orbitReef": {
             "button": "rightTrigger",
-            "threshold": "0.9"
+            "threshold": 0.9
         },
         "autoAlign": {
             "button": "leftTrigger",
-            "threshold": "0.9"
+            "threshold": 0.9
         }
     }
 }

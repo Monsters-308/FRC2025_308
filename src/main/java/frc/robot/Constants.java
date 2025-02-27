@@ -180,7 +180,7 @@ public final class Constants {
             / kDrivingMotorReduction; // meters
         /** Converts motor revolutions per minute to meters per second. */
         public static final double kDrivingEncoderVelocityFactor = (kWheelCircumferenceMeters
-            / kDrivingMotorReduction) / 60.0; // meters per second
+            / kDrivingMotorReduction) / 60; // meters per second
 
         /** How much gear ratio reduces the amount of wheel revolutions relative to the amount of motor revolutions. */
         public static final double kTurningMotorReduction = 150.0 / 7;
@@ -413,9 +413,7 @@ public final class Constants {
         private ElevatorConstants() {}
 
         /** CAN ID of the left elevator motor controller. */
-        public static final int kElevatorLeftCanId = 35;
-        /** CAN ID of the right elevator motor controller. */
-        public static final int kElevatorRightCanId = 36;
+        public static final int kElevatorMotorCanId = 20;
 
         /** Channel of the elevator bottom limit switch. */
         public static final int kBottomSwitchChannel = 0;
@@ -429,14 +427,12 @@ public final class Constants {
         public static final int kElevatorCurrentLimit = 35;
 
         /** Whether to invert the left elevator motor. */
-        public static final boolean kElevatorLeftInverted = false;
-        /** Whether to invert the right elevator motor. */
-        public static final boolean kElevatorRightInverted = false;
+        public static final boolean kElevatorLeftInverted = true;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
         public static final double kElevatorReduction = 40;
         /** The diameter of the gear/wheel that moves the elevator. */
-        public static final double kGearDiameter = Units.inchesToMeters(1);
+        public static final double kGearDiameter = 1;
         /** The circumference of the gear/wheel that moves the elevator. */
         public static final double kGearCircumference = kGearDiameter * Math.PI;
         /** The conversion factor that converts from motor rotations to meters. */
@@ -445,7 +441,7 @@ public final class Constants {
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The P for the elevator PID. */
-        public static final double kElevatorP = 1;
+        public static final double kElevatorP = 2;
         /** The I for the elevator PID. */
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
@@ -464,17 +460,17 @@ public final class Constants {
         public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
 
         /** The maximum allowed speed the elavtor should move at. */
-        public static final double kElevatorMaxSpeedMetersPerSecond = 0.1;
+        public static final double kElevatorMaxSpeedMetersPerSecond = 10;
 
         /** The maximum allowed acceleration of the elevator. */
-        public static final double kElevatorMaxAccelerationMetersPerSecondSquared = 0.1;
+        public static final double kElevatorMaxAccelerationMetersPerSecondSquared = 10;
 
         /** The physical height of the elevator in meters. */
-        public static final double kElevatorMaxHeight = 1;
+        public static final double kElevatorMaxHeight = 15;
 
         // TODO: add heights
         /** The heights, in meters, of every elevator level. */
-        public static final double[] kElevatorLevelHeights = { 0, 0, 0, 0, 0 };
+        public static final double[] kElevatorLevelHeights = { 0, 0.1, 6.3, 13.38, 0 };
     }
 
     /**
@@ -519,9 +515,9 @@ public final class Constants {
         private CoralIntakeConstants() {}
 
         /** The CAN ID for the intake motor. */
-        public static final int kCoralIntakeMotorCanId = 32;
+        public static final int kCoralIntakeMotorCanId = 22;
         /** Whether the coral intake is inverted */
-        public static final boolean kCoralIntakeInverted = false;
+        public static final boolean kCoralIntakeInverted = true;
         /** The idle mode of the coral intake motor. */
         public static final IdleMode kCoralIntakeIdleMode = IdleMode.kBrake;
         /** The current limit for the coral intake motor. */
@@ -541,25 +537,25 @@ public final class Constants {
         private ArmConstants() {}
 
         /** The CAN ID of the arm motor. */
-        public static final int kArmMotorCanId = 30;
-        /** The channel ID for the motor encoder. */
-        public static final int kArmEncoderId = 31;
+        public static final int kArmMotorCanId = 21;
         /** The smart current limit for the motor */
         public static final int kSmartCurrentLimit = 35;
         /** The idle mode of the motor. */
         public static final IdleMode kIdleMode = IdleMode.kBrake;
         /** Whether to invert the direction of the arm motor. */
-        public static final boolean kArmMotorInvered = false;
-        /** Whether to invert the direction of the encoder. */
-        public static final boolean kEncoderInverted = false;
+        public static final boolean kArmMotorInverted = false;
 
+        /** The reduction causes by the gear ratio of the motor. */
+        public static final double kGearReduction = 12;
+        /** The position conversion factor of the arm encoder. */
+        public static final double kPositionEncoderConversionFactor = 1 / kGearReduction;
+        /** The velocity conversion factor of the arm encoder. */
+        public static final double kVelocityEncoderConversionFactor = 1 / kGearReduction / 60;
         /** The maximum speed of the arm in rotations per second. */
-        public static final double kArmMaxSpeedRPS = 0.1;
+        public static final double kArmMaxSpeedRPS = 1;
         /** The maximum acceleration of the arm in rotations per second squared. */
-        public static final double kArmMaxAccelerationRPSSquared = 0.1;
+        public static final double kArmMaxAccelerationRPSSquared = 2;
 
-        /** The period of the duty cycle for the arm. */
-        public static final int kArmDutyCyclePeriod = 4096;
         /** The angle offset for the motor encoder such that when the encoder returns 0 the arm is parallel to the floor. */
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
@@ -573,7 +569,7 @@ public final class Constants {
         /** The S gain for the arm feedforward. */
         public static final double kArmS = 0;
         /** The gravity gain for the arm feedforward. */
-        public static final double kArmG = 0;
+        public static final double kArmG = 0.06;
         /** The V gain for the arm feedforward. */
         public static final double kArmV = 0;
         /** The A gain for the arm feedforward. */

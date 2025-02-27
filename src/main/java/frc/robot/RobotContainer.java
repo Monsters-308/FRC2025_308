@@ -12,11 +12,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
-import frc.robot.commands.drive.AutoAlign;
-import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
 // import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
 // import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
@@ -54,7 +51,7 @@ public class RobotContainer {
     // private final AlgaeIntakeRollerSubsystem m_algaeIntakeRollerSubsystem = new AlgaeIntakeRollerSubsystem();
     // /** The {@link AlgaeIntakeArmSubsystem} of the robot. */
     // private final AlgaeIntakeArmSubsystem m_algaeIntakeArmSubsystem = new AlgaeIntakeArmSubsystem();
-    /** The {@link CoralIntakeSubsystem} of the robot. */
+    // /** The {@link CoralIntakeSubsystem} of the robot. */
     private final CoralIntakeSubsystem m_coralIntakeSubsystem = new CoralIntakeSubsystem();
 
     // Controllers
@@ -151,17 +148,36 @@ public class RobotContainer {
      * Use this method to define your button -> <code>Command</code> mappings.
      */
     private void configureButtonBindings() {
+        m_driverController.a()
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(1), m_elevatorSubsystem))
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
+        m_driverController.b()
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-1), m_elevatorSubsystem))
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
+
+        m_driverController.x()
+            .onTrue(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0.5), m_coralIntakeSubsystem))
+            .onFalse(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0), m_coralIntakeSubsystem));
+        m_driverController.y()
+            .onTrue(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(-0.5), m_coralIntakeSubsystem))
+            .onFalse(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0), m_coralIntakeSubsystem));
+        m_driverController.rightBumper()
+            .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(0), true));
+
+        m_driverController.leftBumper()
+            .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(32.4), true));
+
         //------------------------------------------- Driver buttons -------------------------------------------
 
-        InputMappings.event("driver", "autoAlign")
-            .onTrue(new AutoAlign(driveSubsystem));
+        // InputMappings.event("driver", "autoAlign")
+        //     .onTrue(new AutoAlign(driveSubsystem));
 
-        InputMappings.event("driver", "orbitReef")
-            .whileTrue(new RobotOrbitPoint(driveSubsystem,
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-                FieldConstants.kReefPosition)
-            );
+        // InputMappings.event("driver", "orbitReef")
+        //     .whileTrue(new RobotOrbitPoint(driveSubsystem,
+        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+        //         () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+        //         FieldConstants.kReefPosition)
+        //     );
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
@@ -172,10 +188,10 @@ public class RobotContainer {
         // InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
         //     .onTrue(m_algaeIntakeArmSubsystem.armToggle());
 
-        InputMappings.event("coDriver", "coralIntake")
-            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
-        InputMappings.event("coDriver", "coralShoot")
-            .whileTrue(m_coralIntakeSubsystem.shootCoral());
+        // InputMappings.event("coDriver", "coralIntake")
+        //     .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
+        // InputMappings.event("coDriver", "coralShoot")
+        //     .whileTrue(m_coralIntakeSubsystem.shootCoral());
 
         InputMappings.event("coDriver", "coralL0")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
@@ -208,14 +224,14 @@ public class RobotContainer {
         // NamedCommands.registerCommand("algaeIntakeArmIn", m_algaeIntakeArmSubsystem.armIn());
         // NamedCommands.registerCommand("algaeIntakeArmOut", m_algaeIntakeArmSubsystem.armOut());
 
-        NamedCommands.registerCommand("corslIntake", m_coralIntakeSubsystem.intakeCoral(true));
-        NamedCommands.registerCommand("coralShoot", m_coralIntakeSubsystem.shootCoral().withTimeout(2));
+        // NamedCommands.registerCommand("corslIntake", m_coralIntakeSubsystem.intakeCoral(true));
+        // NamedCommands.registerCommand("coralShoot", m_coralIntakeSubsystem.shootCoral().withTimeout(2));
 
-        NamedCommands.registerCommand("coralL0", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
-        NamedCommands.registerCommand("coralL1", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
-        NamedCommands.registerCommand("coralL2", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
-        NamedCommands.registerCommand("coralL3", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
-        NamedCommands.registerCommand("coralL4", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 4));
+        // NamedCommands.registerCommand("coralL0", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
+        // NamedCommands.registerCommand("coralL1", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
+        // NamedCommands.registerCommand("coralL2", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
+        // NamedCommands.registerCommand("coralL3", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
+        // NamedCommands.registerCommand("coralL4", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 4));
     }
 
     /**

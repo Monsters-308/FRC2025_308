@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
         WebServer.start(5800, Filesystem.getDeployDirectory().toPath().resolve("layouts").toString());
 
         LoggingUtils.logPDH();
+        LoggingUtils.logBattery();
     }
 
     @Override
