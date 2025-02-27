@@ -564,7 +564,7 @@ public final class Constants {
         /** The P for the arm PID controller. */
         public static final double kArmP = 1;
         /** The I for the arm PID controller. */
-        public static final double kArmI = 0.02;
+        public static final double kArmI = 0;
         /** The D for the arm PID controller. */
         public static final double kArmD = 0;
         
