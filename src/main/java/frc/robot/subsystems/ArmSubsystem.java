@@ -97,9 +97,9 @@ public class ArmSubsystem extends SubsystemBase {
         m_armTab.addDouble("Arm Velocity Goal", () -> 
             Units.rotationsToDegrees(m_angleController.getGoal().velocity));
 
-        m_armTab.add("Zero Encoder", new InstantCommand(() -> m_armEncoder.setPosition(0)).runsWhenDisabled());
+        m_armTab.add("Zero Encoder", new InstantCommand(() -> m_armEncoder.setPosition(0)).ignoringDisable(true));
 
-        m_gravityEntry = m_armTab.add("Gravity Value", ArmConstants.kArmG).getEntry();
+        m_gravityEntry = m_armTab.add("Gravity Offset", ArmConstants.kArmG).getEntry();
 
         LoggingUtils.logSparkMax(m_armMotor);
 
