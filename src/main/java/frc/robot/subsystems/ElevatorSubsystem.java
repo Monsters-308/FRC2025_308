@@ -212,7 +212,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         // })
         // .andThen(new WaitUntilCommand(() -> m_bottomSwitch.get()))
         // .withName("Zero Elevator");
-        return runOnce(() -> m_elevatorEncoder.setPosition(0));
+        return runOnce(() -> m_elevatorEncoder.setPosition(0)).ignoringDisable(true);
     }
 
     /**
