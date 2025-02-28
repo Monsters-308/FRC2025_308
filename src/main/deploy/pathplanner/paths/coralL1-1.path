@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.588,
-        "y": 4.026
+        "x": 7.6,
+        "y": 4.0259
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.865446714767693,
-        "y": 4.026
+        "x": 6.688933847159061,
+        "y": 4.109807647138116
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.78175,
-        "y": 3.8495
+        "x": 5.849999999999999,
+        "y": 4.078944672131147
       },
       "prevControl": {
-        "x": 6.2506631716000305,
-        "y": 3.8495
+        "x": 6.497336065573768,
+        "y": 4.007018442622951
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "place coral",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
