@@ -1,0 +1,44 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2-1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "goToL3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "reset elevator"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Level 3",
+  "choreoAuto": false
+}
