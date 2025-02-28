@@ -47,8 +47,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         ElevatorConstants.kElevatorI,
         ElevatorConstants.kElevatorD,
         new TrapezoidProfile.Constraints(
-            ElevatorConstants.kElevatorMaxSpeedMetersPerSecond,
-            ElevatorConstants.kElevatorMaxAccelerationMetersPerSecondSquared
+            ElevatorConstants.kElevatorMaxSpeedInchesPerSecond,
+            ElevatorConstants.kElevatorMaxAccelerationInchesPerSecondSquared
         )
     );
 

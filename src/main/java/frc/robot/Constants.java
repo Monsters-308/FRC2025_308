@@ -431,13 +431,13 @@ public final class Constants {
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
         public static final double kElevatorReduction = 40;
-        /** The diameter of the gear/wheel that moves the elevator. */
+        /** The diameter of the gear/wheel that moves the elevator in inches. */
         public static final double kGearDiameter = 1;
         /** The circumference of the gear/wheel that moves the elevator. */
         public static final double kGearCircumference = kGearDiameter * Math.PI;
-        /** The conversion factor that converts from motor rotations to meters. */
+        /** The conversion factor that converts from motor rotations to inches. */
         public static final double kElevatorEncoderPositionFactor = kGearCircumference / kElevatorReduction;
-        /** The conversion factor that converts from motor rotations per minute to meters per second. */
+        /** The conversion factor that converts from motor rotations per minute to inches per second. */
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The P for the elevator PID. */
@@ -460,16 +460,16 @@ public final class Constants {
         public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
 
         /** The maximum allowed speed the elavtor should move at. */
-        public static final double kElevatorMaxSpeedMetersPerSecond = 10;
+        public static final double kElevatorMaxSpeedInchesPerSecond = 10;
 
         /** The maximum allowed acceleration of the elevator. */
-        public static final double kElevatorMaxAccelerationMetersPerSecondSquared = 10;
+        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 10;
 
-        /** The physical height of the elevator in meters. */
+        /** The physical height of the elevator in inches. */
         public static final double kElevatorMaxHeight = 40;
 
         // TODO: add heights
-        /** The heights, in meters, of every elevator level. */
+        /** The heights, in inches, of every elevator level. */
         public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 0 };
     }
 
