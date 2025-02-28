@@ -12,11 +12,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-// import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
-// import frc.robot.commands.drive.AutoAlign;
-// import frc.robot.commands.drive.RobotOrbitPoint;
+import frc.robot.commands.drive.AutoAlign;
+import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
 // import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
 // import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
@@ -151,36 +151,17 @@ public class RobotContainer {
      * Use this method to define your button -> <code>Command</code> mappings.
      */
     private void configureButtonBindings() {
-        m_driverController.povUp()
-            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0.2), m_elevatorSubsystem))
-            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
-        m_driverController.povDown()
-            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-0.2), m_elevatorSubsystem))
-            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
-
-        // m_driverController.x()
-        //     .onTrue(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0.5), m_coralIntakeSubsystem))
-        //     .onFalse(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0), m_coralIntakeSubsystem));
-        // m_driverController.y()
-        //     .onTrue(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(-0.5), m_coralIntakeSubsystem))
-        //     .onFalse(new InstantCommand(() -> m_coralIntakeSubsystem.setCoralSpeed(0), m_coralIntakeSubsystem));
-        m_driverController.rightBumper()
-            .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(0), true));
-
-        m_driverController.leftBumper()
-            .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(32.4), true));
-
         //------------------------------------------- Driver buttons -------------------------------------------
 
-        // InputMappings.event("driver", "autoAlign")
-        //     .onTrue(new AutoAlign(driveSubsystem));
+        InputMappings.event("driver", "autoAlign")
+            .whileTrue(new AutoAlign(driveSubsystem));
 
-        // InputMappings.event("driver", "orbitReef")
-        //     .whileTrue(new RobotOrbitPoint(driveSubsystem,
-        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-        //         () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-        //         FieldConstants.kReefPosition)
-        //     );
+        InputMappings.event("driver", "orbitReef")
+            .whileTrue(new RobotOrbitPoint(driveSubsystem,
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+                FieldConstants.kReefPosition)
+            );
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
@@ -192,18 +173,43 @@ public class RobotContainer {
         //     .onTrue(m_algaeIntakeArmSubsystem.armToggle());
 
         InputMappings.event("coDriver", "coralIntake")
+        // m_coDriverController.rightBumper()
             .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
         InputMappings.event("coDriver", "coralShoot")
+        // m_coDriverController.rightTrigger(0.1)
             .whileTrue(m_coralIntakeSubsystem.shootCoral());
         InputMappings.event("coDriver", "coralReverse")
+        // m_coDriverController.leftTrigger(0.1)
             .whileTrue(m_coralIntakeSubsystem.reverseCoral());
 
+        InputMappings.event("coDriver", "elevatorUp")
+        // m_coDriverController.povUp()
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(1), m_elevatorSubsystem))
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
+        InputMappings.event("coDriver", "elevatorDown")
+        // m_coDriverController.povDown()
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-1), m_elevatorSubsystem))
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
+
+        InputMappings.event("coDriver", "armUp")
+        // m_coDriverController.povLeft()
+            .onTrue(new InstantCommand(() -> m_armSubsystem.setSpeed(0.4), m_armSubsystem))
+            .onFalse(new InstantCommand(() -> m_armSubsystem.setSpeed(0), m_armSubsystem));
+        InputMappings.event("coDriver", "armDown")
+        // m_coDriverController.povRight()
+            .onTrue(new InstantCommand(() -> m_armSubsystem.setSpeed(-0.4), m_armSubsystem))
+            .onFalse(new InstantCommand(() -> m_armSubsystem.setSpeed(0), m_armSubsystem));
+        
         InputMappings.event("coDriver", "coralL1")
+        // m_coDriverController.a()
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
         InputMappings.event("coDriver", "coralL2")
+        // m_coDriverController.b()
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
         InputMappings.event("coDriver", "coralL3")
+        // m_coDriverController.x()
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
+        // m_coDriverController.y()
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
     }
@@ -242,9 +248,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new SequentialCommandGroup(
-            m_autonFirstAction.getSelected(),
-            m_autonSecondAction.getSelected()
-        );
+        return m_autonFirstAction.getSelected();
     }
 }
