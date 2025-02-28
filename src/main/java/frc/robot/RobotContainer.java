@@ -227,14 +227,14 @@ public class RobotContainer {
         // NamedCommands.registerCommand("algaeIntakeArmIn", m_algaeIntakeArmSubsystem.armIn());
         // NamedCommands.registerCommand("algaeIntakeArmOut", m_algaeIntakeArmSubsystem.armOut());
 
-        // NamedCommands.registerCommand("corslIntake", m_coralIntakeSubsystem.intakeCoral(true));
-        // NamedCommands.registerCommand("coralShoot", m_coralIntakeSubsystem.shootCoral().withTimeout(2));
+        NamedCommands.registerCommand("coralIntake", m_coralIntakeSubsystem.intakeCoral(true));
+        NamedCommands.registerCommand("shoot coral", m_coralIntakeSubsystem.shootCoral().withTimeout(2));
 
-        // NamedCommands.registerCommand("coralL0", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
-        // NamedCommands.registerCommand("coralL1", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
-        // NamedCommands.registerCommand("coralL2", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
-        // NamedCommands.registerCommand("coralL3", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
-        // NamedCommands.registerCommand("coralL4", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 4));
+        NamedCommands.registerCommand("reset elevator", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
+        //NamedCommands.registerCommand("coralL1", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
+        //NamedCommands.registerCommand("coralL2", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
+        NamedCommands.registerCommand("goToL3", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
+        //NamedCommands.registerCommand("coralL4", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 4));
     }
 
     /**
