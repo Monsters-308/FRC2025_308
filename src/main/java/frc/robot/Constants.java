@@ -507,7 +507,7 @@ public final class Constants {
         /** How long the arm motor should be run until it is garunteed to be in the correct position. */
         public static final double kArmTimeout = 1;
         /** The acceptable error for what is considered fully in or out. */
-        public static final double kArmErrorThreshold = 0.05;
+        public static final double kArmErrorThreshold = 0.01;
     }
 
     /** Describe how the {@link CoralIntakeSubsystem} should intake and shoot coral. */
@@ -524,7 +524,7 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 20;
         
         /** The speed the coral intake should be run at when intaking or shooting. */
-        public static final double kCoralIntakeSpeed = 0.55;
+        public static final double kCoralIntakeSpeed = 0.5;
 
         /**The channel for the digital input */
         public static final int kSensorChannel = 0;
