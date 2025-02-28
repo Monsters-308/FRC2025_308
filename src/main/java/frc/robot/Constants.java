@@ -441,7 +441,7 @@ public final class Constants {
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The P for the elevator PID. */
-        public static final double kElevatorP = 2;
+        public static final double kElevatorP = 3;
         /** The I for the elevator PID. */
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
@@ -466,11 +466,11 @@ public final class Constants {
         public static final double kElevatorMaxAccelerationMetersPerSecondSquared = 10;
 
         /** The physical height of the elevator in meters. */
-        public static final double kElevatorMaxHeight = 15;
+        public static final double kElevatorMaxHeight = 40;
 
         // TODO: add heights
         /** The heights, in meters, of every elevator level. */
-        public static final double[] kElevatorLevelHeights = { 0, 0.1, 6.3, 13.38, 0 };
+        public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 0 };
     }
 
     /**
@@ -524,10 +524,10 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 20;
         
         /** The speed the coral intake should be run at when intaking or shooting. */
-        public static final double kCoralIntakeSpeed = 0.1;
+        public static final double kCoralIntakeSpeed = 0.55;
 
         /**The channel for the digital input */
-        public static final int kSensorChannel = 1;
+        public static final int kSensorChannel = 0;
     }
 
     /**
@@ -560,7 +560,7 @@ public final class Constants {
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
-        public static final double kArmP = 1;
+        public static final double kArmP = 2;
         /** The I for the arm PID controller. */
         public static final double kArmI = 0;
         /** The D for the arm PID controller. */
@@ -579,9 +579,8 @@ public final class Constants {
         /** The angles of the arm for each elevator level. */
         public static final Rotation2d[] kArmLevelAngles = {
             Rotation2d.kZero,
-            Rotation2d.kZero,
-            Rotation2d.kZero,
-            Rotation2d.kZero,
+            Rotation2d.fromDegrees(32.4),
+            Rotation2d.fromDegrees(32.4),
             Rotation2d.kZero
         };
     }

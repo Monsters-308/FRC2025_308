@@ -41,7 +41,7 @@ import frc.robot.utils.Elastic.Notification.NotificationLevel;
 public class LoggingUtils {
     private LoggingUtils() {}
 
-    public static final ShuffleboardTab loggingTab = Shuffleboard.getTab("Devices");
+    public static final ShuffleboardTab loggingTab = Shuffleboard.getTab("Faults");
 
     /**
      * Turns off unused telemetry on the spark max to reduce canbus usage.
@@ -250,15 +250,15 @@ public class LoggingUtils {
     public static void logNavX(AHRS navX) {
         loggingTab.addBoolean("NavX", navX::isConnected);
 
-        new Trigger(navX::isConnected).debounce(2).onFalse(new InstantCommand(() -> {
-            Notification notification = new Notification()
-                .withLevel(NotificationLevel.ERROR)
-                .withTitle("NavX Disconnected!")
-                .withDescription("The NaxX as been disconnected.")
-                .withNoAutoDismiss();
+        // new Trigger(navX::isConnected).debounce(2).onFalse(new InstantCommand(() -> {
+        //     Notification notification = new Notification()
+        //         .withLevel(NotificationLevel.ERROR)
+        //         .withTitle("NavX Disconnected!")
+        //         .withDescription("The NaxX as been disconnected.")
+        //         .withNoAutoDismiss();
             
-            Elastic.sendNotification(notification);
-        }));
+        //     Elastic.sendNotification(notification);
+        // }));
     }
 
     /**
@@ -295,9 +295,7 @@ public class LoggingUtils {
     // }
 
     public static void logBattery() {
-        loggingTab.addDouble("Battery Voltage", RobotController::getBatteryVoltage);
-
-        new Trigger(() -> RobotController.getBatteryVoltage() > 15).onFalse(new InstantCommand(() -> {
+        new Trigger(() -> RobotController.getBatteryVoltage() > 10).onFalse(new InstantCommand(() -> {
             Notification notification = new Notification()
                 .withLevel(NotificationLevel.WARNING)
                 .withTitle("Battery Low!")

@@ -105,7 +105,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
         m_elevatorTab.addDouble("Elevator Speed", () -> getElevatorVelocity());
 
-        m_elevatorTab.add("Zero Elevator", zeroElevator());
+        m_elevatorTab.add("Zero Encoder", zeroEncoder());
 
         m_goToHeightLayout.add(goToHeight(() -> { 
             if (m_goToHeightEntry != null) {
@@ -203,10 +203,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     /**
-     * Creates a command that moves the elevator to the bottom.
+     * Creates a command that sets the position of the elevator encoder to zero.
      * @return The runnable Command.
      */
-    public Command zeroElevator() {
+    public Command zeroEncoder() {
         // return runOnce(() -> {
         //     setElevatorVelocity(-ElevatorConstants.kElevatorMaxSpeedMetersPerSecond);
         // })

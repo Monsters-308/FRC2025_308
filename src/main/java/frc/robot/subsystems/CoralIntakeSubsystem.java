@@ -12,10 +12,13 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.CoralIntakeConstants;
+import frc.robot.utils.LoggingUtils;
 
 
 /**
@@ -26,6 +29,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     private final SparkMax m_coralIntakeMotor = new SparkMax(CoralIntakeConstants.kCoralIntakeMotorCanId, MotorType.kBrushless);
     /** The senser that detects whether or not coral is in the intake. */
     private final DigitalInput m_sensor = new DigitalInput(CoralIntakeConstants.kSensorChannel);
+    private final ShuffleboardTab m_coralIntakeTab = Shuffleboard.getTab("Coral Intake");
+
 
     /**
      * Constructs a {@link CoralIntakeSubsystem} that controls the coral intake.
@@ -40,6 +45,11 @@ public class CoralIntakeSubsystem extends SubsystemBase {
             .smartCurrentLimit(CoralIntakeConstants.kSmartCurrentLimit);
 
         m_coralIntakeMotor.configure(coralIntakeMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        m_coralIntakeTab.addBoolean("Coral Detected", this::isCoralDetected);
+
+        LoggingUtils.logSparkMax(m_coralIntakeMotor);
+
     }
 
     /**
@@ -53,7 +63,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
      * This returns a true or false if the coral is detected.
      */
     public boolean isCoralDetected() {
-        return m_sensor.get();
+        return !m_sensor.get();
     }
     
     /**
@@ -61,7 +71,19 @@ public class CoralIntakeSubsystem extends SubsystemBase {
      * @return The <code>Command</code> object.
      */
     public Command shootCoral() {
-        return runOnce(() -> setCoralSpeed(CoralIntakeConstants.kCoralIntakeSpeed));
+        return runOnce(() -> setCoralSpeed(CoralIntakeConstants.kCoralIntakeSpeed))
+            .andThen(run(() -> {}))
+            .finallyDo(() -> setCoralSpeed(0));
+    }
+
+    /**
+     * Creates a {@link Command} that reverses the coral intake.
+     * @return The <code>Command</code> object.
+     */
+    public Command reverseCoral() {
+        return runOnce(() -> setCoralSpeed(-CoralIntakeConstants.kCoralIntakeSpeed))
+            .andThen(run(() -> {}))
+            .finallyDo(() -> setCoralSpeed(0));
     }
 
     /**
@@ -70,7 +92,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
      * @return The <code>Command</code> object.
      */
     public Command intakeCoral(boolean stopWhenDetected) {
-        return runOnce(() -> setCoralSpeed(0.1))
+        return runOnce(() -> setCoralSpeed(CoralIntakeConstants.kCoralIntakeSpeed))
             .andThen(new WaitUntilCommand(() -> isCoralDetected() || !stopWhenDetected))
             .finallyDo(() -> {
                 if (!stopWhenDetected) return;
