@@ -11,13 +11,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3-1"
+                  "pathName": "2-1"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "goToL3"
+                  "name": "coralL2"
                 }
               }
             ]
@@ -26,19 +26,19 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot coral"
+            "name": "shootCoral"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "reset elevator"
+            "name": "coralL1"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Level 3",
+  "folder": "Level 2",
   "choreoAuto": false
 }
