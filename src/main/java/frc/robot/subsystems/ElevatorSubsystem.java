@@ -104,9 +104,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
 
-        m_elevatorTab.addDouble("Elevator Height", () -> getElevatorHeight());
+        m_elevatorTab.addDouble("Elevator Height", () -> Utils.roundToNearest(getElevatorHeight(), 2));
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
-        m_elevatorTab.addDouble("Elevator Speed", () -> getElevatorVelocity());
+        m_elevatorTab.addDouble("Elevator Speed", () -> Utils.roundToNearest(getElevatorVelocity(), 2));
 
         m_elevatorTab.add("Zero Encoder", zeroEncoder());
 
@@ -146,7 +146,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             m_elevatorEncoder.getVelocity()
         );
 
-        m_elevatorPIDController.setGoal(height);
+        m_elevatorPIDController.setGoal(MathUtil.clamp(height, 0, ElevatorConstants.kElevatorMaxHeight));
     }
 
     /**
@@ -224,6 +224,10 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public void setElevatorVelocity(double velocity) {
         m_isPIDMode = false;
+
+        final double currentHeight = getElevatorHeight();
+        if (currentHeight <= 0 || currentHeight >= ElevatorConstants.kElevatorMaxHeight) return;
+
         m_elevatorLeader.set(velocity);
     }
 
@@ -295,8 +299,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         if (currentHeight <= 0) {
             m_elevatorLeader.set(Math.max(0, m_elevatorLeader.get()));
+            m_elevatorEncoder.setPosition(0);
         } else if (currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
             m_elevatorLeader.set(Math.min(0, m_elevatorLeader.get()));
+            m_elevatorEncoder.setPosition(ElevatorConstants.kElevatorMaxHeight);
         }
 
         // Prevent level in shuffleboard go to level layout from being non-integer

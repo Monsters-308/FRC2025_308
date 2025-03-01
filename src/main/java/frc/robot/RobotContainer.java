@@ -9,7 +9,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
+// import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -26,7 +26,7 @@ import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PhotonSubsystem;
-import frc.robot.utils.FieldUtils;
+// import frc.robot.utils.FieldUtils;
 import frc.robot.utils.InputMappings;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -198,6 +198,9 @@ public class RobotContainer {
         InputMappings.event("coDriver", "armDown")
         // m_coDriverController.povRight()
             .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(32.4), false));
+
+        m_coDriverController.leftBumper()
+            .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(90), false));
         
         InputMappings.event("coDriver", "coralL1")
         // m_coDriverController.a()

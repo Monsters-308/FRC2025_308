@@ -8,7 +8,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
+// import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
@@ -85,23 +85,20 @@ public class ArmSubsystem extends SubsystemBase {
 
         m_armEncoder = m_armMotor.getAbsoluteEncoder();
 
-        m_armTab.addDouble("Arm Angle", () -> getAngle().getDegrees());
-        m_armTab.addDouble("Arm Velocity", () -> getVelocity().getDegrees());
+        m_armTab.addDouble("Arm Angle", () -> Utils.roundToNearest(getAngle().getDegrees(), 2));
+        m_armTab.addDouble("Arm Velocity", () -> Utils.roundToNearest(getVelocity().getDegrees(), 2));
 
         m_armTab.addDouble("Arm Angle Setpoint", () -> 
-            Units.rotationsToDegrees(m_angleController.getSetpoint().position));
+            Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getSetpoint().position), 2));
         m_armTab.addDouble("Arm Velocity Setpoint", () -> 
-            Units.rotationsToDegrees(m_angleController.getSetpoint().velocity));
+            Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getSetpoint().velocity), 2));
 
         m_armTab.addDouble("Arm Angle Goal", () -> 
-            Units.rotationsToDegrees(m_angleController.getGoal().position));
+            Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().position), 2));
         m_armTab.addDouble("Arm Velocity Goal", () -> 
-            Units.rotationsToDegrees(m_angleController.getGoal().velocity));
+            Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().velocity), 2));
 
-        m_armTab.add("Go To 80 Degrees", goToAngle(Rotation2d.fromDegrees(80), false));
-        // m_armTab.add("Zero Encoder", new InstantCommand(() -> m_armEncoder.).ignoringDisable(true));
-
-        m_gravityEntry = m_armTab.add("Gravity Offset", ArmConstants.kArmG).getEntry();
+        m_gravityEntry = m_armTab.addPersistent("Gravity Offset", ArmConstants.kArmG).getEntry();
 
         LoggingUtils.logSparkMax(m_armMotor);
 
@@ -114,6 +111,7 @@ public class ArmSubsystem extends SubsystemBase {
         );
 
         m_angleController.enableContinuousInput(0, 1);
+        m_angleController.setTolerance(ArmConstants.kArmTolerance);
     }
 
     /**

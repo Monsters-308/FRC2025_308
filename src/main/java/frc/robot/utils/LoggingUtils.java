@@ -4,15 +4,15 @@
 
 package frc.robot.utils;
 
-import com.revrobotics.spark.SparkBase.Faults;
+// import com.revrobotics.spark.SparkBase.Faults;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkBase.Warnings;
+// import com.revrobotics.spark.SparkBase.Warnings;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+// import java.util.ArrayList;
+// import java.util.Arrays;
 import java.util.function.BooleanSupplier;
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkMax;
@@ -21,15 +21,15 @@ import com.studica.frc.AHRS;
 
 import edu.wpi.first.hal.PowerDistributionFaults;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotController;
+// import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.PDHConstants;
-import frc.robot.utils.Elastic.Notification;
-import frc.robot.utils.Elastic.Notification.NotificationLevel;
+// import frc.robot.utils.Elastic.Notification;
+// import frc.robot.utils.Elastic.Notification.NotificationLevel;
 
 /** 
  * Utilities to help us with logging important information to networktables and 
@@ -79,38 +79,38 @@ public class LoggingUtils {
         // Log faults and warnings
         loggingTab.addBoolean("Spark #" + sparkMax.getDeviceId(), hasNoFaults);
 
-        new Trigger(hasNoFaults).onFalse(new InstantCommand(() -> {
-            Faults sparkFaults = sparkMax.getFaults();
-            Warnings sparkWarnings = sparkMax.getWarnings();
+        // new Trigger(hasNoFaults).onFalse(new InstantCommand(() -> {
+        //     Faults sparkFaults = sparkMax.getFaults();
+        //     Warnings sparkWarnings = sparkMax.getWarnings();
 
-            ArrayList<String> faultList = new ArrayList<>();
-            if (sparkFaults.can) faultList.add("CAN fault");
-            if (sparkFaults.escEeprom) faultList.add("boot during enable fault");
-            if (sparkFaults.firmware) faultList.add("firmware fault");
-            if (sparkFaults.gateDriver) faultList.add("gate driver fault");
-            if (sparkFaults.motorType) faultList.add("motor type fault");
-            if (sparkFaults.other) faultList.add("\"other\" fault");
-            if (sparkFaults.sensor) faultList.add("sensor fault");
-            if (sparkFaults.temperature) faultList.add("tempurature fault");
-            if (sparkWarnings.brownout) faultList.add("brownout warning");
-            if (sparkWarnings.escEeprom) faultList.add("brownout warning");
-            if (sparkWarnings.extEeprom) faultList.add("brownout warning");
-            if (sparkWarnings.hasReset) faultList.add("has reset warning");
-            if (sparkWarnings.other) faultList.add("\"other\" warning");
-            if (sparkWarnings.overcurrent) faultList.add("overcurrent warning");
-            if (sparkWarnings.sensor) faultList.add("sensor warning");
-            if (sparkWarnings.stall) faultList.add("stall warning");
+        //     ArrayList<String> faultList = new ArrayList<>();
+        //     if (sparkFaults.can) faultList.add("CAN fault");
+        //     if (sparkFaults.escEeprom) faultList.add("boot during enable fault");
+        //     if (sparkFaults.firmware) faultList.add("firmware fault");
+        //     if (sparkFaults.gateDriver) faultList.add("gate driver fault");
+        //     if (sparkFaults.motorType) faultList.add("motor type fault");
+        //     if (sparkFaults.other) faultList.add("\"other\" fault");
+        //     if (sparkFaults.sensor) faultList.add("sensor fault");
+        //     if (sparkFaults.temperature) faultList.add("tempurature fault");
+        //     if (sparkWarnings.brownout) faultList.add("brownout warning");
+        //     if (sparkWarnings.escEeprom) faultList.add("brownout warning");
+        //     if (sparkWarnings.extEeprom) faultList.add("brownout warning");
+        //     if (sparkWarnings.hasReset) faultList.add("has reset warning");
+        //     if (sparkWarnings.other) faultList.add("\"other\" warning");
+        //     if (sparkWarnings.overcurrent) faultList.add("overcurrent warning");
+        //     if (sparkWarnings.sensor) faultList.add("sensor warning");
+        //     if (sparkWarnings.stall) faultList.add("stall warning");
 
-            final String description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
-                (faultList.size() == 1 ? " has" : " have") + " been detected in SparkMax #" + sparkMax.getDeviceId() + ".";
+        //     final String description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
+        //         (faultList.size() == 1 ? " has" : " have") + " been detected in SparkMax #" + sparkMax.getDeviceId() + ".";
 
-            Notification notification = new Notification()
-                .withLevel(NotificationLevel.ERROR)
-                .withTitle("SparkMax Faults Detected!")
-                .withDescription(description);
+        //     Notification notification = new Notification()
+        //         .withLevel(NotificationLevel.ERROR)
+        //         .withTitle("SparkMax Faults Detected!")
+        //         .withDescription(description);
             
-            Elastic.sendNotification(notification);
-        }));
+        //     Elastic.sendNotification(notification);
+        // }));
     }
 
     /**
@@ -132,32 +132,32 @@ public class LoggingUtils {
 
         loggingTab.addBoolean("CANcoder #" + canCoder.getDeviceID(), hasNoFaults);
 
-        new Trigger(hasNoFaults).onFalse(new InstantCommand(() -> {
-            ArrayList<String> faultList = new ArrayList<>();
-            if (canCoder.getFault_BadMagnet(false).getValue()) faultList.add("bad magnet");
-            if (canCoder.getFault_BootDuringEnable(false).getValue()) faultList.add("boot during enable fault");
-            if (canCoder.getFault_Hardware(false).getValue()) faultList.add("hardware fault");
-            if (canCoder.getFault_Undervoltage(false).getValue()) faultList.add("undervoltage fault");
-            if (canCoder.getFault_UnlicensedFeatureInUse(false).getValue()) faultList.add("unlicensed feature");
+        // new Trigger(hasNoFaults).onFalse(new InstantCommand(() -> {
+        //     ArrayList<String> faultList = new ArrayList<>();
+        //     if (canCoder.getFault_BadMagnet(false).getValue()) faultList.add("bad magnet");
+        //     if (canCoder.getFault_BootDuringEnable(false).getValue()) faultList.add("boot during enable fault");
+        //     if (canCoder.getFault_Hardware(false).getValue()) faultList.add("hardware fault");
+        //     if (canCoder.getFault_Undervoltage(false).getValue()) faultList.add("undervoltage fault");
+        //     if (canCoder.getFault_UnlicensedFeatureInUse(false).getValue()) faultList.add("unlicensed feature");
 
-            final String title;
-            final String description;
-            if (!canCoder.isConnected()) {
-                title = "CANcoder Disconnected!";
-                description = "CANcoder #" + canCoder.getDeviceID() +" has been disconnected.";
-            } else {
-                title = "CANcoder Faults Detected!";
-                description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
-                    (faultList.size() == 1 ? " has" : " have") + " been detected in CANcoder #" + canCoder.getDeviceID() + ".";
-            }
+        //     final String title;
+        //     final String description;
+        //     if (!canCoder.isConnected()) {
+        //         title = "CANcoder Disconnected!";
+        //         description = "CANcoder #" + canCoder.getDeviceID() +" has been disconnected.";
+        //     } else {
+        //         title = "CANcoder Faults Detected!";
+        //         description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
+        //             (faultList.size() == 1 ? " has" : " have") + " been detected in CANcoder #" + canCoder.getDeviceID() + ".";
+        //     }
 
-            Notification notification = new Notification()
-                .withLevel(NotificationLevel.ERROR)
-                .withTitle(title)
-                .withDescription(description);
+        //     Notification notification = new Notification()
+        //         .withLevel(NotificationLevel.ERROR)
+        //         .withTitle(title)
+        //         .withDescription(description);
             
-            Elastic.sendNotification(notification);
-        }));
+        //     Elastic.sendNotification(notification);
+        // }));
     }
 
     // /** Helper function to see if any of the pdh channels have breaker faults. */
@@ -200,23 +200,23 @@ public class LoggingUtils {
         // Log if the pdh is having any faults
         loggingTab.addBoolean("PDH", hasNoPDHFaults);
 
-        new Trigger(hasNoPDHFaults).onFalse(new InstantCommand(() -> {
-            PowerDistributionFaults faults = pdh.getFaults();
-            ArrayList<String> faultList = new ArrayList<>();
-            if (faults.Brownout) faultList.add("brownout");
-            if (faults.CanWarning) faultList.add("CAN warning");
-            if (faults.HardwareFault) faultList.add("hardware fault");
+        // new Trigger(hasNoPDHFaults).onFalse(new InstantCommand(() -> {
+        //     PowerDistributionFaults faults = pdh.getFaults();
+        //     ArrayList<String> faultList = new ArrayList<>();
+        //     if (faults.Brownout) faultList.add("brownout");
+        //     if (faults.CanWarning) faultList.add("CAN warning");
+        //     if (faults.HardwareFault) faultList.add("hardware fault");
 
-            String description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
-                (faultList.size() == 1 ? " has" : " have") + " been detected.";
+        //     String description = "A " + joinArray(faultList.toArray(new String[faultList.size()])) +
+        //         (faultList.size() == 1 ? " has" : " have") + " been detected.";
 
-            Notification notification = new Notification()
-                .withLevel(NotificationLevel.ERROR)
-                .withTitle("PDH Faults Detected!")
-                .withDescription(description);
+        //     Notification notification = new Notification()
+        //         .withLevel(NotificationLevel.ERROR)
+        //         .withTitle("PDH Faults Detected!")
+        //         .withDescription(description);
             
-            Elastic.sendNotification(notification);
-        }));
+        //     Elastic.sendNotification(notification);
+        // }));
 
         // final BooleanSupplier hasNoBreakerFaults = () -> !hasBreakerFaults(pdh.getFaults());
 
@@ -263,23 +263,23 @@ public class LoggingUtils {
      * @param array The array to join.
      * @return The joined array as a string.
      */
-    private static String joinArray(String[] array) {
-        if (array == null || array.length == 0) {
-            return "";
-        }
-        if (array.length == 1) {
-            return array[0];
-        }
-        if (array.length == 2) {
-            return String.join(" and ", array);
-        }
+    // private static String joinArray(String[] array) {
+    //     if (array == null || array.length == 0) {
+    //         return "";
+    //     }
+    //     if (array.length == 1) {
+    //         return array[0];
+    //     }
+    //     if (array.length == 2) {
+    //         return String.join(" and ", array);
+    //     }
 
-        String allButLast = Arrays.stream(array)
-                .limit(array.length - 1)
-                .collect(Collectors.joining(", "));
+    //     String allButLast = Arrays.stream(array)
+    //             .limit(array.length - 1)
+    //             .collect(Collectors.joining(", "));
         
-        return allButLast.concat(" and ").concat(array[array.length - 1]);
-    }
+    //     return allButLast.concat(" and ").concat(array[array.length - 1]);
+    // }
 
     // /**
     //  * Joins an array with commas and an "and".
@@ -292,13 +292,13 @@ public class LoggingUtils {
     // }
 
     public static void logBattery() {
-        new Trigger(() -> RobotController.getBatteryVoltage() > 10).onFalse(new InstantCommand(() -> {
-            Notification notification = new Notification()
-                .withLevel(NotificationLevel.WARNING)
-                .withTitle("Battery Low!")
-                .withDescription("The output battery voltage is below 11 volts.");
+        // new Trigger(() -> RobotController.getBatteryVoltage() > 10).onFalse(new InstantCommand(() -> {
+        //     Notification notification = new Notification()
+        //         .withLevel(NotificationLevel.WARNING)
+        //         .withTitle("Battery Low!")
+        //         .withDescription("The output battery voltage is below 11 volts.");
             
-            Elastic.sendNotification(notification);
-        }));
+        //     Elastic.sendNotification(notification);
+        // }));
     }
 }

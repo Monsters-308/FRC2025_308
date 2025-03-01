@@ -16,7 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
 
-import java.util.Map;
+// import java.util.Map;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -35,7 +35,7 @@ import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.SwerveModule;
 import frc.robot.utils.Utils;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets ;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
@@ -126,13 +126,13 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.enableLogging(false);
     
         // Widgets for swerve module angles 
-        m_swerveTab.addDouble("frontLeft angle", () -> Utils.angleConstrain(m_frontLeft.getTurningAngle().getDegrees()));
-        m_swerveTab.addDouble("frontRight angle", () -> Utils.angleConstrain(m_frontRight.getTurningAngle().getDegrees()));
-        m_swerveTab.addDouble("rearLeft angle", () -> Utils.angleConstrain(m_rearLeft.getTurningAngle().getDegrees()));
-        m_swerveTab.addDouble("rearRight angle", () -> Utils.angleConstrain(m_rearRight.getTurningAngle().getDegrees()));
+        m_swerveTab.addDouble("frontLeft angle", () -> Utils.roundToNearest(Utils.angleConstrain(m_frontLeft.getTurningAngle().getDegrees()), 2));
+        m_swerveTab.addDouble("frontRight angle", () -> Utils.roundToNearest(Utils.angleConstrain(m_frontRight.getTurningAngle().getDegrees()), 2));
+        m_swerveTab.addDouble("rearLeft angle", () -> Utils.roundToNearest(Utils.angleConstrain(m_rearLeft.getTurningAngle().getDegrees()), 2));
+        m_swerveTab.addDouble("rearRight angle", () -> Utils.roundToNearest(Utils.angleConstrain(m_rearRight.getTurningAngle().getDegrees()), 2));
 
         // Gyro widget
-        m_swerveTab.addDouble("Robot Heading", this::getHeading);
+        m_swerveTab.addDouble("Robot Heading", () -> Utils.roundToNearest(getHeading(), 2));
             // .withWidget(BuiltInWidgets.kGyro)
             // .withSize(2, 2)
             // .withProperties(Map.of(
@@ -142,14 +142,14 @@ public class DriveSubsystem extends SubsystemBase {
         m_swerveTab.add("Field", m_field)
             .withSize(6, 3);
         
-        m_swerveTab.addDouble("robot X", () -> getPose().getX());
-        m_swerveTab.addDouble("robot Y", () -> getPose().getY());
+        m_swerveTab.addDouble("robot X", () -> Utils.roundToNearest(getPose().getX(), 2));
+        m_swerveTab.addDouble("robot Y", () -> Utils.roundToNearest(getPose().getY(), 2));
 
         m_swerveTab.addBoolean("Alliance", FieldUtils::isBlueAlliance);
 
         // // Gyro values for testing
-        m_swerveTab.addDouble("gyro pitch", () -> m_gyro.getPitch());
-        m_swerveTab.addDouble("gyro roll", () -> m_gyro.getRoll());
+        m_swerveTab.addDouble("gyro pitch", () -> Utils.roundToNearest(m_gyro.getPitch(), 2));
+        m_swerveTab.addDouble("gyro roll", () -> Utils.roundToNearest(m_gyro.getRoll(), 2));
         
         // Configure the AutoBuilder
         AutoBuilder.configure(
@@ -212,23 +212,23 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearRight.getPosition()
             });
         
-        // if (m_usePhotonData.getEntry().getBoolean(true)) {
-        //     EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimations();
+        if (m_usePhotonData.getEntry().getBoolean(true)) {
+            EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimations();
 
-        //     for (int i = 0; i < estimations.length; i++) {
-        //         if (estimations[i] == null) continue;
+            for (int i = 0; i < estimations.length; i++) {
+                if (estimations[i] == null) continue;
 
-        //         Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
-        //         PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
+                Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
+                PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
 
-        //         stdDev = stdDev.times(
-        //             DriveConstants.kVisionStandardDeviationMultipler *
-        //             result.getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
-        //         );
+                stdDev = stdDev.times(
+                    DriveConstants.kVisionStandardDeviationMultipler *
+                    result.getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
+                );
 
-        //         m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds, stdDev);
-        //     }
-        // }
+                m_odometry.addVisionMeasurement(FieldUtils.flipRed(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
+            }
+        }
 
         // Update field widget
         m_field.setRobotPose(FieldUtils.flipRed(getPose()));

@@ -575,6 +575,8 @@ public final class Constants {
         /** The A gain for the arm feedforward. */
         public static final double kArmA = 0;
 
+        public static final double kArmTolerance = 0.1;
+
         // TODO: add angles
         /** The angles of the arm for each elevator level. */
         public static final Rotation2d[] kArmLevelAngles = {
