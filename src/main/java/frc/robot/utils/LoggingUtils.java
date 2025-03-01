@@ -107,8 +107,7 @@ public class LoggingUtils {
             Notification notification = new Notification()
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle("SparkMax Faults Detected!")
-                .withDescription(description)
-                .withNoAutoDismiss();
+                .withDescription(description);
             
             Elastic.sendNotification(notification);
         }));
@@ -155,8 +154,7 @@ public class LoggingUtils {
             Notification notification = new Notification()
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle(title)
-                .withDescription(description)
-                .withNoAutoDismiss();
+                .withDescription(description);
             
             Elastic.sendNotification(notification);
         }));
@@ -215,8 +213,7 @@ public class LoggingUtils {
             Notification notification = new Notification()
                 .withLevel(NotificationLevel.ERROR)
                 .withTitle("PDH Faults Detected!")
-                .withDescription(description)
-                .withNoAutoDismiss();
+                .withDescription(description);
             
             Elastic.sendNotification(notification);
         }));
@@ -299,8 +296,7 @@ public class LoggingUtils {
             Notification notification = new Notification()
                 .withLevel(NotificationLevel.WARNING)
                 .withTitle("Battery Low!")
-                .withDescription("The output battery voltage is below 11 volts.")
-                .withNoAutoDismiss();
+                .withDescription("The output battery voltage is below 11 volts.");
             
             Elastic.sendNotification(notification);
         }));

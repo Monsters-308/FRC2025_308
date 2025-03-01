@@ -4,19 +4,20 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+// import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Constants.FieldConstants;
+// import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
-import frc.robot.commands.drive.AutoAlign;
-import frc.robot.commands.drive.RobotOrbitPoint;
+// import frc.robot.commands.drive.AutoAlign;
+// import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
 // import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
 // import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
@@ -30,8 +31,8 @@ import frc.robot.utils.InputMappings;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+// import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /*
@@ -65,9 +66,7 @@ public class RobotContainer {
 
     // Sendable choosers to dictate what the robot does during auton
     /** The {@link SendableChooser} send to Elastic for the first auton path to follow. */
-    private final SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
-    /** The {@link SendableChooser} send to Elastic for the second auton path to follow. */
-    private final SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
+    private SendableChooser<Command> m_autonFirstAction;
 
 
     /**
@@ -85,6 +84,8 @@ public class RobotContainer {
         // Configure named commands for pathplanner
         configureNamedCommands();
 
+        m_autonFirstAction = AutoBuilder.buildAutoChooser();
+
         // Configure default commands
         driveSubsystem.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -98,12 +99,10 @@ public class RobotContainer {
                 driveSubsystem));
         
         // Adding options to the sendable choosers
-        applyCommands(m_autonFirstAction);
-        applyCommands(m_autonSecondAction);
+        // applyCommands(m_autonFirstAction);
 
         // Put choosers on the dashboard
         Shuffleboard.getTab("Autonomous").add("First Action", m_autonFirstAction).withSize(2, 1);
-        Shuffleboard.getTab("Autonomous").add("Second Action", m_autonSecondAction).withSize(2, 1);
 
         // DEBUG: widgets for testing swerve modules
         Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
@@ -116,35 +115,35 @@ public class RobotContainer {
         Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(driveSubsystem));
 
         // FAILSAFE: widgets for manually setting robot position if the limelight is not working or can't view the april tags.
-        Shuffleboard.getTab("Autonomous").add("Set Amp Side",
-            new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
-                new Pose2d(
-                    0.73, 
-                    6.73, 
-                    Rotation2d.fromDegrees(-120))
-            )))
-            .ignoringDisable(true)
-        );
+        // Shuffleboard.getTab("Autonomous").add("Set Amp Side",
+        //     new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
+        //         new Pose2d(
+        //             0.73, 
+        //             6.73, 
+        //             Rotation2d.fromDegrees(-120))
+        //     )))
+        //     .ignoringDisable(true)
+        // );
 
-        Shuffleboard.getTab("Autonomous").add("Set Middle",
-            new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
-                new Pose2d(
-                    1.5,
-                    5.55,
-                    Rotation2d.fromDegrees(180))
-            )))
-            .ignoringDisable(true)
-        );
+        // Shuffleboard.getTab("Autonomous").add("Set Middle",
+        //     new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
+        //         new Pose2d(
+        //             1.5,
+        //             5.55,
+        //             Rotation2d.fromDegrees(180))
+        //     )))
+        //     .ignoringDisable(true)
+        // );
 
-        Shuffleboard.getTab("Autonomous").add("Set Source Side",
-            new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
-                new Pose2d(
-                    0.73, 
-                    4.39, 
-                    Rotation2d.fromDegrees(120))
-            )))
-            .ignoringDisable(true)
-        );
+        // Shuffleboard.getTab("Autonomous").add("Set Source Side",
+        //     new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
+        //         new Pose2d(
+        //             0.73, 
+        //             4.39, 
+        //             Rotation2d.fromDegrees(120))
+        //     )))
+        //     .ignoringDisable(true)
+        // );
     }
 
     /**
@@ -153,15 +152,17 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //------------------------------------------- Driver buttons -------------------------------------------
 
-        InputMappings.event("driver", "autoAlign")
-            .whileTrue(new AutoAlign(driveSubsystem));
+        m_driverController.rightBumper()
+            .onTrue(new InstantCommand((() -> driveSubsystem.setHeading(0))));
+        // InputMappings.event("driver", "autoAlign")
+        //     .whileTrue(new AutoAlign(driveSubsystem));
 
-        InputMappings.event("driver", "orbitReef")
-            .whileTrue(new RobotOrbitPoint(driveSubsystem,
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-                FieldConstants.kReefPosition)
-            );
+        // InputMappings.event("driver", "orbitReef")
+        //     .whileTrue(new RobotOrbitPoint(driveSubsystem,
+        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+        //         () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+        //         FieldConstants.kReefPosition)
+        //     );
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
@@ -173,8 +174,8 @@ public class RobotContainer {
         //     .onTrue(m_algaeIntakeArmSubsystem.armToggle());
 
         InputMappings.event("coDriver", "coralIntake")
-        // m_coDriverController.rightBumper()
-            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
+        // m_coDriverController.rightBumper()      
+            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true).raceWith(m_armSubsystem.goToSpeed(0.04)));
         InputMappings.event("coDriver", "coralShoot")
         // m_coDriverController.rightTrigger(0.1)
             .whileTrue(m_coralIntakeSubsystem.shootCoral());
@@ -184,21 +185,19 @@ public class RobotContainer {
 
         InputMappings.event("coDriver", "elevatorUp")
         // m_coDriverController.povUp()
-            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(1), m_elevatorSubsystem))
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0.8), m_elevatorSubsystem))
             .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
         InputMappings.event("coDriver", "elevatorDown")
         // m_coDriverController.povDown()
-            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-1), m_elevatorSubsystem))
+            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-0.8), m_elevatorSubsystem))
             .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
 
         InputMappings.event("coDriver", "armUp")
         // m_coDriverController.povLeft()
-            .onTrue(new InstantCommand(() -> m_armSubsystem.setSpeed(0.4), m_armSubsystem))
-            .onFalse(new InstantCommand(() -> m_armSubsystem.setSpeed(0), m_armSubsystem));
+            .onTrue(m_armSubsystem.goToAngle(Rotation2d.kZero, false));
         InputMappings.event("coDriver", "armDown")
         // m_coDriverController.povRight()
-            .onTrue(new InstantCommand(() -> m_armSubsystem.setSpeed(-0.4), m_armSubsystem))
-            .onFalse(new InstantCommand(() -> m_armSubsystem.setSpeed(0), m_armSubsystem));
+            .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(32.4), false));
         
         InputMappings.event("coDriver", "coralL1")
         // m_coDriverController.a()
@@ -209,7 +208,8 @@ public class RobotContainer {
         InputMappings.event("coDriver", "coralL3")
         // m_coDriverController.x()
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
-        // m_coDriverController.y()
+        // m_coDriverController.y()4\
+    
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
     }
@@ -218,11 +218,11 @@ public class RobotContainer {
      * Function for adding all of our auton paths to each of the choosers
      * @param autonChooser The {@link SendableChooser} being used for auton.
      */
-    private void applyCommands(SendableChooser<Command> autonChooser){
-        autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-        autonChooser.addOption("Move One Meter", new PathPlannerAuto("Move One Meter"));
-        autonChooser.addOption("Two Meter Spin", new PathPlannerAuto("Two Meter Spin"));
-    }
+    // private void applyCommands(SendableChooser<Command> autonChooser){
+    //     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
+    //     autonChooser.addOption("Move One Meter", new PathPlannerAuto("Move One Meter"));
+    //     autonChooser.addOption("Two Meter Spin", new PathPlannerAuto("Two Meter Spin"));
+    // }
 
     /**
      * Configures the {@link NamedCommands} for PathPlanner.
@@ -234,13 +234,12 @@ public class RobotContainer {
         // NamedCommands.registerCommand("algaeIntakeArmOut", m_algaeIntakeArmSubsystem.armOut());
 
         NamedCommands.registerCommand("coralIntake", m_coralIntakeSubsystem.intakeCoral(true));
-        NamedCommands.registerCommand("shoot coral", m_coralIntakeSubsystem.shootCoral().withTimeout(2));
+        NamedCommands.registerCommand("shootCoral", m_coralIntakeSubsystem.shootCoral().withTimeout(2));
 
-        NamedCommands.registerCommand("reset elevator", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
-        //NamedCommands.registerCommand("coralL1", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
-        //NamedCommands.registerCommand("coralL2", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
-        NamedCommands.registerCommand("goToL3", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
-        //NamedCommands.registerCommand("coralL4", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 4));
+        NamedCommands.registerCommand("coralL1", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
+        NamedCommands.registerCommand("coralL2", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
+        NamedCommands.registerCommand("coralL3", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
+        NamedCommands.registerCommand("coralL4", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
     }
 
     /**

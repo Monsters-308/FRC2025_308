@@ -52,15 +52,15 @@ public class PhotonSubsystem extends SubsystemBase {
     public EstimatedRobotPose[] getEstimations() {
         EstimatedRobotPose[] estimations = new EstimatedRobotPose[m_cameras.length];
 
-        for (int i = 0; i < m_cameras.length; i++) {
-            PhotonPipelineResult result = m_results[i];
+        // for (int i = 0; i < m_cameras.length; i++) {
+        //     PhotonPipelineResult result = m_results[i];
 
-            if (result == null) continue;
+        //     if (result == null) continue;
 
-            Optional<EstimatedRobotPose> estimation = m_photonPoseEstimators[i].update(result);
+        //     Optional<EstimatedRobotPose> estimation = m_photonPoseEstimators[i].update(result);
             
-            estimations[i] = estimation.orElse(null);
-        }
+        //     estimations[i] = estimation.orElse(null);
+        // }
 
         return estimations;
     }
@@ -94,14 +94,14 @@ public class PhotonSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        for (int i = 0; i < m_cameras.length; i++) {
-            List<PhotonPipelineResult> results = m_cameras[i].getAllUnreadResults();
+        // for (int i = 0; i < m_cameras.length; i++) {
+        //     List<PhotonPipelineResult> results = m_cameras[i].getAllUnreadResults();
 
-            if (!results.isEmpty()) {
-                m_results[i] = results.get(results.size() - 1);
-            } else {
-                m_results[i] = null;
-            }
-        }
+        //     if (!results.isEmpty()) {
+        //         m_results[i] = results.get(results.size() - 1);
+        //     } else {
+        //         m_results[i] = null;
+        //     }
+        // }
     }
 }

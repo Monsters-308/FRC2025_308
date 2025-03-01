@@ -20,10 +20,13 @@ import org.json.simple.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utils.Elastic.Notification;
@@ -243,6 +246,7 @@ public final class InputMappings {
      */
     public static void addChoosers(ShuffleboardTab tab) {
         final ShuffleboardLayout mappingLayout = tab.getLayout("Mappings", BuiltInLayouts.kList);
+        final ShuffleboardLayout vibrationLayout = tab.getLayout("Vibrate Controllers", BuiltInLayouts.kList);
 
         for (final String key : m_controllers.keySet()) {
             SendableChooser<String> chooser = getChooser(key);
@@ -250,6 +254,12 @@ public final class InputMappings {
                 continue;
             }
             mappingLayout.add(WordUtils.capitalize(key), chooser);
+            vibrationLayout.add(key, 
+                new InstantCommand(() -> m_controllers.get(key).setRumble(RumbleType.kBothRumble, 1))
+                    .andThen(new WaitCommand(2))
+                    .finallyDo(() -> m_controllers.get(key).setRumble(RumbleType.kBothRumble, 0))
+                    .ignoringDisable(true)
+            );
         }
     }
 

@@ -123,25 +123,20 @@ public class DriveSubsystem extends SubsystemBase {
         m_photonSubsystem = photonSubsystem;
 
         LoggingUtils.logNavX(m_gyro);
+        m_gyro.enableLogging(false);
     
         // Widgets for swerve module angles 
         m_swerveTab.addDouble("frontLeft angle", () -> Utils.angleConstrain(m_frontLeft.getTurningAngle().getDegrees()));
         m_swerveTab.addDouble("frontRight angle", () -> Utils.angleConstrain(m_frontRight.getTurningAngle().getDegrees()));
         m_swerveTab.addDouble("rearLeft angle", () -> Utils.angleConstrain(m_rearLeft.getTurningAngle().getDegrees()));
         m_swerveTab.addDouble("rearRight angle", () -> Utils.angleConstrain(m_rearRight.getTurningAngle().getDegrees()));
-        m_swerveTab.addDouble("frontLeft test angle", () -> Utils.angleConstrain(m_frontLeft.getRelativeTurningAngle()));
-        m_swerveTab.addDouble("frontRight test angle", () -> Utils.angleConstrain(m_frontRight.getRelativeTurningAngle()));
-        m_swerveTab.addDouble("rearLeft test angle", () -> Utils.angleConstrain(m_rearLeft.getRelativeTurningAngle()));
-        m_swerveTab.addDouble("rearRight test angle", () -> Utils.angleConstrain(m_rearRight.getRelativeTurningAngle()));
-
-        m_swerveTab.addDouble("Desired Angle", () -> m_frontLeft.getDesiredAngle());
 
         // Gyro widget
-        m_swerveTab.addDouble("Robot Heading", this::getHeading)
-            .withWidget(BuiltInWidgets.kGyro)
-            .withSize(2, 2)
-            .withProperties(Map.of(
-                "Counter Clockwise", true));
+        m_swerveTab.addDouble("Robot Heading", this::getHeading);
+            // .withWidget(BuiltInWidgets.kGyro)
+            // .withSize(2, 2)
+            // .withProperties(Map.of(
+            //     "Counter Clockwise", true));
         
         // Field widget for displaying odometry estimation
         m_swerveTab.add("Field", m_field)
@@ -168,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
             this // Reference to this subsystem to set requirements
         );
 
-        m_usePhotonData = m_swerveTab.add("Photon Vision Data", true)
+        m_usePhotonData = m_swerveTab.addPersistent("Use Photon Vision Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch);
 
         Utils.configureSysID(
@@ -217,23 +212,23 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearRight.getPosition()
             });
         
-        if (m_usePhotonData.getEntry().getBoolean(true)) {
-            EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimations();
+        // if (m_usePhotonData.getEntry().getBoolean(true)) {
+        //     EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimations();
 
-            for (int i = 0; i < estimations.length; i++) {
-                if (estimations[i] == null) continue;
+        //     for (int i = 0; i < estimations.length; i++) {
+        //         if (estimations[i] == null) continue;
 
-                Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
-                PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
+        //         Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
+        //         PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
 
-                stdDev = stdDev.times(
-                    DriveConstants.kVisionStandardDeviationMultipler *
-                    result.getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
-                );
+        //         stdDev = stdDev.times(
+        //             DriveConstants.kVisionStandardDeviationMultipler *
+        //             result.getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
+        //         );
 
-                m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds, stdDev);
-            }
-        }
+        //         m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds, stdDev);
+        //     }
+        // }
 
         // Update field widget
         m_field.setRobotPose(FieldUtils.flipRed(getPose()));

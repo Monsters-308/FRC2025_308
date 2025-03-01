@@ -15,6 +15,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.Utils;
 
 /**
@@ -88,6 +90,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
         m_elevatorLeader.configure(leaderMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        LoggingUtils.logSparkMax(m_elevatorLeader);
 
         // SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
 
@@ -267,6 +270,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public void stop() {
         setElevatorHeight(getElevatorHeight());
+        setElevatorVelocity(0);
     }
 
     @Override
@@ -277,19 +281,22 @@ public class ElevatorSubsystem extends SubsystemBase {
         //     m_elevatorEncoder.setPosition(0); // Reset encoder position to 0 at the bottom
         //     m_elevatorPIDController.reset(0, 0);
         // }
-        
-        if (getElevatorHeight() >= ElevatorConstants.kElevatorMaxHeight) {
-            stop();
-            // m_elevatorPIDController.reset(ElevatorConstants.kElevatorMaxHeight, 0);
-        }
 
-        if (m_isPIDMode) {
+        final double currentHeight = getElevatorHeight();
+
+        if (m_isPIDMode && (currentHeight < ElevatorConstants.kElevatorMaxHeight || currentHeight > 0)) {
             // double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
             
             m_elevatorLeader.set(
                 m_elevatorPIDController.calculate(getElevatorHeight())
                 // m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
             );
+        }
+
+        if (currentHeight <= 0) {
+            m_elevatorLeader.set(Math.max(0, m_elevatorLeader.get()));
+        } else if (currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
+            m_elevatorLeader.set(Math.min(0, m_elevatorLeader.get()));
         }
 
         // Prevent level in shuffleboard go to level layout from being non-integer
