@@ -15,6 +15,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.Utils;
 
 /**
@@ -88,6 +90,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
         m_elevatorLeader.configure(leaderMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        LoggingUtils.logSparkMax(m_elevatorLeader);
 
         // SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
 
@@ -101,9 +104,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
 
-        m_elevatorTab.addDouble("Elevator Height", () -> getElevatorHeight());
+        m_elevatorTab.addDouble("Elevator Height", () -> Utils.roundToNearest(getElevatorHeight(), 2));
         m_elevatorTab.addInteger("Elevator Level", this::getCurrentLevel);
-        m_elevatorTab.addDouble("Elevator Speed", () -> getElevatorVelocity());
+        m_elevatorTab.addDouble("Elevator Speed", () -> Utils.roundToNearest(getElevatorVelocity(), 2));
 
         m_elevatorTab.add("Zero Encoder", zeroEncoder());
 
@@ -143,7 +146,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             m_elevatorEncoder.getVelocity()
         );
 
-        m_elevatorPIDController.setGoal(height);
+        m_elevatorPIDController.setGoal(MathUtil.clamp(height, 0, ElevatorConstants.kElevatorMaxHeight));
     }
 
     /**
@@ -221,6 +224,10 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public void setElevatorVelocity(double velocity) {
         m_isPIDMode = false;
+
+        final double currentHeight = getElevatorHeight();
+        if (currentHeight <= 0 || currentHeight >= ElevatorConstants.kElevatorMaxHeight) return;
+
         m_elevatorLeader.set(velocity);
     }
 
@@ -267,6 +274,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public void stop() {
         setElevatorHeight(getElevatorHeight());
+        setElevatorVelocity(0);
     }
 
     @Override
@@ -277,19 +285,24 @@ public class ElevatorSubsystem extends SubsystemBase {
         //     m_elevatorEncoder.setPosition(0); // Reset encoder position to 0 at the bottom
         //     m_elevatorPIDController.reset(0, 0);
         // }
-        
-        if (getElevatorHeight() >= ElevatorConstants.kElevatorMaxHeight) {
-            stop();
-            // m_elevatorPIDController.reset(ElevatorConstants.kElevatorMaxHeight, 0);
-        }
 
-        if (m_isPIDMode) {
+        final double currentHeight = getElevatorHeight();
+
+        if (m_isPIDMode && (currentHeight < ElevatorConstants.kElevatorMaxHeight || currentHeight > 0)) {
             // double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
             
             m_elevatorLeader.set(
                 m_elevatorPIDController.calculate(getElevatorHeight())
                 // m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
             );
+        }
+
+        if (currentHeight <= 0) {
+            m_elevatorLeader.set(Math.max(0, m_elevatorLeader.get()));
+            m_elevatorEncoder.setPosition(0);
+        } else if (currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
+            m_elevatorLeader.set(Math.min(0, m_elevatorLeader.get()));
+            m_elevatorEncoder.setPosition(ElevatorConstants.kElevatorMaxHeight);
         }
 
         // Prevent level in shuffleboard go to level layout from being non-integer

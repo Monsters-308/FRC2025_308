@@ -163,4 +163,9 @@ public class Utils {
     public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Consumer<Voltage> driveAtVoltage) {
         configureSysID(layout, subsystem, () -> {}, driveAtVoltage);
     }
+
+    public static double roundToNearest(double value, int place) {
+        double power = Math.pow(10, place);
+        return Math.round(power * value) / power;
+    }
 }

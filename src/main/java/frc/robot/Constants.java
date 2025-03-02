@@ -251,9 +251,9 @@ public final class Constants {
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
         /** The current limit of the driving motors in amps. */
-        public static final int kDrivingMotorCurrentLimit = 35; // amps
+        public static final int kDrivingMotorCurrentLimit = 30; // amps
         /** The current limit of the turning motors in amps. */
-        public static final int kTurningMotorCurrentLimit = 35; // amps
+        public static final int kTurningMotorCurrentLimit = 30; // amps
     }
 
     /**
@@ -424,7 +424,7 @@ public final class Constants {
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
 
         /** Current limit of the elevator motors. */
-        public static final int kElevatorCurrentLimit = 35;
+        public static final int kElevatorCurrentLimit = 30;
 
         /** Whether to invert the left elevator motor. */
         public static final boolean kElevatorLeftInverted = true;
@@ -441,7 +441,7 @@ public final class Constants {
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The P for the elevator PID. */
-        public static final double kElevatorP = 3;
+        public static final double kElevatorP = 3.2;
         /** The I for the elevator PID. */
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
@@ -463,10 +463,10 @@ public final class Constants {
         public static final double kElevatorMaxSpeedInchesPerSecond = 10;
 
         /** The maximum allowed acceleration of the elevator. */
-        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 10;
+        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 50;
 
         /** The physical height of the elevator in inches. */
-        public static final double kElevatorMaxHeight = 40;
+        public static final double kElevatorMaxHeight = 30;
 
         // TODO: add heights
         /** The heights, in inches, of every elevator level. */
@@ -495,9 +495,9 @@ public final class Constants {
         public static final IdleMode kAlgaeIntakeArmIdleMode = IdleMode.kBrake;
 
         /** The current limit of the alage intake roller in amps. */
-        public static final int kAlageIntakeRollerSmartCurrentLimit = 35;
+        public static final int kAlageIntakeRollerSmartCurrentLimit = 30;
         /** The current limit of the alage intake arm in amps. */
-        public static final int kAlageIntakeArmSmartCurrentLimit = 35;
+        public static final int kAlageIntakeArmSmartCurrentLimit = 30;
         
         /** The speed the roller should be run at when intaking and shooting. */
         public static final double kRollerSpeed = 0.1;
@@ -507,7 +507,7 @@ public final class Constants {
         /** How long the arm motor should be run until it is garunteed to be in the correct position. */
         public static final double kArmTimeout = 1;
         /** The acceptable error for what is considered fully in or out. */
-        public static final double kArmErrorThreshold = 0.05;
+        public static final double kArmErrorThreshold = 0.01;
     }
 
     /** Describe how the {@link CoralIntakeSubsystem} should intake and shoot coral. */
@@ -524,7 +524,7 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 20;
         
         /** The speed the coral intake should be run at when intaking or shooting. */
-        public static final double kCoralIntakeSpeed = 0.55;
+        public static final double kCoralIntakeSpeed = 0.5;
 
         /**The channel for the digital input */
         public static final int kSensorChannel = 0;
@@ -539,14 +539,14 @@ public final class Constants {
         /** The CAN ID of the arm motor. */
         public static final int kArmMotorCanId = 21;
         /** The smart current limit for the motor */
-        public static final int kSmartCurrentLimit = 35;
+        public static final int kSmartCurrentLimit = 30;
         /** The idle mode of the motor. */
         public static final IdleMode kIdleMode = IdleMode.kBrake;
         /** Whether to invert the direction of the arm motor. */
         public static final boolean kArmMotorInverted = false;
 
         /** The reduction causes by the gear ratio of the motor. */
-        public static final double kGearReduction = 12;
+        public static final double kGearReduction = 1;
         /** The position conversion factor of the arm encoder. */
         public static final double kPositionEncoderConversionFactor = 1 / kGearReduction;
         /** The velocity conversion factor of the arm encoder. */
@@ -560,7 +560,7 @@ public final class Constants {
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
-        public static final double kArmP = 2;
+        public static final double kArmP = 1;
         /** The I for the arm PID controller. */
         public static final double kArmI = 0;
         /** The D for the arm PID controller. */
@@ -574,6 +574,8 @@ public final class Constants {
         public static final double kArmV = 0;
         /** The A gain for the arm feedforward. */
         public static final double kArmA = 0;
+
+        public static final double kArmTolerance = 0.1;
 
         // TODO: add angles
         /** The angles of the arm for each elevator level. */

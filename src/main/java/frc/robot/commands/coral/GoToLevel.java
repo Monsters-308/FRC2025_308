@@ -19,7 +19,11 @@ public class GoToLevel extends SequentialCommandGroup {
      * @param elevatorSubsystem The {@link ELevatorSubsystem} of the robot.
      * @param index The index of the level to move the elevator and arm to.
      */
-    public GoToLevel(ArmSubsystem armSubsystem, ElevatorSubsystem elevatorSubsystem, int index) {
-        super(armSubsystem.goToLevel(index, false), elevatorSubsystem.goToLevel(index, false));
+    public GoToLevel(ArmSubsystem armSubsystem, ElevatorSubsystem elevatorSubsystem, Integer index) {
+        if (index.equals(0)) {
+            addCommands(elevatorSubsystem.goToLevel(index, false), armSubsystem.goToLevel(index, false));
+        } else {
+            addCommands(armSubsystem.goToLevel(index, false), elevatorSubsystem.goToLevel(index, false));
+        }
     }
 }
