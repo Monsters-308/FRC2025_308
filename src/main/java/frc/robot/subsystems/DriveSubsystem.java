@@ -97,8 +97,8 @@ public class DriveSubsystem extends SubsystemBase {
     /** {@link SimpleWidget} for toggling Photon Vision data. */
     private final SimpleWidget m_usePhotonData;
 
-    /** The {@link PhotonSubsystem} of the robot. */
-    private final PhotonSubsystem m_photonSubsystem;
+    /** The {@link VisionSubsystem} of the robot. */
+    private final VisionSubsystem m_photonSubsystem;
 
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -119,7 +119,7 @@ public class DriveSubsystem extends SubsystemBase {
      * Constructs a {@link DriveSubsystem} to control all of the {@link SwerveModule} objects, along with the pathplanner setup, the gyro,
      * the odometry, and the use of odometry and vision data to estimate the robot's position.
      */
-    public DriveSubsystem(PhotonSubsystem photonSubsystem) {
+    public DriveSubsystem(VisionSubsystem photonSubsystem) {
         m_photonSubsystem = photonSubsystem;
 
         LoggingUtils.logNavX(m_gyro);

@@ -24,7 +24,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.PhotonSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.InputMappings;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,8 +42,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
     // The robot's subsystems
-    /** The {@link PhotonSubsystem} of the robot. */
-    private final PhotonSubsystem m_photonSubsystem = new PhotonSubsystem();
+    /** The {@link VisionSubsystem} of the robot. */
+    private final VisionSubsystem m_photonSubsystem = new VisionSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
     public final DriveSubsystem driveSubsystem = new DriveSubsystem(m_photonSubsystem);
     /** The {@link ElevatorSubsystem} of the robot. */

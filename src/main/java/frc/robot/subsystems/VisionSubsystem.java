@@ -17,9 +17,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PhotonConstants;
 
 /**
- * Subsystem that interfaces with Photon Vision for april tag position estimation.
+ * Subsystem that interfaces with PhotonVision for april tag position estimation.
  */
-public class PhotonSubsystem extends SubsystemBase {
+public class VisionSubsystem extends SubsystemBase {
     /** The {@link PhotonCamera} that represents the robot camera. */
     private final PhotonCamera[] m_cameras;
 
@@ -29,7 +29,7 @@ public class PhotonSubsystem extends SubsystemBase {
     /** An array of results from the cameras. */
     private final PhotonPipelineResult[] m_results;
 
-    public PhotonSubsystem() {
+    public VisionSubsystem() {
         m_cameras = new PhotonCamera[PhotonConstants.kCameraNames.length];
         m_photonPoseEstimators = new PhotonPoseEstimator[m_cameras.length];
 
@@ -46,8 +46,9 @@ public class PhotonSubsystem extends SubsystemBase {
     }
 
     /**
-     * Gets the current position estimations from Photon Vision.
-     * @return An optional {@link EstimatedRobotPose} that contains an estimated {@link Pose2d} and timestamp if present.
+     * Gets the current position estimations from PhotonVision.
+     * @return An array of {@link EstimatedRobotPose} objects that contain an estimated {@link Pose2d} and timestamp for each camera.
+     * If an estimation is not present, either because no april tags are in view, or there are no new camera results, it will be <code>null</code>.
      */
     public EstimatedRobotPose[] getEstimations() {
         EstimatedRobotPose[] estimations = new EstimatedRobotPose[m_cameras.length];
