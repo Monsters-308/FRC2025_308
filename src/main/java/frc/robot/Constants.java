@@ -34,7 +34,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.PhotonSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.SwerveModule;
 
@@ -586,25 +586,25 @@ public final class Constants {
     }
 
     /**
-     * Describe how the {@link PhotonSubsystem} should interface with Photon Vision.
+     * Describe how the {@link VisionSubsystem} should interface with PhotonVision.
      */
     public static final class PhotonConstants {
         private PhotonConstants() {}
 
         // TODO: set names and transformations
-        /** The name of the Photon Vision cameras. */
+        /** The name of the PhotonVision cameras. */
         public static final String[] kCameraNames = { "jojo bizar" };
-        /** The transformations that describe how to move from the center of the robot to the Photon Vision cameras. */
+        /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
         public static final Transform3d[] kRobotToCameraTransformations = {
             new Transform3d(
-                new Translation3d(0,0,0),
-                new Rotation3d(0,0,0)
+                new Translation3d(-12.125,0,21.75),
+                new Rotation3d(0, Units.degreesToRadians(-180), 0)
             )
         };
 
-        /** The april tage layout Photon Vision should use. */
+        /** The april tag layout PhotonVision should use. */
         public static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
-        /** How Photon Vision should use april tag data to determine position. */
+        /** How PhotonVision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
     }
 
