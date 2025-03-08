@@ -106,7 +106,7 @@ public class FieldUtils {
 
     /**
      * Mirrors a Rotation2d object so that left becomes right if the robot is on the red alliance.
-     * This is equivalent to multiplying the angle by -1.
+     * This is equivalent to adding 180 degrees to the angle.
      * @param angle A rotation2d object. 
      * @return The same object but flipped.
      */
