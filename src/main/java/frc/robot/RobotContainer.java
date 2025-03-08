@@ -187,25 +187,25 @@ public class RobotContainer {
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
         
-        InputMappings.event("driver", "LeftHuman")
+        InputMappings.event("driver", "leftHuman")
             .onTrue(new RobotGotoAngle(
-                driveSubsystem, 
-                FieldConstants.kHumanPlayerStationAngle, 
-                false, 
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
-                ));
-
-        InputMappings.event("driver", "RightHuman")
-            .onTrue(new RobotGotoAngle(
-                driveSubsystem, 
+                driveSubsystem,
                 -FieldConstants.kHumanPlayerStationAngle,
-                false, 
+                false,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
-                ));
+            ));
+
+        InputMappings.event("driver", "rightHuman")
+            .onTrue(new RobotGotoAngle(
+                driveSubsystem,
+                FieldConstants.kHumanPlayerStationAngle,
+                false,
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
+            ));
     }
 
     /**
