@@ -9,23 +9,22 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-
+/**
+ * Sets the speed of the elevator and, if the velocity is positive, verifies the arm's angle is greater than 15 degrees.
+ * If it is not, it will move the arm to 15 degrees.
+ */
 public class SetElevatorVelocity extends SequentialCommandGroup {
     /**
-     * Sets the speed of the elevator, and if the velocity is positive verifies the arm
-     * @param armSubsystem
-     * @param elevatorSubsystem
-     * @param velocity
+     * Creates a new {@link SetElevatorVelocity} that sets the velocity of the elevator.
+     * @param armSubsystem The {@link ArmSubsystem} of the robot.
+     * @param elevatorSubsystem The {@link ElevatorSubsystem} of the robot.
+     * @param velocity The velocity to set the elevator to.
      */
     public SetElevatorVelocity(ArmSubsystem armSubsystem, ElevatorSubsystem elevatorSubsystem, double velocity) {
-        
-        if(velocity >= 0 && armSubsystem.getAngle().getDegrees() < 15) {
-            addCommands(armSubsystem.goToAngle(Rotation2d.fromDegrees(15), isScheduled()) ,elevatorSubsystem.goToVelocity(velocity));
+        if (velocity >= 0 && armSubsystem.getAngle().getDegrees() < 15) {
+            addCommands(armSubsystem.goToAngle(Rotation2d.fromDegrees(15), false) ,elevatorSubsystem.goToVelocity(velocity));
         } else {
             addCommands(elevatorSubsystem.goToVelocity(velocity));
         }
     }
-
-
-    // this is gabe I finally feel like I did work yippeee
 }
