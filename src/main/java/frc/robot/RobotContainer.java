@@ -175,7 +175,7 @@ public class RobotContainer {
 
         InputMappings.event("coDriver", "coralIntake")
         // m_coDriverController.rightBumper()      
-            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true).raceWith(m_armSubsystem.goToSpeed(0.04)));
+            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true).raceWith(m_armSubsystem.runAtSpeed(0.04)));
         InputMappings.event("coDriver", "coralShoot")
         // m_coDriverController.rightTrigger(0.1)
             .whileTrue(m_coralIntakeSubsystem.shootCoral());

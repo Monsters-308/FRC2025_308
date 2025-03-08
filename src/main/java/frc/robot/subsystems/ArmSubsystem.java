@@ -173,7 +173,7 @@ public class ArmSubsystem extends SubsystemBase {
         m_armMotor.set(m_speed);
     }
 
-    public Command goToSpeed(double speed) {
+    public Command runAtSpeed(double speed) {
         return runOnce(() -> setSpeed(speed))
             .andThen(run(() -> {}))
             .finallyDo(() -> m_isPIDMode = true);
