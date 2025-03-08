@@ -100,7 +100,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final SimpleWidget m_usePhotonData;
 
     /** The {@link VisionSubsystem} of the robot. */
-    private final VisionSubsystem m_photonSubsystem;
+    private final VisionSubsystem m_visionSubsystem;
 
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -122,7 +122,7 @@ public class DriveSubsystem extends SubsystemBase {
      * the odometry, and the use of odometry and vision data to estimate the robot's position.
      */
     public DriveSubsystem(VisionSubsystem photonSubsystem) {
-        m_photonSubsystem = photonSubsystem;
+        m_visionSubsystem = photonSubsystem;
 
         LoggingUtils.logNavX(m_gyro);
         m_gyro.enableLogging(false);
@@ -219,13 +219,13 @@ public class DriveSubsystem extends SubsystemBase {
             });
         
         if (m_usePhotonData.getEntry().getBoolean(true)) {
-            EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimations();
+            EstimatedRobotPose[] estimations = m_visionSubsystem.getEstimations();
 
             for (int i = 0; i < estimations.length; i++) {
                 if (estimations[i] == null) continue;
 
                 Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
-                PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
+                PhotonPipelineResult result = m_visionSubsystem.getLatestResult(i);
 
                 stdDev = stdDev.times(
                     DriveConstants.kVisionStandardDeviationMultipler *

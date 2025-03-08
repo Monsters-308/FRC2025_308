@@ -46,9 +46,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotContainer {
     // The robot's subsystems
     /** The {@link VisionSubsystem} of the robot. */
-    private final VisionSubsystem m_photonSubsystem = new VisionSubsystem();
+    private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
-    public final DriveSubsystem driveSubsystem = new DriveSubsystem(m_photonSubsystem);
+    public final DriveSubsystem driveSubsystem = new DriveSubsystem(m_visionSubsystem);
     /** The {@link ElevatorSubsystem} of the robot. */
     private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
     /** The {@link ArmSubsystem} of the robot. */
