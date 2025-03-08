@@ -66,10 +66,9 @@ public class RobotGotoAngle extends Command {
         m_complete = false;
         pidController.reset();
         
-        if(m_allianceRelative){
+        if (!m_allianceRelative) {
             pidController.setSetpoint(FieldUtils.flipRedAngle(m_desiredAngle));
-        }
-        else {
+        } else {
             pidController.setSetpoint(m_desiredAngle);
         }
     }
