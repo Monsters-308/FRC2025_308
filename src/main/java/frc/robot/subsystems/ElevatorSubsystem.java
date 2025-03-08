@@ -205,6 +205,10 @@ public class ElevatorSubsystem extends SubsystemBase {
             .withName("Go");
     }
 
+    public Command goToVelocity(double velocity) {
+        return runOnce(() -> setElevatorVelocity(velocity));
+    }
+
     /**
      * Creates a command that sets the position of the elevator encoder to zero.
      * @return The runnable Command.
@@ -312,4 +316,5 @@ public class ElevatorSubsystem extends SubsystemBase {
         //     m_levelNetworkTableEntry.setInteger(roundedValue);
         // }
     }
+
 }
