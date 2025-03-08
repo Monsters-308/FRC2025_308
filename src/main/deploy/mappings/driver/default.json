@@ -8,6 +8,9 @@
         "autoAlign": {
             "button": "leftTrigger",
             "threshold": 0.9
-        }
+        },
+
+        "RightHuman": "leftBumper",
+        "LeftHuman": "rightBumper"
     }
 }

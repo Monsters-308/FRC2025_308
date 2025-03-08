@@ -13,9 +13,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Constants.FieldConstants;
 // import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
+import frc.robot.commands.drive.RobotGotoAngle;
 // import frc.robot.commands.drive.AutoAlign;
 // import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
@@ -114,36 +116,6 @@ public class RobotContainer {
                 driveSubsystem));
         Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(driveSubsystem));
 
-        // FAILSAFE: widgets for manually setting robot position if the limelight is not working or can't view the april tags.
-        // Shuffleboard.getTab("Autonomous").add("Set Amp Side",
-        //     new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
-        //         new Pose2d(
-        //             0.73, 
-        //             6.73, 
-        //             Rotation2d.fromDegrees(-120))
-        //     )))
-        //     .ignoringDisable(true)
-        // );
-
-        // Shuffleboard.getTab("Autonomous").add("Set Middle",
-        //     new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
-        //         new Pose2d(
-        //             1.5,
-        //             5.55,
-        //             Rotation2d.fromDegrees(180))
-        //     )))
-        //     .ignoringDisable(true)
-        // );
-
-        // Shuffleboard.getTab("Autonomous").add("Set Source Side",
-        //     new InstantCommand(() -> driveSubsystem.resetOdometry(FieldUtils.flipRed(
-        //         new Pose2d(
-        //             0.73, 
-        //             4.39, 
-        //             Rotation2d.fromDegrees(120))
-        //     )))
-        //     .ignoringDisable(true)
-        // );
     }
 
     /**
@@ -173,14 +145,13 @@ public class RobotContainer {
         // InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
         //     .onTrue(m_algaeIntakeArmSubsystem.armToggle());
 
-        InputMappings.event("coDriver", "coralIntake")
-        // m_coDriverController.rightBumper()      
-            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true).raceWith(m_armSubsystem.runAtSpeed(0.04)));
+        InputMappings.event("coDriver", "coralIntake")    
+            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
+
         InputMappings.event("coDriver", "coralShoot")
-        // m_coDriverController.rightTrigger(0.1)
             .whileTrue(m_coralIntakeSubsystem.shootCoral());
+
         InputMappings.event("coDriver", "coralReverse")
-        // m_coDriverController.leftTrigger(0.1)
             .whileTrue(m_coralIntakeSubsystem.reverseCoral());
 
         InputMappings.event("coDriver", "elevatorUp")
@@ -215,17 +186,27 @@ public class RobotContainer {
     
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
-    }
+        
+        InputMappings.event("driver", "LeftHuman")
+            .onTrue(new RobotGotoAngle(
+                driveSubsystem, 
+                FieldConstants.kHumanPlayerStationAngle, // this needs to change
+                false, 
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
+                ));
 
-    /**
-     * Function for adding all of our auton paths to each of the choosers
-     * @param autonChooser The {@link SendableChooser} being used for auton.
-     */
-    // private void applyCommands(SendableChooser<Command> autonChooser){
-    //     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    //     autonChooser.addOption("Move One Meter", new PathPlannerAuto("Move One Meter"));
-    //     autonChooser.addOption("Two Meter Spin", new PathPlannerAuto("Two Meter Spin"));
-    // }
+        InputMappings.event("driver", "RightHuman")
+            .onTrue(new RobotGotoAngle(
+                driveSubsystem, 
+                -FieldConstants.kHumanPlayerStationAngle, // this needs to change
+                false, 
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
+                ));
+    }
 
     /**
      * Configures the {@link NamedCommands} for PathPlanner.

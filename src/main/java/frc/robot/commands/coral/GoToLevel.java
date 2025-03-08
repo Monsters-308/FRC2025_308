@@ -5,6 +5,7 @@
 package frc.robot.commands.coral;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
@@ -23,7 +24,11 @@ public class GoToLevel extends SequentialCommandGroup {
         if (index.equals(0)) {
             addCommands(elevatorSubsystem.goToLevel(index, false), armSubsystem.goToLevel(index, false));
         } else {
-            addCommands(armSubsystem.goToLevel(index, false), elevatorSubsystem.goToLevel(index, false));
+            addCommands(
+                armSubsystem.goToLevel(index, true), 
+                new WaitUntilCommand(() -> armSubsystem.getAngle().getDegrees() < 15),
+                elevatorSubsystem.goToLevel(index, false));
         }
+
     }
 }
