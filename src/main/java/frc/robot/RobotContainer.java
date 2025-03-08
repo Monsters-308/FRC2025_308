@@ -191,7 +191,7 @@ public class RobotContainer {
             .onTrue(new RobotGotoAngle(
                 driveSubsystem,
                 -FieldConstants.kHumanPlayerStationAngle,
-                false,
+                true,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
@@ -201,7 +201,7 @@ public class RobotContainer {
             .onTrue(new RobotGotoAngle(
                 driveSubsystem,
                 FieldConstants.kHumanPlayerStationAngle,
-                false,
+                true,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
