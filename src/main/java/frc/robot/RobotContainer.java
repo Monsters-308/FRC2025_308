@@ -70,7 +70,6 @@ public class RobotContainer {
     /** The {@link SendableChooser} sent to Elastic for the auton path to follow. */
     private SendableChooser<Command> m_autonAction;
 
-
     /**
      * The container for the robot. Contains <code>Subsystem</code> objects, OI devices, and <code>Command</code> objects.
      */
@@ -115,7 +114,6 @@ public class RobotContainer {
                 false, true),
                 m_driveSubsystem));
         Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(m_driveSubsystem));
-
     }
 
     /**
