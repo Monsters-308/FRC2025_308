@@ -10,6 +10,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -37,10 +38,10 @@ public class RobotGotoAngle extends Command {
      * Uses PID to make the robot rotate to a certain direction while still giving the driver control over the translation of the robot.
      * This command automatically ends when the driver tries to rotate the robot.
      */
-    public RobotGotoAngle(DriveSubsystem driveSubsystem, double angle, boolean allianceRelative, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier driverRotation) {
+    public RobotGotoAngle(DriveSubsystem driveSubsystem, Rotation2d angle, boolean allianceRelative, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier driverRotation) {
         m_driveSubsystem = driveSubsystem;
 
-        m_desiredAngle = angle;
+        m_desiredAngle = angle.getDegrees();
         m_allianceRelative = allianceRelative;
 
         m_xSpeed = xSpeed;

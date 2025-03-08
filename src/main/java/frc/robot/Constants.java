@@ -348,7 +348,7 @@ public final class Constants {
         public static final Translation2d kReefPosition = new Translation2d(4.49, 4.0255);
 
         /** The angle of the human player station relative to the right side. */
-        public static final double kHumanPlayerStationAngle = 45;
+        public static final Rotation2d kHumanPlayerStationAngle = Rotation2d.fromDegrees(45);
     }
 
     /**

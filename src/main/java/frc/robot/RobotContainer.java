@@ -137,7 +137,7 @@ public class RobotContainer {
         InputMappings.event("driver", "leftHuman")
             .onTrue(new RobotGotoAngle(
                 m_driveSubsystem,
-                -FieldConstants.kHumanPlayerStationAngle,
+                FieldConstants.kHumanPlayerStationAngle.unaryMinus(),
                 true,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
