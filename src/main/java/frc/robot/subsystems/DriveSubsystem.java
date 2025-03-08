@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.WPIUtilJNI;
 
 // import java.util.Map;
@@ -30,6 +31,7 @@ import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.commands.calculation.CalculateStandardDeviation;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.SwerveModule;
@@ -198,6 +200,10 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearRight.setDriveVoltage(voltage.times(-1));
             }
         );
+        
+        GenericEntry entry = m_swerveTab.add("StdDev", 0).getEntry();
+
+        m_swerveTab.add("Angle StdDev", new CalculateStandardDeviation(this::getHeading, entry::setDouble, entry::setDouble));
     }
 
     @Override
