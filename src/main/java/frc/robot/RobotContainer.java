@@ -48,7 +48,7 @@ public class RobotContainer {
     /** The {@link VisionSubsystem} of the robot. */
     private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
     /** The {@link DriveSubsystem} of the robot. */
-    public final DriveSubsystem driveSubsystem = new DriveSubsystem(m_visionSubsystem);
+    private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_visionSubsystem);
     /** The {@link ElevatorSubsystem} of the robot. */
     private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
     /** The {@link ArmSubsystem} of the robot. */
@@ -89,16 +89,16 @@ public class RobotContainer {
         m_autonFirstAction = AutoBuilder.buildAutoChooser();
 
         // Configure default commands
-        driveSubsystem.setDefaultCommand(
+        m_driveSubsystem.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
             new RunCommand(
-                () -> driveSubsystem.drive(
+                () -> m_driveSubsystem.drive(
                     -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                     -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                     -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
                     true, true),
-                driveSubsystem));
+                m_driveSubsystem));
         
         // Adding options to the sendable choosers
         // applyCommands(m_autonFirstAction);
@@ -108,13 +108,13 @@ public class RobotContainer {
 
         // DEBUG: widgets for testing swerve modules
         Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
-            () -> driveSubsystem.drive(
+            () -> m_driveSubsystem.drive(
                 0.03,
                 0,
                 0,
                 false, true),
-                driveSubsystem));
-        Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(driveSubsystem));
+                m_driveSubsystem));
+        Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(m_driveSubsystem));
 
     }
 
@@ -125,7 +125,7 @@ public class RobotContainer {
         //------------------------------------------- Driver buttons -------------------------------------------
 
         m_driverController.rightBumper()
-            .onTrue(new InstantCommand((() -> driveSubsystem.setHeading(0))));
+            .onTrue(new InstantCommand((() -> m_driveSubsystem.setHeading(0))));
         // InputMappings.event("driver", "autoAlign")
         //     .whileTrue(new AutoAlign(driveSubsystem));
 
@@ -189,7 +189,7 @@ public class RobotContainer {
         
         InputMappings.event("driver", "leftHuman")
             .onTrue(new RobotGotoAngle(
-                driveSubsystem,
+                m_driveSubsystem,
                 -FieldConstants.kHumanPlayerStationAngle,
                 true,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
@@ -199,7 +199,7 @@ public class RobotContainer {
 
         InputMappings.event("driver", "rightHuman")
             .onTrue(new RobotGotoAngle(
-                driveSubsystem,
+                m_driveSubsystem,
                 FieldConstants.kHumanPlayerStationAngle,
                 true,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
@@ -232,5 +232,13 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return m_autonFirstAction.getSelected();
+    }
+
+    /**
+     * Gets the {@link DriveSubsystem} of the container.
+     * @return The <code>DriveSubsystem</code>.
+     */
+    public DriveSubsystem getDriveSubsystem() {
+        return m_driveSubsystem;
     }
 }
