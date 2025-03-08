@@ -3,12 +3,12 @@
   "robotLength": 0.895,
   "holonomicMode": true,
   "pathFolders": [
-    "L1Coral",
-    "go to human",
-    "place coral"
+    "Go To Human",
+    "Go To Coral"
   ],
   "autoFolders": [
-    "Level 2"
+    "Coral L1",
+    "Coral L2"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

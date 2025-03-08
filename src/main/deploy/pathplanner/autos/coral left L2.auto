@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1-1"
+                  "pathName": "Coral Left"
                 }
               },
               {
@@ -28,17 +28,11 @@
           "data": {
             "name": "shootCoral"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "coralL1"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Level 2",
+  "folder": "Coral L2",
   "choreoAuto": false
 }

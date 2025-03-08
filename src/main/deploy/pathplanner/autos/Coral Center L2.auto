@@ -11,7 +11,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "coralL1-1"
+                  "pathName": "Coral Center"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "coralL2"
                 }
               }
             ]
@@ -27,6 +33,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Coral L2",
   "choreoAuto": false
 }
