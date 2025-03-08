@@ -347,7 +347,7 @@ public final class Constants {
         /** Reef position for orbital controls. */
         public static final Translation2d kReefPosition = new Translation2d(4.49, 4.0255);
 
-        public static final double kHumanPlayerStationAngle = 45;
+        public static final double kHumanPlayerStationAngle = 45; // this needs to change
     }
 
     /**
