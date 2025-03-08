@@ -67,8 +67,8 @@ public class RobotContainer {
     private final CommandXboxController m_coDriverController = new CommandXboxController(OIConstants.kCoDriverControllerPort);
 
     // Sendable choosers to dictate what the robot does during auton
-    /** The {@link SendableChooser} send to Elastic for the first auton path to follow. */
-    private SendableChooser<Command> m_autonFirstAction;
+    /** The {@link SendableChooser} sent to Elastic for the auton path to follow. */
+    private SendableChooser<Command> m_autonAction;
 
 
     /**
@@ -86,7 +86,7 @@ public class RobotContainer {
         // Configure named commands for pathplanner
         configureNamedCommands();
 
-        m_autonFirstAction = AutoBuilder.buildAutoChooser();
+        m_autonAction = AutoBuilder.buildAutoChooser();
 
         // Configure default commands
         m_driveSubsystem.setDefaultCommand(
@@ -104,7 +104,7 @@ public class RobotContainer {
         // applyCommands(m_autonFirstAction);
 
         // Put choosers on the dashboard
-        Shuffleboard.getTab("Autonomous").add("First Action", m_autonFirstAction).withSize(2, 1);
+        Shuffleboard.getTab("Autonomous").add("First Action", m_autonAction).withSize(2, 1);
 
         // DEBUG: widgets for testing swerve modules
         Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
@@ -231,7 +231,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return m_autonFirstAction.getSelected();
+        return m_autonAction.getSelected();
     }
 
     /**
