@@ -122,8 +122,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //------------------------------------------- Driver buttons -------------------------------------------
 
-        m_driverController.rightBumper()
-            .onTrue(new InstantCommand((() -> m_driveSubsystem.setHeading(0))));
+        // m_driverController.rightBumper()
+        //     .onTrue(new InstantCommand((() -> m_driveSubsystem.setHeading(0))));
         // InputMappings.event("driver", "autoAlign")
         //     .whileTrue(new AutoAlign(driveSubsystem));
 
@@ -133,6 +133,26 @@ public class RobotContainer {
         //         () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
         //         FieldConstants.kReefPosition)
         //     );
+
+        InputMappings.event("driver", "leftHuman")
+            .onTrue(new RobotGotoAngle(
+                m_driveSubsystem,
+                -FieldConstants.kHumanPlayerStationAngle,
+                true,
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
+            ));
+
+        InputMappings.event("driver", "rightHuman")
+            .onTrue(new RobotGotoAngle(
+                m_driveSubsystem,
+                FieldConstants.kHumanPlayerStationAngle,
+                true,
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
+            ));
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
@@ -184,26 +204,6 @@ public class RobotContainer {
     
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
-        
-        InputMappings.event("driver", "leftHuman")
-            .onTrue(new RobotGotoAngle(
-                m_driveSubsystem,
-                -FieldConstants.kHumanPlayerStationAngle,
-                true,
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
-            ));
-
-        InputMappings.event("driver", "rightHuman")
-            .onTrue(new RobotGotoAngle(
-                m_driveSubsystem,
-                FieldConstants.kHumanPlayerStationAngle,
-                true,
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
-            ));
     }
 
     /**
