@@ -334,8 +334,8 @@ public final class Constants {
             new Pose2d(5, 5.24, Rotation2d.fromDegrees(-120)),
             new Pose2d(5, 2.81, Rotation2d.fromDegrees(120)),
             // Column 5
-            new Pose2d(5.29, 5.07, Rotation2d.fromDegrees(-60)),
-            new Pose2d(5.29, 2.98, Rotation2d.fromDegrees(60)),
+            new Pose2d(5.29, 5.07, Rotation2d.fromDegrees(-120)),
+            new Pose2d(5.29, 2.98, Rotation2d.fromDegrees(120)),
             // Column 6
             new Pose2d(5.8, 4.191, Rotation2d.fromDegrees(180)),
             new Pose2d(5.8, 3.86, Rotation2d.fromDegrees(180)),
