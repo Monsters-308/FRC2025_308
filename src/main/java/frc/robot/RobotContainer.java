@@ -260,16 +260,16 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Coral", m_coralIntakeSubsystem.intakeCoral(true));
         NamedCommands.registerCommand("Shoot Coral", m_coralIntakeSubsystem.shootCoral().withTimeout(0.5));
 
-        Set<Subsystem> coralLevelRequirements = new HashSet<>();
-        coralLevelRequirements.add(m_armSubsystem);
-        coralLevelRequirements.add(m_elevatorSubsystem);
+        Set<Subsystem> coralCommandRequirements = new HashSet<>();
+        coralCommandRequirements.add(m_armSubsystem);
+        coralCommandRequirements.add(m_elevatorSubsystem);
 
         NamedCommands.registerCommand("1st Coral", 
-            new DeferredCommand(() -> new GoToLevel(m_armSubsystem, m_elevatorSubsystem, m_autonFirstCoralLevel.getSelected()), coralLevelRequirements)
+            new DeferredCommand(() -> new GoToLevel(m_armSubsystem, m_elevatorSubsystem, m_autonFirstCoralLevel.getSelected()), coralCommandRequirements)
         );
 
         NamedCommands.registerCommand("2nd Coral",
-            new DeferredCommand(() -> new GoToLevel(m_armSubsystem, m_elevatorSubsystem, m_autonSecondCoralLevel.getSelected()), coralLevelRequirements)
+            new DeferredCommand(() -> new GoToLevel(m_armSubsystem, m_elevatorSubsystem, m_autonSecondCoralLevel.getSelected()), coralCommandRequirements)
         );
     }
 
