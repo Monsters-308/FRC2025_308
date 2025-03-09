@@ -111,7 +111,6 @@ public class ArmSubsystem extends SubsystemBase {
         );
 
         m_angleController.enableContinuousInput(0, 1);
-        m_angleController.setTolerance(ArmConstants.kArmTolerance);
     }
 
     /**
