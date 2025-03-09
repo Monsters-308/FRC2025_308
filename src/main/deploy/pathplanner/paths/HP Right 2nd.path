@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 3.968,
+        "y": 2.81
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0530161504284765,
-        "y": 0.0
+        "x": 3.0745229822089035,
+        "y": 2.304492855585151
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "2nd Right Coral"
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 0.0
+        "x": 1.609,
+        "y": 0.71
       },
       "prevControl": {
-        "x": 0.8544435622017081,
-        "y": 1.4029020247923222e-16
+        "x": 2.59801884223562,
+        "y": 2.755232120130935
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right HP"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -126.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "2nd Coral To HP",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 59.99999999999999
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

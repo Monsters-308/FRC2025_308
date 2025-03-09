@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.653176229508196,
-        "y": 6.320645491803278
+        "x": 6.596267713007089,
+        "y": 5.892323795320869
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.0,
-        "y": 5.24
+        "x": 5.29,
+        "y": 5.07
       },
       "prevControl": {
-        "x": 5.75,
-        "y": 6.539038105676658
+        "x": 6.203225035010736,
+        "y": 5.58368668936642
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "1st Left Coral"
     }
   ],
   "rotationTargets": [],
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -120.61860540890945
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Go To Coral",
+  "folder": "Start To 1st Coral",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

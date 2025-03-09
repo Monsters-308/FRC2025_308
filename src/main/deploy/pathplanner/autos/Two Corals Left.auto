@@ -1,0 +1,87 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Coral Left 1st"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "1st Coral"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HP Left 1st"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Coral Left 2nd"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "2nd Coral"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HP Left 2nd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Two Corals",
+  "choreoAuto": false
+}

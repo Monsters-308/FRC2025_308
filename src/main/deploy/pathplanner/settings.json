@@ -1,14 +1,16 @@
 {
-  "robotWidth": 0.898525,
+  "robotWidth": 0.899,
   "robotLength": 0.895,
   "holonomicMode": true,
   "pathFolders": [
-    "Go To Human",
-    "Go To Coral"
+    "1st Coral To HP",
+    "HP To 2nd Coral",
+    "2nd Coral To HP",
+    "Start To 1st Coral"
   ],
   "autoFolders": [
-    "Coral L1",
-    "Coral L2"
+    "One Coral",
+    "Two Corals"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

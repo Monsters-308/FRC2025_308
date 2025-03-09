@@ -1,0 +1,86 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.8,
+        "y": 4.191
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.114238553395896,
+        "y": 4.322277287696165
+      },
+      "isLocked": false,
+      "linkedName": "1st Center Coral"
+    },
+    {
+      "anchor": {
+        "x": 6.7275,
+        "y": 4.649
+      },
+      "prevControl": {
+        "x": 6.577918323154517,
+        "y": 4.448686940135962
+      },
+      "nextControl": {
+        "x": 6.918505431744458,
+        "y": 4.904785890961144
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.600750000000001,
+        "y": 6.5015
+      },
+      "prevControl": {
+        "x": 7.020670744187384,
+        "y": 6.061264831895727
+      },
+      "nextControl": {
+        "x": 5.922874309744813,
+        "y": 7.212169150272142
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.609,
+        "y": 7.34
+      },
+      "prevControl": {
+        "x": 2.1740494648691584,
+        "y": 7.216993489567476
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left HP"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 126.0
+  },
+  "reversed": false,
+  "folder": "1st Coral To HP",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}
