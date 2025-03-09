@@ -97,6 +97,11 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         for (int i = 0; i < m_cameras.length; i++) {
+            if (!m_cameras[i].isConnected()) {
+                m_results[i] = null;
+                continue;
+            }
+
             List<PhotonPipelineResult> results = m_cameras[i].getAllUnreadResults();
 
             if (!results.isEmpty()) {
