@@ -159,13 +159,13 @@ public class DriveSubsystem extends SubsystemBase {
             (Pose2d newPose) -> resetOdometry(FieldUtils.flipRed(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            AutonConstants.kPathPlannerController, // Path planner controller for holonomic drive.
+            AutonConstants.kPathPlannerController, // Path planner controller for holonomic drive
             AutonConstants.kPathPlannerRobotConfig, // Path planner config for robot constants
             FieldUtils::isRedAlliance, // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
             this // Reference to this subsystem to set requirements
         );
 
-        m_usePhotonData = m_swerveTab.addPersistent("Use Photon Vision Data", true)
+        m_usePhotonData = m_swerveTab.addPersistent("Use PhotonVision Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch);
 
         Utils.configureSysID(
