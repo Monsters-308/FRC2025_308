@@ -48,7 +48,7 @@
   "folder": "HP To 2nd Coral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 126.0
+    "rotation": -54.0
   },
   "useDefaultConstraints": true
 }
