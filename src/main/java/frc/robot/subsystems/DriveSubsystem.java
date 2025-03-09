@@ -135,10 +135,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Gyro widget
         m_swerveTab.addDouble("Robot Heading", () -> Utils.roundToNearest(getHeading(), 2));
-            // .withWidget(BuiltInWidgets.kGyro)
-            // .withSize(2, 2)
-            // .withProperties(Map.of(
-            //     "Counter Clockwise", true));
         
         // Field widget for displaying odometry estimation
         m_swerveTab.add("Field", m_field)
@@ -438,7 +434,8 @@ public class DriveSubsystem extends SubsystemBase {
             false, 
             false);
     }
-    /*
+
+    /**
      * This sets the idlemode.
      */
     public void setIdleMode(IdleMode idleMode) {
