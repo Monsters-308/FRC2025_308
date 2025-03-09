@@ -11,13 +11,11 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
-// import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.FieldConstants;
-// import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
 import frc.robot.commands.coral.IntakeCoral;
@@ -33,15 +31,12 @@ import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-// import frc.robot.utils.FieldUtils;
 import frc.robot.utils.InputMappings;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-// import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /*
@@ -215,34 +210,30 @@ public class RobotContainer {
             .whileTrue(m_coralIntakeSubsystem.reverseCoral());
 
         InputMappings.event("coDriver", "elevatorUp")
-        // m_coDriverController.povUp()
             .onTrue(new SetElevatorVelocity(m_armSubsystem, m_elevatorSubsystem, 0.8))
             .onFalse(new InstantCommand(m_elevatorSubsystem::stop));
+
         InputMappings.event("coDriver", "elevatorDown")
-        // m_coDriverController.povDown()
         .onTrue(new SetElevatorVelocity(m_armSubsystem, m_elevatorSubsystem, -0.8))
             .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
 
         InputMappings.event("coDriver", "armUp")
-        // m_coDriverController.povLeft()
             .onTrue(m_armSubsystem.goToAngle(Rotation2d.kZero, false));
+
         InputMappings.event("coDriver", "armDown")
-        // m_coDriverController.povRight()
             .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(32.4), false));
 
         m_coDriverController.leftBumper()
             .onTrue(m_armSubsystem.goToAngle(Rotation2d.fromDegrees(90), false));
         
         InputMappings.event("coDriver", "coralL1")
-        // m_coDriverController.a()
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
+
         InputMappings.event("coDriver", "coralL2")
-        // m_coDriverController.b()
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
+
         InputMappings.event("coDriver", "coralL3")
-        // m_coDriverController.x()
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
-        // m_coDriverController.y()4\
     
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
