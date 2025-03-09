@@ -257,7 +257,10 @@ public class RobotContainer {
         // NamedCommands.registerCommand("algaeIntakeArmIn", m_algaeIntakeArmSubsystem.armIn());
         // NamedCommands.registerCommand("algaeIntakeArmOut", m_algaeIntakeArmSubsystem.armOut());
 
-        NamedCommands.registerCommand("Intake Coral", m_coralIntakeSubsystem.intakeCoral(true));
+        NamedCommands.registerCommand("Intake Coral", 
+            new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0)
+                .andThen(m_coralIntakeSubsystem.intakeCoral(true))
+        );
         NamedCommands.registerCommand("Shoot Coral", m_coralIntakeSubsystem.shootCoral().withTimeout(0.5));
 
         Set<Subsystem> coralCommandRequirements = new HashSet<>();

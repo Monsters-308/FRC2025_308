@@ -30,15 +30,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "HP Right 1st"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Coral"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Coral"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "HP Right 1st"
+                }
+              }
+            ]
           }
         },
         {
@@ -67,15 +74,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "HP Right 2nd"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Coral"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Coral"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "HP Right 2nd"
+                }
+              }
+            ]
           }
         }
       ]
