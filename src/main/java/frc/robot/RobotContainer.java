@@ -163,9 +163,11 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         //------------------------------------------- Driver buttons -------------------------------------------
-
-        // m_driverController.rightBumper()
-        //     .onTrue(new InstantCommand((() -> m_driveSubsystem.setHeading(0))));
+        
+        // Button for zeroing gyro
+        m_driverController.x()
+            .onTrue(new InstantCommand(m_driveSubsystem::zeroHeading));
+    
         // InputMappings.event("driver", "autoAlign")
         //     .whileTrue(new AutoAlign(driveSubsystem));
 
