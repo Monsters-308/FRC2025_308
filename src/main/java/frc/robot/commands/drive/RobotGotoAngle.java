@@ -50,9 +50,7 @@ public class RobotGotoAngle extends Command {
         m_ySpeed = ySpeed;
         m_driverRotation = driverRotation;
 
-        pidController.enableContinuousInput(-180, 180);
-
-        pidController.setTolerance(HeadingConstants.kHeadingTolerance);
+        pidController.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(m_driveSubsystem);
     }

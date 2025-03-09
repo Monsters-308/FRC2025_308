@@ -267,11 +267,11 @@ public final class Constants {
         // This is used for making the robot face a certain direction
 
         /** The P for the PID making the robot rotate to certain angles. */
-        public static final double kHeadingP = 0.025;
+        public static final double kHeadingP = 5;
         /** The I for the PID making the robot rotate to certain angles. */
         public static final double kHeadingI = 0;
         /** The D for the PID making the robot rotate to certain angles. */
-        public static final double kHeadingD = 0.001;
+        public static final double kHeadingD = 0;
         /** The maximum output of the PID making the robot rotate to certain angles. */
         public static final double kHeadingMaxOutput = 0.8; // Percent
         /** The acceptable error in angle to the desired angle. */
@@ -370,9 +370,9 @@ public final class Constants {
 
         /** A {@link PIDConstants} object that describes the PID constants PathPlanner should use to turn the robot wheels. */
         public static final PIDConstants kAutoAngularPID = new PIDConstants(
-            5, 
-            0, 
-            0
+            HeadingConstants.kHeadingP, 
+            HeadingConstants.kHeadingI, 
+            HeadingConstants.kHeadingD
         );
 
         /** A {@link PathFollowingController} that tells PathPlanner how to follow paths. */
