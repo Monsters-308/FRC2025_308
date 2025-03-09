@@ -68,12 +68,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     /**
-     * Gets the {@link PhotonPipelineResult} for the specified camera.
-     * @param camera The index of the camera.
-     * @return The {@link PhotonPipelienResult}.
+     * Gets the {@link PhotonPipelineResult} objects for every camera.
+     * @return The {@link PhotonPipelienResult} objects.
      */
-    public PhotonPipelineResult getLatestResult(int camera) {
-        return m_results[camera];
+    public PhotonPipelineResult[] getResults() {
+        return m_results;
     }
 
     /**

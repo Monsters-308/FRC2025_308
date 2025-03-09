@@ -219,17 +219,17 @@ public class DriveSubsystem extends SubsystemBase {
             });
         
         if (m_usePhotonData.getEntry().getBoolean(true)) {
+            PhotonPipelineResult[] results = m_visionSubsystem.getResults();
             EstimatedRobotPose[] estimations = m_visionSubsystem.getEstimations();
 
             for (int i = 0; i < estimations.length; i++) {
                 if (estimations[i] == null) continue;
 
                 Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
-                PhotonPipelineResult result = m_visionSubsystem.getLatestResult(i);
 
                 stdDev = stdDev.times(
                     DriveConstants.kVisionStandardDeviationMultipler *
-                    result.getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
+                    results[i].getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
                 );
 
                 m_odometry.addVisionMeasurement(FieldUtils.flipRed(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
