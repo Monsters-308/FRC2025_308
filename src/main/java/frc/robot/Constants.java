@@ -578,6 +578,9 @@ public final class Constants {
         /** The A gain for the arm feedforward. */
         public static final double kArmA = 0;
 
+        /** The speed to move the arm at while intaking. */
+        public static final double kArmIntakingSpeed = 0.8;
+
         // TODO: add angles
         /** The angles of the arm for each elevator level. */
         public static final Rotation2d[] kArmLevelAngles = {
