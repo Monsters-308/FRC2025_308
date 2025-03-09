@@ -17,6 +17,7 @@ import frc.robot.Constants.FieldConstants;
 // import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
+import frc.robot.commands.coral.SetElevatorVelocity;
 import frc.robot.commands.drive.RobotGotoAngle;
 // import frc.robot.commands.drive.AutoAlign;
 // import frc.robot.commands.drive.RobotOrbitPoint;
@@ -89,15 +90,17 @@ public class RobotContainer {
 
         // Configure default commands
         m_driveSubsystem.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
+            // The left stick controls translation of the robot.
+            // Turning is controlled by the X axis of the right stick.
             new RunCommand(
                 () -> m_driveSubsystem.drive(
                     -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                     -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                     -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-                    true, true),
-                m_driveSubsystem));
+                    true, true
+                ), m_driveSubsystem
+            )
+        );
         
         // Adding options to the sendable choosers
         // applyCommands(m_autonFirstAction);
@@ -174,11 +177,11 @@ public class RobotContainer {
 
         InputMappings.event("coDriver", "elevatorUp")
         // m_coDriverController.povUp()
-            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0.8), m_elevatorSubsystem))
-            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
+            .onTrue(new SetElevatorVelocity(m_armSubsystem, m_elevatorSubsystem, 0.8))
+            .onFalse(new InstantCommand(m_elevatorSubsystem::stop));
         InputMappings.event("coDriver", "elevatorDown")
         // m_coDriverController.povDown()
-            .onTrue(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(-0.8), m_elevatorSubsystem))
+        .onTrue(new SetElevatorVelocity(m_armSubsystem, m_elevatorSubsystem, -0.8))
             .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
 
         InputMappings.event("coDriver", "armUp")
@@ -216,7 +219,7 @@ public class RobotContainer {
         // NamedCommands.registerCommand("algaeIntakeArmOut", m_algaeIntakeArmSubsystem.armOut());
 
         NamedCommands.registerCommand("coralIntake", m_coralIntakeSubsystem.intakeCoral(true));
-        NamedCommands.registerCommand("shootCoral", m_coralIntakeSubsystem.shootCoral().withTimeout(2));
+        NamedCommands.registerCommand("shootCoral", m_coralIntakeSubsystem.shootCoral().withTimeout(0.5));
 
         NamedCommands.registerCommand("coralL1", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
         NamedCommands.registerCommand("coralL2", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
@@ -226,7 +229,7 @@ public class RobotContainer {
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
-     * @return the command to run in autonomous
+     * @return The command to run in autonomous.
      */
     public Command getAutonomousCommand() {
         return m_autonAction.getSelected();
