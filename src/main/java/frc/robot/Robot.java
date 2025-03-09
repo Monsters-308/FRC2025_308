@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        // Set drivetrain to Brake mode when enabled.
+        // Set drivetrain to brake mode when enabled.
         m_robotContainer.getDriveSubsystem().setIdleMode(IdleMode.kBrake);
         m_robotContainer.getDriveSubsystem().drive(0, 0, 0, false, false);
 
