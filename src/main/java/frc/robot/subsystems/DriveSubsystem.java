@@ -17,8 +17,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.WPIUtilJNI;
 
-// import java.util.Map;
-
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -29,7 +27,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.commands.calculation.CalculateStandardDeviation;
 import frc.robot.utils.FieldUtils;
@@ -386,7 +383,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The angle of the gyro adjusted for inversion.
      */
     private double getGyroAngle() {
-        return m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
+        return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     /**
@@ -410,7 +407,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The turn rate of the robot, in degrees per second.
      */
     public double getTurnRate() {
-        return m_gyro.getRate() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
+        return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     /**

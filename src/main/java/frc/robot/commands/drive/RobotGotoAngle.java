@@ -11,7 +11,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -20,9 +20,9 @@ public class RobotGotoAngle extends Command {
     private final DriveSubsystem m_driveSubsystem;
 
     private final PIDController pidController = new PIDController (  
-        HeadingConstants.kHeadingP, 
-        HeadingConstants.kHeadingI, 
-        HeadingConstants.kHeadingD);
+        DrivePIDConstants.kRotationP, 
+        DrivePIDConstants.kRotationI, 
+        DrivePIDConstants.kRotationD);
 
     private boolean m_complete = false;
 
@@ -81,7 +81,7 @@ public class RobotGotoAngle extends Command {
 
         double rotation = pidController.calculate(m_driveSubsystem.getHeading());
 
-        rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput);
+        rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
 
         m_driveSubsystem.drive(
             -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
