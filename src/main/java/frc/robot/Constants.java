@@ -59,10 +59,10 @@ public final class Constants {
         private RobotConstants() {}
 
         /** Mass of the robot in kilograms. */
-        public static final double kRobotMassKG = 68;
+        public static final double kRobotMassKG = Units.lbsToKilograms(90);
 
-        /** Moment of inertia of the robot. */
-        public static final double kRobotMOI = 20;
+        /** Moment of inertia of the robot in KG*M^2. */
+        public static final double kRobotMOI = 3.441;
     }
 
     /**
