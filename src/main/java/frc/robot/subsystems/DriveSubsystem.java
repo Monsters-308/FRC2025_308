@@ -112,7 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         },
-        new Pose2d(),
+        new Pose2d(8.7, 4, Rotation2d.fromDegrees(180)),
         DriveConstants.kStateStandardDeviations,
         DriveConstants.kVisionStandardDeviations
     );
