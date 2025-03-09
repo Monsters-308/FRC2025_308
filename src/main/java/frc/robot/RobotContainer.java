@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -12,6 +15,7 @@ import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.FieldConstants;
 // import frc.robot.Constants.FieldConstants;
@@ -32,8 +36,10 @@ import frc.robot.subsystems.VisionSubsystem;
 // import frc.robot.utils.FieldUtils;
 import frc.robot.utils.InputMappings;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 // import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -68,8 +74,16 @@ public class RobotContainer {
     private final CommandXboxController m_coDriverController = new CommandXboxController(OIConstants.kCoDriverControllerPort);
 
     // Sendable choosers to dictate what the robot does during auton
-    /** The {@link SendableChooser} sent to Elastic for the auton path to follow. */
-    private SendableChooser<Command> m_autonAction;
+    /** The {@link SendableChooser} containing the auto to use during auton if set manually. */
+    public final SendableChooser<Command> m_manualAuton;
+    /** The {@link SendableChooser} containing the auton start position. Can be left, center, or right. */
+    private final SendableChooser<String> m_autonStartPose = new SendableChooser<>();
+    /** The {@link SendableChooser} containing the number of corals to attempt to score during auton. */
+    private final SendableChooser<String> m_autonNumCorals = new SendableChooser<>();
+    /** The {@link SendableChooser} containing the level to attempt to score the first coral to during auton. */
+    private final SendableChooser<Integer> m_autonFirstCoralLevel = new SendableChooser<>();
+    /** The {@link SendableChooser} containing the level to attempt to score the second coral to during auton. */
+    private final SendableChooser<Integer> m_autonSecondCoralLevel = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains <code>Subsystem</code> objects, OI devices, and <code>Command</code> objects.
@@ -86,8 +100,6 @@ public class RobotContainer {
         // Configure named commands for pathplanner
         configureNamedCommands();
 
-        m_autonAction = AutoBuilder.buildAutoChooser();
-
         // Configure default commands
         m_driveSubsystem.setDefaultCommand(
             // The left stick controls translation of the robot.
@@ -101,12 +113,39 @@ public class RobotContainer {
                 ), m_driveSubsystem
             )
         );
-        
-        // Adding options to the sendable choosers
-        // applyCommands(m_autonFirstAction);
 
         // Put choosers on the dashboard
-        Shuffleboard.getTab("Autonomous").add("First Action", m_autonAction).withSize(2, 1);
+        ShuffleboardTab autonTab = Shuffleboard.getTab("Autonomous");
+
+        m_manualAuton = AutoBuilder.buildAutoChooser();
+        m_manualAuton.setDefaultOption("None", null);
+
+        autonTab.add("Manual", m_manualAuton);
+
+        m_autonStartPose.addOption("Left", "Left");
+        m_autonStartPose.setDefaultOption("Center", "Center");
+        m_autonStartPose.addOption("Right", "Right");
+
+        autonTab.add("Start Position", m_autonStartPose);
+
+        m_autonNumCorals.setDefaultOption("One", "One Coral");
+        m_autonNumCorals.addOption("Two", "Two Corals");
+        
+        autonTab.add("Number of Corals", m_autonNumCorals);
+
+        m_autonFirstCoralLevel.setDefaultOption("Level #1", 0);
+        m_autonFirstCoralLevel.addOption("Level #2", 1);
+        m_autonFirstCoralLevel.addOption("Level #3", 2);
+        m_autonFirstCoralLevel.addOption("Level #4", 3);
+        
+        autonTab.add("First Coral Level", m_autonFirstCoralLevel);
+
+        m_autonSecondCoralLevel.setDefaultOption("Level #1", 0);
+        m_autonSecondCoralLevel.addOption("Level #2", 1);
+        m_autonSecondCoralLevel.addOption("Level #3", 2);
+        m_autonSecondCoralLevel.addOption("Level #4", 3);
+        
+        autonTab.add("Second Coral Level", m_autonSecondCoralLevel);
 
         // DEBUG: widgets for testing swerve modules
         Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
@@ -218,13 +257,20 @@ public class RobotContainer {
         // NamedCommands.registerCommand("algaeIntakeArmIn", m_algaeIntakeArmSubsystem.armIn());
         // NamedCommands.registerCommand("algaeIntakeArmOut", m_algaeIntakeArmSubsystem.armOut());
 
-        NamedCommands.registerCommand("coralIntake", m_coralIntakeSubsystem.intakeCoral(true));
-        NamedCommands.registerCommand("shootCoral", m_coralIntakeSubsystem.shootCoral().withTimeout(0.5));
+        NamedCommands.registerCommand("Intake Coral", m_coralIntakeSubsystem.intakeCoral(true));
+        NamedCommands.registerCommand("Shoot Coral", m_coralIntakeSubsystem.shootCoral().withTimeout(0.5));
 
-        NamedCommands.registerCommand("coralL1", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0));
-        NamedCommands.registerCommand("coralL2", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 1));
-        NamedCommands.registerCommand("coralL3", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
-        NamedCommands.registerCommand("coralL4", new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
+        Set<Subsystem> coralLevelRequirements = new HashSet<>();
+        coralLevelRequirements.add(m_armSubsystem);
+        coralLevelRequirements.add(m_elevatorSubsystem);
+
+        NamedCommands.registerCommand("1st Coral", 
+            new DeferredCommand(() -> new GoToLevel(m_armSubsystem, m_elevatorSubsystem, m_autonFirstCoralLevel.getSelected()), coralLevelRequirements)
+        );
+
+        NamedCommands.registerCommand("2nd Coral",
+            new DeferredCommand(() -> new GoToLevel(m_armSubsystem, m_elevatorSubsystem, m_autonSecondCoralLevel.getSelected()), coralLevelRequirements)
+        );
     }
 
     /**
@@ -232,7 +278,13 @@ public class RobotContainer {
      * @return The command to run in autonomous.
      */
     public Command getAutonomousCommand() {
-        return m_autonAction.getSelected();
+        Command selectedManually = m_manualAuton.getSelected();
+
+        if (selectedManually != null) {
+            return selectedManually;
+        }
+
+        return AutoBuilder.buildAuto(m_autonNumCorals.getSelected() + " " + m_autonStartPose.getSelected());
     }
 
     /**
