@@ -62,10 +62,22 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void simulationInit() {}
+
+    @Override
+    public void simulationPeriodic() {}
+
+    @Override
     public void disabledInit() {
-        // Set drivetrain to Coast mode when disabled
+        // Set drivetrain to coast mode when disabled.
         m_robotContainer.getDriveSubsystem().setIdleMode(IdleMode.kCoast);
         m_robotContainer.getDriveSubsystem().drive(0, 0, 0, false, false);
+    }
+
+    @Override
+    public void disabledExit() {
+        // Set drivetrain to brake mode when enabled.
+        m_robotContainer.getDriveSubsystem().setIdleMode(IdleMode.kBrake);
     }
 
     @Override
@@ -73,10 +85,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        // Set drivetrain to brake mode when enabled.
-        m_robotContainer.getDriveSubsystem().setIdleMode(IdleMode.kBrake);
-        m_robotContainer.getDriveSubsystem().drive(0, 0, 0, false, false);
-
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
@@ -90,10 +98,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        // Set drivetrain to Brake mode when enabled.
-        m_robotContainer.getDriveSubsystem().setIdleMode(IdleMode.kBrake);
-        m_robotContainer.getDriveSubsystem().drive(0, 0, 0, false, false);
-
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
@@ -105,12 +109,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {}
-
-    @Override
-    public void simulationInit() {}
-
-    @Override
-    public void simulationPeriodic() {}
 
     @Override
     public void testInit() {
