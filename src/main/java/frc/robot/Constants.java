@@ -15,7 +15,6 @@ import com.pathplanner.lib.controllers.PathFollowingController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -608,8 +607,8 @@ public final class Constants {
             )
         };
 
-        /** The april tag layout PhotonVision should use. */
-        public static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+        /** The game field PhotonVision should use. */
+        public static final AprilTagFields kField = AprilTagFields.k2025ReefscapeWelded;
         /** How PhotonVision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
     }
