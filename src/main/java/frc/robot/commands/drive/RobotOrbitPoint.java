@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.Utils;
@@ -22,9 +22,9 @@ public class RobotOrbitPoint extends Command {
     final DriveSubsystem m_driveSubsystem;
      
     private final PIDController angleController = new PIDController(
-        HeadingConstants.kHeadingP, 
-        HeadingConstants.kHeadingI, 
-        HeadingConstants.kHeadingD
+        DrivePIDConstants.kRotationP, 
+        DrivePIDConstants.kRotationI, 
+        DrivePIDConstants.kRotationD
     );
     
     //If you want to control whether or not the command has ended, you should store it in some sort of variable:
@@ -43,8 +43,8 @@ public class RobotOrbitPoint extends Command {
         m_orbitSpeed = orbitSpeed;
         m_point = point;
 
-        angleController.enableContinuousInput(-180, 180);
-        angleController.setTolerance(HeadingConstants.kHeadingTolerance);
+        angleController.enableContinuousInput(-Math.PI, Math.PI);
+        angleController.setTolerance(DrivePIDConstants.kRotationTolerance);
 
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
@@ -78,7 +78,7 @@ public class RobotOrbitPoint extends Command {
 
         double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
 
-        rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
+        rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput); // clamp value (speed limiter)
         
         m_driveSubsystem.drive(
             m_approachSpeed.getAsDouble(),

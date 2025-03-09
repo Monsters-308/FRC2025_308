@@ -9,7 +9,6 @@ import java.util.Set;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-// import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.geometry.Pose2d;
@@ -181,7 +180,6 @@ public class RobotContainer {
             .onTrue(new RobotGotoAngle(
                 m_driveSubsystem,
                 FieldConstants.kHumanPlayerStationAngle.unaryMinus(),
-                true,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
@@ -191,7 +189,6 @@ public class RobotContainer {
             .onTrue(new RobotGotoAngle(
                 m_driveSubsystem,
                 FieldConstants.kHumanPlayerStationAngle,
-                true,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                 () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)

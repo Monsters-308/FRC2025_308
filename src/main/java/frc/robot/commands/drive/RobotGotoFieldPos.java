@@ -10,7 +10,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.Utils;
@@ -19,21 +19,21 @@ public class RobotGotoFieldPos extends Command {
     private final DriveSubsystem m_driveSubsystem;
 
     private final PIDController pidControllerX = new PIDController(
-        HeadingConstants.kTranslationP, 
-        HeadingConstants.kTranslationI, 
-        HeadingConstants.kTranslationD
+        DrivePIDConstants.kTranslationP, 
+        DrivePIDConstants.kTranslationI, 
+        DrivePIDConstants.kTranslationD
     );
 
     private final PIDController pidControllerY = new PIDController(
-        HeadingConstants.kTranslationP, 
-        HeadingConstants.kTranslationI, 
-        HeadingConstants.kTranslationD
+        DrivePIDConstants.kTranslationP, 
+        DrivePIDConstants.kTranslationI, 
+        DrivePIDConstants.kTranslationD
     );
 
     private final PIDController pidControllerAngle = new PIDController(
-        HeadingConstants.kHeadingP, 
-        HeadingConstants.kHeadingI, 
-        HeadingConstants.kHeadingD
+        DrivePIDConstants.kRotationP, 
+        DrivePIDConstants.kRotationI, 
+        DrivePIDConstants.kRotationD
     );
     private boolean m_complete = false;
 
@@ -50,11 +50,11 @@ public class RobotGotoFieldPos extends Command {
 
         m_allianceRelative = allianceRelative;
 
-        pidControllerX.setTolerance(HeadingConstants.kTranslationTolerance);
-        pidControllerY.setTolerance(HeadingConstants.kTranslationTolerance);
-        pidControllerAngle.setTolerance(HeadingConstants.kHeadingTolerance);
+        pidControllerX.setTolerance(DrivePIDConstants.kTranslationTolerance);
+        pidControllerY.setTolerance(DrivePIDConstants.kTranslationTolerance);
+        pidControllerAngle.setTolerance(DrivePIDConstants.kRotationTolerance);
 
-        pidControllerAngle.enableContinuousInput(-180, 180);
+        pidControllerAngle.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(m_driveSubsystem);
     }
@@ -105,9 +105,9 @@ public class RobotGotoFieldPos extends Command {
         double ySpeed = pidControllerY.calculate(currentPos.getTranslation().getY());
         double angleSpeed = pidControllerAngle.calculate(m_driveSubsystem.getHeading());
 
-        xSpeed = MathUtil.clamp(xSpeed, -HeadingConstants.kTranslationMaxOutput, HeadingConstants.kTranslationMaxOutput);
-        ySpeed = MathUtil.clamp(ySpeed, -HeadingConstants.kTranslationMaxOutput, HeadingConstants.kTranslationMaxOutput);
-        angleSpeed = MathUtil.clamp(angleSpeed, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput);
+        xSpeed = MathUtil.clamp(xSpeed, -DrivePIDConstants.kTranslationMaxOutput, DrivePIDConstants.kTranslationMaxOutput);
+        ySpeed = MathUtil.clamp(ySpeed, -DrivePIDConstants.kTranslationMaxOutput, DrivePIDConstants.kTranslationMaxOutput);
+        angleSpeed = MathUtil.clamp(angleSpeed, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
 
 
         m_driveSubsystem.drive(

@@ -59,10 +59,10 @@ public final class Constants {
         private RobotConstants() {}
 
         /** Mass of the robot in kilograms. */
-        public static final double kRobotMassKG = 68;
+        public static final double kRobotMassKG = Units.lbsToKilograms(90);
 
-        /** Moment of inertia of the robot. */
-        public static final double kRobotMOI = 20;
+        /** Moment of inertia of the robot in KG*M^2. */
+        public static final double kRobotMOI = 3.441;
     }
 
     /**
@@ -143,6 +143,9 @@ public final class Constants {
 
         /** A multipler that controls how much the distance should scale the {@link DriveConstants#kVisionStandardDeviations}. */
         public static final double kVisionStandardDeviationMultipler = 1;
+
+        /** Whether or not to reverse the gyro to make it CCW positive. */
+        public static final boolean kGyroReversed = true;
     }
 
     /**
@@ -258,24 +261,21 @@ public final class Constants {
     /**
      * Describe how the robot should move to certain position and angle setpoints.
      */
-    public static final class HeadingConstants {
-        private HeadingConstants() {}
-
-        /** Whether or not to reverse the gyro to make it CCW positive. */
-        public static final boolean kGyroReversed = true;
+    public static final class DrivePIDConstants {
+        private DrivePIDConstants() {}
 
         // This is used for making the robot face a certain direction
 
         /** The P for the PID making the robot rotate to certain angles. */
-        public static final double kHeadingP = 0.025;
+        public static final double kRotationP = 5;
         /** The I for the PID making the robot rotate to certain angles. */
-        public static final double kHeadingI = 0;
+        public static final double kRotationI = 0;
         /** The D for the PID making the robot rotate to certain angles. */
-        public static final double kHeadingD = 0.001;
+        public static final double kRotationD = 0;
         /** The maximum output of the PID making the robot rotate to certain angles. */
-        public static final double kHeadingMaxOutput = 0.8; // Percent
+        public static final double kRotationMaxOutput = 0.8; // Percent
         /** The acceptable error in angle to the desired angle. */
-        public static final double kHeadingTolerance = 1; // Degrees
+        public static final double kRotationTolerance = Units.degreesToRadians(1); // Radians
 
         /** The P for the PID making the robot move to certain positions. */
         public static final double kTranslationP = 5;
@@ -286,7 +286,7 @@ public final class Constants {
         /** The maximum output of the PID making the robot move to certain positions. */
         public static final double kTranslationMaxOutput = 1; // Percent 
         /** The acceptable error in position to the desired position. */
-        public static final double kTranslationTolerance = Units.inchesToMeters(3); // Meters
+        public static final double kTranslationTolerance = Units.inchesToMeters(1); // Meters
     }
 
     /**
@@ -363,16 +363,16 @@ public final class Constants {
 
         /** A {@link PIDConstants} object that describes the PID constants PathPlanner should use move the robot. */
         public static final PIDConstants kAutoTranslationPID = new PIDConstants(
-            HeadingConstants.kTranslationP, 
-            HeadingConstants.kTranslationI, 
-            HeadingConstants.kTranslationD
+            DrivePIDConstants.kTranslationP, 
+            DrivePIDConstants.kTranslationI, 
+            DrivePIDConstants.kTranslationD
         );
 
         /** A {@link PIDConstants} object that describes the PID constants PathPlanner should use to turn the robot wheels. */
         public static final PIDConstants kAutoAngularPID = new PIDConstants(
-            5, 
-            0, 
-            0
+            DrivePIDConstants.kRotationP, 
+            DrivePIDConstants.kRotationI, 
+            DrivePIDConstants.kRotationD
         );
 
         /** A {@link PathFollowingController} that tells PathPlanner how to follow paths. */
