@@ -138,14 +138,14 @@ public class RobotContainer {
         m_autonFirstCoralLevel.addOption("Level #3", 2);
         m_autonFirstCoralLevel.addOption("Level #4", 3);
         
-        autonTab.add("First Coral Level", m_autonFirstCoralLevel);
+        autonTab.add("1st Coral Level", m_autonFirstCoralLevel);
 
         m_autonSecondCoralLevel.setDefaultOption("Level #1", 0);
         m_autonSecondCoralLevel.addOption("Level #2", 1);
         m_autonSecondCoralLevel.addOption("Level #3", 2);
         m_autonSecondCoralLevel.addOption("Level #4", 3);
         
-        autonTab.add("Second Coral Level", m_autonSecondCoralLevel);
+        autonTab.add("2nd Coral Level", m_autonSecondCoralLevel);
 
         // DEBUG: widgets for testing swerve modules
         Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
