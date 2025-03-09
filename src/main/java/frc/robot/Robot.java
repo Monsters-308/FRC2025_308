@@ -75,13 +75,13 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void disabledPeriodic() {}
+
+    @Override
     public void disabledExit() {
         // Set drivetrain to brake mode when enabled.
         m_robotContainer.getDriveSubsystem().setIdleMode(IdleMode.kBrake);
     }
-
-    @Override
-    public void disabledPeriodic() {}
 
     @Override
     public void autonomousInit() {
