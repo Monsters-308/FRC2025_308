@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.7775,
-        "y": 2.31875
+        "x": 4.788818073869134,
+        "y": 2.5828824447989907
       },
       "isLocked": false,
       "linkedName": "1st Right Coral"
@@ -20,8 +20,8 @@
         "y": 0.71
       },
       "prevControl": {
-        "x": 2.524850525983368,
-        "y": 1.3387918249198383
+        "x": 2.404054007163249,
+        "y": 1.2421069452063414
       },
       "nextControl": null,
       "isLocked": false,

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.7775,
-        "y": 5.828749999999999
+        "x": 4.601636340445503,
+        "y": 5.562393346784804
       },
       "isLocked": false,
       "linkedName": "1st Left Coral"
@@ -20,8 +20,8 @@
         "y": 7.34
       },
       "prevControl": {
-        "x": 2.521292511331647,
-        "y": 6.736985203704716
+        "x": 2.384063326511418,
+        "y": 6.833802402559671
       },
       "nextControl": null,
       "isLocked": false,
