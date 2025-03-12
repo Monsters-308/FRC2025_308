@@ -15,6 +15,7 @@ import com.pathplanner.lib.controllers.PathFollowingController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -312,10 +313,16 @@ public final class Constants {
     public static final class FieldConstants {
         private FieldConstants() {}
 
+        /** The game field being used. */
+        public static final AprilTagFields kField = AprilTagFields.k2025ReefscapeWelded;
+
+        /** The {@link AprilTagFieldLayout} used for field constants. */
+        private static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(kField);
+
         /** X axis: long side */
-        public static final double kFieldWidthMeters = 17.5133;
+        public static final double kFieldWidthMeters = kFieldLayout.getFieldLength(); // 17.548
         /** Y axis: short side */
-        public static final double kFieldHeightMeters = 8.0518;
+        public static final double kFieldHeightMeters = kFieldLayout.getFieldWidth(); // 8.052
 
         /** Auto align positions. */
         public static final Pose2d[] kAutoAlignPositions = {
@@ -607,8 +614,6 @@ public final class Constants {
             )
         };
 
-        /** The game field PhotonVision should use. */
-        public static final AprilTagFields kField = AprilTagFields.k2025ReefscapeWelded;
         /** How PhotonVision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
     }

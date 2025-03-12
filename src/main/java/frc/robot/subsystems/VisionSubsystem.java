@@ -16,6 +16,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PhotonConstants;
+import frc.robot.Constants.FieldConstants;
 
 /**
  * Subsystem that interfaces with PhotonVision for april tag position estimation.
@@ -37,7 +38,7 @@ public class VisionSubsystem extends SubsystemBase {
         for (int i = 0; i < m_cameras.length; i++) {
             m_cameras[i] = new PhotonCamera(PhotonConstants.kCameraNames[i]);
             m_photonPoseEstimators[i] = new PhotonPoseEstimator(
-                AprilTagFieldLayout.loadField(PhotonConstants.kField),
+                AprilTagFieldLayout.loadField(FieldConstants.kField),
                 PhotonConstants.kPoseStrategy,
                 PhotonConstants.kRobotToCameraTransformations[i]
             );
