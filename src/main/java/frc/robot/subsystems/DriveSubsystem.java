@@ -27,6 +27,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.commands.calculation.CalculateStandardDeviation;
 import frc.robot.utils.FieldUtils;
@@ -109,7 +110,11 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         },
-        new Pose2d(8.7, 4, Rotation2d.fromDegrees(180)),
+        new Pose2d(
+            FieldConstants.kFieldWidthMeters / 2,
+            FieldConstants.kFieldHeightMeters / 2,
+            Rotation2d.fromDegrees(180)
+        ),
         DriveConstants.kStateStandardDeviations,
         DriveConstants.kVisionStandardDeviations
     );
