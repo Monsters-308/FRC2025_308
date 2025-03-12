@@ -477,7 +477,6 @@ public final class Constants {
         /** The physical height of the elevator in inches. */
         public static final double kElevatorMaxHeight = 30;
 
-        // TODO: add heights
         /** The heights, in inches, of every elevator level. */
         public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 0 };
     }
@@ -587,7 +586,6 @@ public final class Constants {
         /** The speed to move the arm at while intaking. */
         public static final double kArmIntakingSpeed = 0.8;
 
-        // TODO: add angles
         /** The angles of the arm for each elevator level. */
         public static final Rotation2d[] kArmLevelAngles = {
             Rotation2d.kZero,
@@ -603,7 +601,6 @@ public final class Constants {
     public static final class PhotonConstants {
         private PhotonConstants() {}
 
-        // TODO: set names and transformations
         /** The name of the PhotonVision cameras. */
         public static final String[] kCameraNames = { "jojo bizar" };
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
