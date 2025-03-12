@@ -218,12 +218,13 @@ public class DriveSubsystem extends SubsystemBase {
             for (int i = 0; i < estimations.length; i++) {
                 if (estimations[i] == null) continue;
 
-                Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
-
-                stdDev = stdDev.times(
+                Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations.times(
                     DriveConstants.kVisionStandardDeviationMultipler *
-                    results[i].getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
+                    results[i].getBestTarget().getBestCameraToTarget().getTranslation().getDistance(Translation3d.kZero)
                 );
+
+                // Don't scale the heading standard deviation
+                stdDev.set(2, 0, DriveConstants.kVisionStandardDeviations.get(2));
 
                 m_odometry.addVisionMeasurement(FieldUtils.flipRed(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
             }
