@@ -71,7 +71,7 @@ public class AutoAlign extends Command {
         Pose2d robotPose = m_driveSubsystem.getPose();
         Double smallestDst = null;
 
-        boolean flipPose = robotPose.getY() > FieldConstants.kFieldWidthMeters / 2;
+        boolean flipPose = robotPose.getX() > FieldConstants.kFieldWidthMeters / 2;
 
         for (Pose2d pose : FieldConstants.kAutoAlignPositions) {
             pose = flipPose ? FieldUtils.flip(pose) : pose;
