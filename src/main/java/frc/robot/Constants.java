@@ -254,9 +254,9 @@ public final class Constants {
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
         /** The current limit of the driving motors in amps. */
-        public static final int kDrivingMotorCurrentLimit = 30; // amps
+        public static final int kDrivingMotorCurrentLimit = 50; // amps
         /** The current limit of the turning motors in amps. */
-        public static final int kTurningMotorCurrentLimit = 30; // amps
+        public static final int kTurningMotorCurrentLimit = 50; // amps
     }
 
     /**
@@ -433,7 +433,7 @@ public final class Constants {
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
 
         /** Current limit of the elevator motors. */
-        public static final int kElevatorCurrentLimit = 30;
+        public static final int kElevatorCurrentLimit = 60;
 
         /** Whether to invert the left elevator motor. */
         public static final boolean kElevatorLeftInverted = true;
