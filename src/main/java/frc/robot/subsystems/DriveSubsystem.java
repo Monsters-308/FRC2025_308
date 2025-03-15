@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -203,7 +204,7 @@ public class DriveSubsystem extends SubsystemBase {
         GenericEntry entry = m_swerveTab.add("StdDev", 0).getEntry();
 
         m_swerveTab.add("Angle StdDev", new CalculateStandardDeviation(this::getHeading, entry::setDouble, entry::setDouble));
-        m_swerveTab.add("Pose Variation", 0);
+        SmartDashboard.putNumber("Pose Variation", 0);
     }
 
     @Override
@@ -245,7 +246,7 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         // Display variation in pose (in inches)
-        m_swerveTab.add("Pose Variation", 
+        SmartDashboard.putNumber("Pose Variation", 
             Units.metersToInches(
                 Utils.getDistancePosToPos(oldPose.getTranslation(), m_odometry.getEstimatedPosition().getTranslation())
             )
