@@ -10,51 +10,47 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utils.FieldUtils;
 import frc.robot.utils.Utils;
 
 public class RobotGotoFieldPos extends Command {
     private final DriveSubsystem m_driveSubsystem;
 
     private final PIDController pidControllerX = new PIDController(
-        HeadingConstants.kTranslationP, 
-        HeadingConstants.kTranslationI, 
-        HeadingConstants.kTranslationD
+        DrivePIDConstants.kTranslationP, 
+        DrivePIDConstants.kTranslationI, 
+        DrivePIDConstants.kTranslationD
     );
 
     private final PIDController pidControllerY = new PIDController(
-        HeadingConstants.kTranslationP, 
-        HeadingConstants.kTranslationI, 
-        HeadingConstants.kTranslationD
+        DrivePIDConstants.kTranslationP, 
+        DrivePIDConstants.kTranslationI, 
+        DrivePIDConstants.kTranslationD
     );
 
     private final PIDController pidControllerAngle = new PIDController(
-        HeadingConstants.kHeadingP, 
-        HeadingConstants.kHeadingI, 
-        HeadingConstants.kHeadingD
+        DrivePIDConstants.kRotationP, 
+        DrivePIDConstants.kRotationI, 
+        DrivePIDConstants.kRotationD
     );
     private boolean m_complete = false;
 
     private final Pose2d m_desiredRobotPos;
-    private final boolean m_allianceRelative;
 
     /** 
      * Uses PID to make the robot go to a certain postion relative to the field.  
      */
-    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPos, boolean allianceRelative) {
+    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPos) {
         m_driveSubsystem = driveSubsystem;
 
         m_desiredRobotPos = desiredRobotoPos;
 
-        m_allianceRelative = allianceRelative;
+        pidControllerX.setTolerance(DrivePIDConstants.kTranslationTolerance);
+        pidControllerY.setTolerance(DrivePIDConstants.kTranslationTolerance);
+        pidControllerAngle.setTolerance(DrivePIDConstants.kRotationTolerance);
 
-        pidControllerX.setTolerance(HeadingConstants.kTranslationTolerance);
-        pidControllerY.setTolerance(HeadingConstants.kTranslationTolerance);
-        pidControllerAngle.setTolerance(HeadingConstants.kHeadingTolerance);
-
-        pidControllerAngle.enableContinuousInput(-180, 180);
+        pidControllerAngle.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(m_driveSubsystem);
     }
@@ -62,8 +58,8 @@ public class RobotGotoFieldPos extends Command {
     /** 
      * Uses PID to make the robot go to a certain postion relative to the field.  
      */
-    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, double xPosition, double yPosition, double angle, boolean allianceRelative) {
-        this(driveSubsystem, new Pose2d(xPosition, yPosition, new Rotation2d(angle)), allianceRelative);
+    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, double xPosition, double yPosition, double angle) {
+        this(driveSubsystem, new Pose2d(xPosition, yPosition, new Rotation2d(angle)));
     }
 
     /*
@@ -76,19 +72,14 @@ public class RobotGotoFieldPos extends Command {
     @Override
     public void initialize() {
         m_complete = false;
-        pidControllerX.reset();
-        pidControllerY.reset();
-        pidControllerAngle.reset();
 
         pidControllerX.reset();
         pidControllerY.reset();
         pidControllerAngle.reset();
 
-        Pose2d m_updatedRobotPos = m_allianceRelative ? FieldUtils.flipRed(m_desiredRobotPos) : m_desiredRobotPos;
-
-        pidControllerX.setSetpoint(m_updatedRobotPos.getX());
-        pidControllerY.setSetpoint(m_updatedRobotPos.getY());
-        pidControllerAngle.setSetpoint(Utils.angleConstrain(m_updatedRobotPos.getRotation().getDegrees()));
+        pidControllerX.setSetpoint(m_desiredRobotPos.getX());
+        pidControllerY.setSetpoint(m_desiredRobotPos.getY());
+        pidControllerAngle.setSetpoint(Utils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
     }
 
     /*
@@ -105,9 +96,9 @@ public class RobotGotoFieldPos extends Command {
         double ySpeed = pidControllerY.calculate(currentPos.getTranslation().getY());
         double angleSpeed = pidControllerAngle.calculate(m_driveSubsystem.getHeading());
 
-        xSpeed = MathUtil.clamp(xSpeed, -HeadingConstants.kTranslationMaxOutput, HeadingConstants.kTranslationMaxOutput);
-        ySpeed = MathUtil.clamp(ySpeed, -HeadingConstants.kTranslationMaxOutput, HeadingConstants.kTranslationMaxOutput);
-        angleSpeed = MathUtil.clamp(angleSpeed, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput);
+        xSpeed = MathUtil.clamp(xSpeed, -DrivePIDConstants.kTranslationMaxOutput, DrivePIDConstants.kTranslationMaxOutput);
+        ySpeed = MathUtil.clamp(ySpeed, -DrivePIDConstants.kTranslationMaxOutput, DrivePIDConstants.kTranslationMaxOutput);
+        angleSpeed = MathUtil.clamp(angleSpeed, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
 
 
         m_driveSubsystem.drive(

@@ -10,46 +10,47 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.Constants.HeadingConstants;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utils.FieldUtils;
 
 public class RobotGotoAngle extends Command {
 
     private final DriveSubsystem m_driveSubsystem;
 
     private final PIDController pidController = new PIDController (  
-        HeadingConstants.kHeadingP, 
-        HeadingConstants.kHeadingI, 
-        HeadingConstants.kHeadingD);
+        DrivePIDConstants.kRotationP, 
+        DrivePIDConstants.kRotationI, 
+        DrivePIDConstants.kRotationD);
 
     private boolean m_complete = false;
 
     private final double m_desiredAngle;
-    private final boolean m_allianceRelative;
 
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_ySpeed;
     private final DoubleSupplier m_driverRotation;
 
-    /** 
-     * Uses PID to make the robot rotate to a certain direction while still giving the driver control over the translation of the robot.
+    /**
+     * Uses PID to make the robot face a certain direction while still giving the driver control over the translation of the robot.
      * This command automatically ends when the driver tries to rotate the robot.
+     * @param driveSubsystem The drive subsystem.
+     * @param angle The angle to face.
+     * @param xSpeed The xSpeed joystick input (gives driver control over translation).
+     * @param ySpeed The ySpeed joystick input (gives driver control over translation).
+     * @param driverRotation The rotation joystick input (disables command when driver tries to rotate).
      */
-    public RobotGotoAngle(DriveSubsystem driveSubsystem, double angle, boolean allianceRelative, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier driverRotation) {
+    public RobotGotoAngle(DriveSubsystem driveSubsystem, Rotation2d angle, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier driverRotation) {
         m_driveSubsystem = driveSubsystem;
 
-        m_desiredAngle = angle;
-        m_allianceRelative = allianceRelative;
+        m_desiredAngle = angle.getDegrees();
 
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
         m_driverRotation = driverRotation;
 
-        pidController.enableContinuousInput(-180, 180);
-
-        pidController.setTolerance(HeadingConstants.kHeadingTolerance);
+        pidController.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(m_driveSubsystem);
     }
@@ -64,14 +65,9 @@ public class RobotGotoAngle extends Command {
     @Override
     public void initialize() {
         m_complete = false;
+
         pidController.reset();
-        
-        if(m_allianceRelative){
-            pidController.setSetpoint(FieldUtils.flipRedAngle(m_desiredAngle));
-        }
-        else {
-            pidController.setSetpoint(m_desiredAngle);
-        }
+        pidController.setSetpoint(m_desiredAngle);
     }
 
     /*
@@ -85,7 +81,7 @@ public class RobotGotoAngle extends Command {
 
         double rotation = pidController.calculate(m_driveSubsystem.getHeading());
 
-        rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput);
+        rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
 
         m_driveSubsystem.drive(
             -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
@@ -114,7 +110,7 @@ public class RobotGotoAngle extends Command {
     // When not overridden, this function is blank.
     @Override
     public void end(boolean interrupted) {
-
+        m_driveSubsystem.drive(0, 0, 0, false, false);
     }
 
     /*

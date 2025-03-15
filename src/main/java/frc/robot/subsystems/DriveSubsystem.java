@@ -14,9 +14,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.WPIUtilJNI;
-
-// import java.util.Map;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -28,8 +28,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.commands.calculation.CalculateStandardDeviation;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.SwerveModule;
@@ -40,6 +41,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -98,7 +100,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final SimpleWidget m_usePhotonData;
 
     /** The {@link VisionSubsystem} of the robot. */
-    private final VisionSubsystem m_photonSubsystem;
+    private final VisionSubsystem m_visionSubsystem;
 
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -110,7 +112,11 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         },
-        new Pose2d(),
+        new Pose2d(
+            FieldConstants.kFieldWidthMeters / 2,
+            FieldConstants.kFieldHeightMeters / 2,
+            Rotation2d.fromDegrees(180)
+        ),
         DriveConstants.kStateStandardDeviations,
         DriveConstants.kVisionStandardDeviations
     );
@@ -120,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
      * the odometry, and the use of odometry and vision data to estimate the robot's position.
      */
     public DriveSubsystem(VisionSubsystem photonSubsystem) {
-        m_photonSubsystem = photonSubsystem;
+        m_visionSubsystem = photonSubsystem;
 
         LoggingUtils.logNavX(m_gyro);
         m_gyro.enableLogging(false);
@@ -133,10 +139,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Gyro widget
         m_swerveTab.addDouble("Robot Heading", () -> Utils.roundToNearest(getHeading(), 2));
-            // .withWidget(BuiltInWidgets.kGyro)
-            // .withSize(2, 2)
-            // .withProperties(Map.of(
-            //     "Counter Clockwise", true));
         
         // Field widget for displaying odometry estimation
         m_swerveTab.add("Field", m_field)
@@ -153,17 +155,17 @@ public class DriveSubsystem extends SubsystemBase {
         
         // Configure the AutoBuilder
         AutoBuilder.configure(
-            () -> FieldUtils.flipRed(getPose()), // Robot pose supplier
-            (Pose2d newPose) -> resetOdometry(FieldUtils.flipRed(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
+            () -> FieldUtils.convertAllianceRelative(getPose()), // Robot pose supplier
+            (Pose2d newPose) -> resetOdometry(FieldUtils.convertAllianceRelative(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            AutonConstants.kPathPlannerController, // Path planner controller for holonomic drive.
+            AutonConstants.kPathPlannerController, // Path planner controller for holonomic drive
             AutonConstants.kPathPlannerRobotConfig, // Path planner config for robot constants
             FieldUtils::isRedAlliance, // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
             this // Reference to this subsystem to set requirements
         );
 
-        m_usePhotonData = m_swerveTab.addPersistent("Use Photon Vision Data", true)
+        m_usePhotonData = m_swerveTab.addPersistent("Use PhotonVision Data", true)
             .withWidget(BuiltInWidgets.kToggleSwitch);
 
         Utils.configureSysID(
@@ -198,6 +200,11 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearRight.setDriveVoltage(voltage.times(-1));
             }
         );
+        
+        GenericEntry entry = m_swerveTab.add("StdDev", 0).getEntry();
+
+        m_swerveTab.add("Angle StdDev", new CalculateStandardDeviation(this::getHeading, entry::setDouble, entry::setDouble));
+        SmartDashboard.putNumber("Pose Variation", 0);
     }
 
     @Override
@@ -212,26 +219,41 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearRight.getPosition()
             });
         
+        // Save the current pose to compare it to the vision-adjusted pose
+        Pose2d oldPose = m_odometry.getEstimatedPosition();
+        
         if (m_usePhotonData.getEntry().getBoolean(true)) {
-            EstimatedRobotPose[] estimations = m_photonSubsystem.getEstimations();
+            PhotonPipelineResult[] results = m_visionSubsystem.getResults();
+            EstimatedRobotPose[] estimations = m_visionSubsystem.getEstimations();
 
             for (int i = 0; i < estimations.length; i++) {
                 if (estimations[i] == null) continue;
 
-                Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations;
-                PhotonPipelineResult result = m_photonSubsystem.getLatestResult(i);
-
-                stdDev = stdDev.times(
+                Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations.times(
                     DriveConstants.kVisionStandardDeviationMultipler *
-                    result.getBestTarget().bestCameraToTarget.getTranslation().getDistance(Translation3d.kZero)
+                    results[i].getBestTarget().getBestCameraToTarget().getTranslation().getDistance(Translation3d.kZero)
                 );
 
-                m_odometry.addVisionMeasurement(FieldUtils.flipRed(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
+                // Don't scale the heading standard deviation
+                stdDev.set(2, 0, DriveConstants.kVisionStandardDeviations.get(2));
+
+                m_odometry.addVisionMeasurement(
+                    FieldUtils.convertAllianceRelative(estimations[i].estimatedPose.toPose2d()), 
+                    estimations[i].timestampSeconds, 
+                    stdDev
+                );
             }
         }
 
+        // Display variation in pose (in inches)
+        SmartDashboard.putNumber("Pose Variation", 
+            Units.metersToInches(
+                Utils.getDistancePosToPos(oldPose.getTranslation(), m_odometry.getEstimatedPosition().getTranslation())
+            )
+        );
+
         // Update field widget
-        m_field.setRobotPose(FieldUtils.flipRed(getPose()));
+        m_field.setRobotPose(FieldUtils.convertAllianceRelative(getPose())); // Convert back to global blue origin.
     }
 
     /**
@@ -384,7 +406,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The angle of the gyro adjusted for inversion.
      */
     private double getGyroAngle() {
-        return m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
+        return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     /**
@@ -408,7 +430,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The turn rate of the robot, in degrees per second.
      */
     public double getTurnRate() {
-        return m_gyro.getRate() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
+        return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     /**
@@ -432,7 +454,8 @@ public class DriveSubsystem extends SubsystemBase {
             false, 
             false);
     }
-    /*
+
+    /**
      * This sets the idlemode.
      */
     public void setIdleMode(IdleMode idleMode) {

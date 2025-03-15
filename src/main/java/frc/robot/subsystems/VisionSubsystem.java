@@ -12,9 +12,11 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PhotonConstants;
+import frc.robot.Constants.FieldConstants;
 
 /**
  * Subsystem that interfaces with PhotonVision for april tag position estimation.
@@ -36,7 +38,7 @@ public class VisionSubsystem extends SubsystemBase {
         for (int i = 0; i < m_cameras.length; i++) {
             m_cameras[i] = new PhotonCamera(PhotonConstants.kCameraNames[i]);
             m_photonPoseEstimators[i] = new PhotonPoseEstimator(
-                PhotonConstants.kFieldLayout,
+                AprilTagFieldLayout.loadField(FieldConstants.kField),
                 PhotonConstants.kPoseStrategy,
                 PhotonConstants.kRobotToCameraTransformations[i]
             );
@@ -67,12 +69,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     /**
-     * Gets the {@link PhotonPipelineResult} for the specified camera.
-     * @param camera The index of the camera.
-     * @return The {@link PhotonPipelienResult}.
+     * Gets the {@link PhotonPipelineResult} objects for every camera.
+     * @return The {@link PhotonPipelienResult} objects.
      */
-    public PhotonPipelineResult getLatestResult(int camera) {
-        return m_results[camera];
+    public PhotonPipelineResult[] getResults() {
+        return m_results;
     }
 
     /**
@@ -96,6 +97,11 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         for (int i = 0; i < m_cameras.length; i++) {
+            if (!m_cameras[i].isConnected()) {
+                m_results[i] = null;
+                continue;
+            }
+
             List<PhotonPipelineResult> results = m_cameras[i].getAllUnreadResults();
 
             if (!results.isEmpty()) {

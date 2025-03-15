@@ -102,6 +102,11 @@ public final class InputMappings {
 
         final File[] mappings = controllerDirectory.listFiles();
         final Trigger[] triggers = new Trigger[mappings.length];
+ 
+        if (mappings.length == 0) {
+            DriverStation.reportError("No mapping files found.", false);
+            return new Trigger(() -> false);
+        }
 
         for (int i = 0; i < mappings.length; i++) {
             final JSONObject obj;

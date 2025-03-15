@@ -10,7 +10,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.Utils;
@@ -24,23 +24,23 @@ public class AutoAlign extends Command {
 
     /** The {@link PIDController} for the robot's x-coordinate. */
     private final PIDController pidControllerX = new PIDController(
-        HeadingConstants.kTranslationP, 
-        HeadingConstants.kTranslationI, 
-        HeadingConstants.kTranslationD
+        DrivePIDConstants.kTranslationP, 
+        DrivePIDConstants.kTranslationI, 
+        DrivePIDConstants.kTranslationD
     );
 
     /** The {@link PIDController} for the robot's y-coordinate. */
     private final PIDController pidControllerY = new PIDController(
-        HeadingConstants.kTranslationP, 
-        HeadingConstants.kTranslationI, 
-        HeadingConstants.kTranslationD
+        DrivePIDConstants.kTranslationP, 
+        DrivePIDConstants.kTranslationI, 
+        DrivePIDConstants.kTranslationD
     );
 
     /** The {@link PIDController} for the robot's angle. */
     private final PIDController pidControllerAngle = new PIDController(
-        HeadingConstants.kHeadingP, 
-        HeadingConstants.kHeadingI, 
-        HeadingConstants.kHeadingD
+        DrivePIDConstants.kRotationP, 
+        DrivePIDConstants.kRotationI, 
+        DrivePIDConstants.kRotationD
     );
     
     /** Whether the {@link Command} has finished. */
@@ -55,11 +55,11 @@ public class AutoAlign extends Command {
     public AutoAlign(DriveSubsystem driveSubsystem) {
         m_driveSubsystem = driveSubsystem;
 
-        pidControllerX.setTolerance(HeadingConstants.kTranslationTolerance);
-        pidControllerY.setTolerance(HeadingConstants.kTranslationTolerance);
-        pidControllerAngle.setTolerance(HeadingConstants.kHeadingTolerance);
+        pidControllerX.setTolerance(DrivePIDConstants.kTranslationTolerance);
+        pidControllerY.setTolerance(DrivePIDConstants.kTranslationTolerance);
+        pidControllerAngle.setTolerance(DrivePIDConstants.kRotationTolerance);
 
-        pidControllerAngle.enableContinuousInput(-180, 180);
+        pidControllerAngle.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(m_driveSubsystem);
     }
@@ -71,10 +71,10 @@ public class AutoAlign extends Command {
         Pose2d robotPose = m_driveSubsystem.getPose();
         Double smallestDst = null;
 
-        boolean flipPose = robotPose.getY() > FieldConstants.kFieldHeightMeters / 2;
+        boolean flipPose = robotPose.getX() > FieldConstants.kFieldWidthMeters / 2;
 
         for (Pose2d pose : FieldConstants.kAutoAlignPositions) {
-            pose = flipPose ? FieldUtils.flipBlue(pose) : FieldUtils.flipRed(pose);
+            pose = flipPose ? FieldUtils.flip(pose) : pose;
             double dst = Utils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
             if (smallestDst == null || dst < smallestDst) {
                 smallestDst = dst;
@@ -99,9 +99,9 @@ public class AutoAlign extends Command {
         double ySpeed = pidControllerY.calculate(currentPos.getTranslation().getY());
         double angleSpeed = pidControllerAngle.calculate(m_driveSubsystem.getHeading());
 
-        xSpeed = MathUtil.clamp(xSpeed, -HeadingConstants.kTranslationMaxOutput, HeadingConstants.kTranslationMaxOutput);
-        ySpeed = MathUtil.clamp(ySpeed, -HeadingConstants.kTranslationMaxOutput, HeadingConstants.kTranslationMaxOutput);
-        angleSpeed = MathUtil.clamp(angleSpeed, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput);
+        xSpeed = MathUtil.clamp(xSpeed, -DrivePIDConstants.kTranslationMaxOutput, DrivePIDConstants.kTranslationMaxOutput);
+        ySpeed = MathUtil.clamp(ySpeed, -DrivePIDConstants.kTranslationMaxOutput, DrivePIDConstants.kTranslationMaxOutput);
+        angleSpeed = MathUtil.clamp(angleSpeed, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
 
 
         m_driveSubsystem.drive(

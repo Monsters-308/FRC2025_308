@@ -11,7 +11,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "coralL1-3"
+                  "pathName": "Coral Center 1st"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "1st Coral"
                 }
               }
             ]
@@ -20,13 +26,13 @@
         {
           "type": "named",
           "data": {
-            "name": "shootCoral"
+            "name": "Shoot Coral"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "One Coral",
   "choreoAuto": false
 }

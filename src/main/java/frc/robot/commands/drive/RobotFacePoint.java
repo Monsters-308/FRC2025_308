@@ -12,9 +12,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utils.FieldUtils;
 import frc.robot.utils.Utils;
 
 public class RobotFacePoint extends Command {
@@ -23,9 +22,9 @@ public class RobotFacePoint extends Command {
     final DriveSubsystem m_driveSubsystem;
      
     private final PIDController angleController = new PIDController(
-        HeadingConstants.kHeadingP, 
-        HeadingConstants.kHeadingI, 
-        HeadingConstants.kHeadingD
+        DrivePIDConstants.kRotationP, 
+        DrivePIDConstants.kRotationI, 
+        DrivePIDConstants.kRotationD
     );
     
     //If you want to control whether or not the command has ended, you should store it in some sort of variable:
@@ -35,21 +34,18 @@ public class RobotFacePoint extends Command {
 
     private final Translation2d m_point;
 
-    private final boolean m_allianceRelative;
-
     /**
      * This command rotates the robot in space using the pose estimation compared to a given point on the field.
      * The driver still has full control over the X and Y of the robot.
      */
-    public RobotFacePoint(DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed, Translation2d point, boolean allianceRelative){
+    public RobotFacePoint(DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed, Translation2d point){
         m_driveSubsystem = driveSubsystem;
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
         m_point = point;
-        m_allianceRelative = allianceRelative;
 
-        angleController.enableContinuousInput(-180, 180);
-        angleController.setTolerance(HeadingConstants.kHeadingTolerance);
+        angleController.enableContinuousInput(-Math.PI, Math.PI);
+        angleController.setTolerance(DrivePIDConstants.kRotationTolerance);
 
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
@@ -75,7 +71,7 @@ public class RobotFacePoint extends Command {
     public void execute() {
         
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = m_allianceRelative ? FieldUtils.flipRed(m_point) : m_point; // 2D point on field (adjusted for alliance) 
+        Translation2d pos2 = m_point; // 2D point on field
         Rotation2d angleToTarget = Utils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
 
         // Set pid controller to angle to make robot face point
@@ -85,7 +81,7 @@ public class RobotFacePoint extends Command {
 
         double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
 
-        rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
+        rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput); // clamp value (speed limiter)
         
         m_driveSubsystem.drive(
             m_xSpeed.getAsDouble(),

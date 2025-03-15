@@ -60,10 +60,10 @@ public final class Constants {
         private RobotConstants() {}
 
         /** Mass of the robot in kilograms. */
-        public static final double kRobotMassKG = 68;
+        public static final double kRobotMassKG = Units.lbsToKilograms(90);
 
-        /** Moment of inertia of the robot. */
-        public static final double kRobotMOI = 20;
+        /** Moment of inertia of the robot in KG*M^2. */
+        public static final double kRobotMOI = 3.441;
     }
 
     /**
@@ -144,6 +144,9 @@ public final class Constants {
 
         /** A multipler that controls how much the distance should scale the {@link DriveConstants#kVisionStandardDeviations}. */
         public static final double kVisionStandardDeviationMultipler = 1;
+
+        /** Whether or not to reverse the gyro to make it CCW positive. */
+        public static final boolean kGyroReversed = true;
     }
 
     /**
@@ -251,32 +254,29 @@ public final class Constants {
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
         /** The current limit of the driving motors in amps. */
-        public static final int kDrivingMotorCurrentLimit = 30; // amps
+        public static final int kDrivingMotorCurrentLimit = 50; // amps
         /** The current limit of the turning motors in amps. */
-        public static final int kTurningMotorCurrentLimit = 30; // amps
+        public static final int kTurningMotorCurrentLimit = 50; // amps
     }
 
     /**
      * Describe how the robot should move to certain position and angle setpoints.
      */
-    public static final class HeadingConstants {
-        private HeadingConstants() {}
-
-        /** Whether or not to reverse the gyro to make it CCW positive. */
-        public static final boolean kGyroReversed = true;
+    public static final class DrivePIDConstants {
+        private DrivePIDConstants() {}
 
         // This is used for making the robot face a certain direction
 
         /** The P for the PID making the robot rotate to certain angles. */
-        public static final double kHeadingP = 0.025;
+        public static final double kRotationP = 5;
         /** The I for the PID making the robot rotate to certain angles. */
-        public static final double kHeadingI = 0;
+        public static final double kRotationI = 0;
         /** The D for the PID making the robot rotate to certain angles. */
-        public static final double kHeadingD = 0.001;
+        public static final double kRotationD = 0;
         /** The maximum output of the PID making the robot rotate to certain angles. */
-        public static final double kHeadingMaxOutput = 0.8; // Percent
+        public static final double kRotationMaxOutput = 0.8; // Percent
         /** The acceptable error in angle to the desired angle. */
-        public static final double kHeadingTolerance = 1; // Degrees
+        public static final double kRotationTolerance = Units.degreesToRadians(1); // Radians
 
         /** The P for the PID making the robot move to certain positions. */
         public static final double kTranslationP = 5;
@@ -287,7 +287,7 @@ public final class Constants {
         /** The maximum output of the PID making the robot move to certain positions. */
         public static final double kTranslationMaxOutput = 1; // Percent 
         /** The acceptable error in position to the desired position. */
-        public static final double kTranslationTolerance = Units.inchesToMeters(3); // Meters
+        public static final double kTranslationTolerance = Units.inchesToMeters(1); // Meters
     }
 
     /**
@@ -313,10 +313,16 @@ public final class Constants {
     public static final class FieldConstants {
         private FieldConstants() {}
 
+        /** The game field being used. */
+        public static final AprilTagFields kField = AprilTagFields.k2025ReefscapeWelded;
+
+        /** The {@link AprilTagFieldLayout} used for field constants. */
+        private static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(kField);
+
         /** X axis: long side */
-        public static final double kFieldWidthMeters = 17.5133;
+        public static final double kFieldWidthMeters = kFieldLayout.getFieldLength(); // 17.548
         /** Y axis: short side */
-        public static final double kFieldHeightMeters = 8.0518;
+        public static final double kFieldHeightMeters = kFieldLayout.getFieldWidth(); // 8.052
 
         /** Auto align positions. */
         public static final Pose2d[] kAutoAlignPositions = {
@@ -334,8 +340,8 @@ public final class Constants {
             new Pose2d(5, 5.24, Rotation2d.fromDegrees(-120)),
             new Pose2d(5, 2.81, Rotation2d.fromDegrees(120)),
             // Column 5
-            new Pose2d(5.29, 5.07, Rotation2d.fromDegrees(-60)),
-            new Pose2d(5.29, 2.98, Rotation2d.fromDegrees(60)),
+            new Pose2d(5.29, 5.07, Rotation2d.fromDegrees(-120)),
+            new Pose2d(5.29, 2.98, Rotation2d.fromDegrees(120)),
             // Column 6
             new Pose2d(5.8, 4.191, Rotation2d.fromDegrees(180)),
             new Pose2d(5.8, 3.86, Rotation2d.fromDegrees(180)),
@@ -346,6 +352,9 @@ public final class Constants {
 
         /** Reef position for orbital controls. */
         public static final Translation2d kReefPosition = new Translation2d(4.49, 4.0255);
+
+        /** The angle of the human player station relative to the right side. */
+        public static final Rotation2d kHumanPlayerStationAngle = Rotation2d.fromDegrees(54);
     }
 
     /**
@@ -361,16 +370,16 @@ public final class Constants {
 
         /** A {@link PIDConstants} object that describes the PID constants PathPlanner should use move the robot. */
         public static final PIDConstants kAutoTranslationPID = new PIDConstants(
-            HeadingConstants.kTranslationP, 
-            HeadingConstants.kTranslationI, 
-            HeadingConstants.kTranslationD
+            DrivePIDConstants.kTranslationP, 
+            DrivePIDConstants.kTranslationI, 
+            DrivePIDConstants.kTranslationD
         );
 
         /** A {@link PIDConstants} object that describes the PID constants PathPlanner should use to turn the robot wheels. */
         public static final PIDConstants kAutoAngularPID = new PIDConstants(
-            5, 
-            0, 
-            0
+            DrivePIDConstants.kRotationP, 
+            DrivePIDConstants.kRotationI, 
+            DrivePIDConstants.kRotationD
         );
 
         /** A {@link PathFollowingController} that tells PathPlanner how to follow paths. */
@@ -424,13 +433,13 @@ public final class Constants {
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
 
         /** Current limit of the elevator motors. */
-        public static final int kElevatorCurrentLimit = 30;
+        public static final int kElevatorCurrentLimit = 60;
 
         /** Whether to invert the left elevator motor. */
         public static final boolean kElevatorLeftInverted = true;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
-        public static final double kElevatorReduction = 40;
+        public static final double kElevatorReduction = 60;
         /** The diameter of the gear/wheel that moves the elevator in inches. */
         public static final double kGearDiameter = 1;
         /** The circumference of the gear/wheel that moves the elevator. */
@@ -468,7 +477,6 @@ public final class Constants {
         /** The physical height of the elevator in inches. */
         public static final double kElevatorMaxHeight = 30;
 
-        // TODO: add heights
         /** The heights, in inches, of every elevator level. */
         public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 0 };
     }
@@ -575,9 +583,9 @@ public final class Constants {
         /** The A gain for the arm feedforward. */
         public static final double kArmA = 0;
 
-        public static final double kArmTolerance = 0.1;
+        /** The speed to move the arm at while intaking. */
+        public static final double kArmIntakingSpeed = 0.8;
 
-        // TODO: add angles
         /** The angles of the arm for each elevator level. */
         public static final Rotation2d[] kArmLevelAngles = {
             Rotation2d.kZero,
@@ -593,7 +601,6 @@ public final class Constants {
     public static final class PhotonConstants {
         private PhotonConstants() {}
 
-        // TODO: set names and transformations
         /** The name of the PhotonVision cameras. */
         public static final String[] kCameraNames = { "jojo bizar" };
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
@@ -604,8 +611,6 @@ public final class Constants {
             )
         };
 
-        /** The april tag layout PhotonVision should use. */
-        public static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
         /** How PhotonVision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
     }
