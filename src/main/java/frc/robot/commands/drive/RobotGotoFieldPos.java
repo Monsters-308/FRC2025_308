@@ -76,9 +76,6 @@ public class RobotGotoFieldPos extends Command {
     @Override
     public void initialize() {
         m_complete = false;
-        pidControllerX.reset();
-        pidControllerY.reset();
-        pidControllerAngle.reset();
 
         pidControllerX.reset();
         pidControllerY.reset();
