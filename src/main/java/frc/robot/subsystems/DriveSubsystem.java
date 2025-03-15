@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.WPIUtilJNI;
 
@@ -202,6 +203,7 @@ public class DriveSubsystem extends SubsystemBase {
         GenericEntry entry = m_swerveTab.add("StdDev", 0).getEntry();
 
         m_swerveTab.add("Angle StdDev", new CalculateStandardDeviation(this::getHeading, entry::setDouble, entry::setDouble));
+        m_swerveTab.add("Pose Variation", 0);
     }
 
     @Override
@@ -215,6 +217,9 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearLeft.getPosition(),
                 m_rearRight.getPosition()
             });
+        
+        // Save the current pose to compare it to the vision-adjusted pose
+        Pose2d oldPose = m_odometry.getEstimatedPosition();
         
         if (m_usePhotonData.getEntry().getBoolean(true)) {
             PhotonPipelineResult[] results = m_visionSubsystem.getResults();
@@ -239,8 +244,15 @@ public class DriveSubsystem extends SubsystemBase {
             }
         }
 
+        // Display variation in pose (in inches)
+        m_swerveTab.add("Pose Variation", 
+            Units.metersToInches(
+                Utils.getDistancePosToPos(oldPose.getTranslation(), m_odometry.getEstimatedPosition().getTranslation())
+            )
+        );
+
         // Update field widget
-        m_field.setRobotPose(FieldUtils.convertAllianceRelative(getPose()));
+        m_field.setRobotPose(FieldUtils.convertAllianceRelative(getPose())); // Convert back to global blue origin.
     }
 
     /**
