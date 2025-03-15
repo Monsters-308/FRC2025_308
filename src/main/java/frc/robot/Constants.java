@@ -439,7 +439,7 @@ public final class Constants {
         public static final boolean kElevatorLeftInverted = true;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
-        public static final double kElevatorReduction = 40;
+        public static final double kElevatorReduction = 60;
         /** The diameter of the gear/wheel that moves the elevator in inches. */
         public static final double kGearDiameter = 1;
         /** The circumference of the gear/wheel that moves the elevator. */
