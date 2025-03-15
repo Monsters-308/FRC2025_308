@@ -515,7 +515,7 @@ public final class Constants {
         private CoralIntakeConstants() {}
 
         /** The CAN ID for the intake motor. */
-        public static final int kCoralIntakeMotorCanId = 22;
+        public static final int kCoralIntakeMotorCanId = 21;
         /** Whether the coral intake is inverted */
         public static final boolean kCoralIntakeInverted = true;
         /** The idle mode of the coral intake motor. */
@@ -537,7 +537,7 @@ public final class Constants {
         private ArmConstants() {}
 
         /** The CAN ID of the arm motor. */
-        public static final int kArmMotorCanId = 21;
+        public static final int kArmMotorCanId = 22;
         /** The smart current limit for the motor */
         public static final int kSmartCurrentLimit = 30;
         /** The idle mode of the motor. */
