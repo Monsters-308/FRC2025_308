@@ -75,7 +75,7 @@ public class RobotFacePoint extends Command {
     public void execute() {
         
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = !m_allianceRelative ? FieldUtils.flipRed(m_point) : m_point; // 2D point on field (adjusted for alliance) 
+        Translation2d pos2 = !m_allianceRelative ? FieldUtils.convertAllianceRelative(m_point) : m_point; // 2D point on field (adjusted for alliance) 
         Rotation2d angleToTarget = Utils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
 
         // Set pid controller to angle to make robot face point

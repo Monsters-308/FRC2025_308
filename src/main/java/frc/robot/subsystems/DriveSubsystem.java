@@ -153,8 +153,8 @@ public class DriveSubsystem extends SubsystemBase {
         
         // Configure the AutoBuilder
         AutoBuilder.configure(
-            () -> FieldUtils.flipRed(getPose()), // Robot pose supplier
-            (Pose2d newPose) -> resetOdometry(FieldUtils.flipRed(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
+            () -> FieldUtils.convertAllianceRelative(getPose()), // Robot pose supplier
+            (Pose2d newPose) -> resetOdometry(FieldUtils.convertAllianceRelative(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             AutonConstants.kPathPlannerController, // Path planner controller for holonomic drive
@@ -231,12 +231,16 @@ public class DriveSubsystem extends SubsystemBase {
                 // Don't scale the heading standard deviation
                 stdDev.set(2, 0, DriveConstants.kVisionStandardDeviations.get(2));
 
-                m_odometry.addVisionMeasurement(FieldUtils.flipRed(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
+                m_odometry.addVisionMeasurement(
+                    FieldUtils.convertAllianceRelative(estimations[i].estimatedPose.toPose2d()), 
+                    estimations[i].timestampSeconds, 
+                    stdDev
+                );
             }
         }
 
         // Update field widget
-        m_field.setRobotPose(FieldUtils.flipRed(getPose()));
+        m_field.setRobotPose(FieldUtils.convertAllianceRelative(getPose()));
     }
 
     /**

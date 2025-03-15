@@ -84,7 +84,7 @@ public class RobotGotoFieldPos extends Command {
         pidControllerY.reset();
         pidControllerAngle.reset();
 
-        Pose2d m_updatedRobotPos = !m_allianceRelative ? FieldUtils.flipRed(m_desiredRobotPos) : m_desiredRobotPos;
+        Pose2d m_updatedRobotPos = !m_allianceRelative ? FieldUtils.convertAllianceRelative(m_desiredRobotPos) : m_desiredRobotPos;
 
         pidControllerX.setSetpoint(m_updatedRobotPos.getX());
         pidControllerY.setSetpoint(m_updatedRobotPos.getY());
