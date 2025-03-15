@@ -210,12 +210,12 @@ public class RobotContainer {
             .whileTrue(m_coralIntakeSubsystem.reverseCoral());
 
         InputMappings.event("coDriver", "elevatorUp")
-            .onTrue(new SetElevatorVelocity(m_armSubsystem, m_elevatorSubsystem, 0.8))
+            .onTrue(m_elevatorSubsystem.goToVelocity(0.4))
             .onFalse(new InstantCommand(m_elevatorSubsystem::stop));
 
         InputMappings.event("coDriver", "elevatorDown")
-        .onTrue(new SetElevatorVelocity(m_armSubsystem, m_elevatorSubsystem, -0.8))
-            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0), m_elevatorSubsystem));
+            .onTrue(m_elevatorSubsystem.goToVelocity(-0.4))
+            .onFalse(new InstantCommand(m_elevatorSubsystem::stop));
 
         InputMappings.event("coDriver", "armUp")
             .onTrue(m_armSubsystem.goToAngle(Rotation2d.kZero, false));
