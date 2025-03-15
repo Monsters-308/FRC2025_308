@@ -439,7 +439,7 @@ public final class Constants {
         public static final boolean kElevatorLeftInverted = true;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
-        public static final double kElevatorReduction = 60;
+        public static final double kElevatorReduction = 20;
         /** The diameter of the gear/wheel that moves the elevator in inches. */
         public static final double kGearDiameter = 1;
         /** The circumference of the gear/wheel that moves the elevator. */
@@ -450,7 +450,7 @@ public final class Constants {
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The P for the elevator PID. */
-        public static final double kElevatorP = 3.2;
+        public static final double kElevatorP = 2.5;
         /** The I for the elevator PID. */
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
@@ -475,10 +475,10 @@ public final class Constants {
         public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 50;
 
         /** The physical height of the elevator in inches. */
-        public static final double kElevatorMaxHeight = 30;
+        public static final double kElevatorMaxHeight = 25.6;
 
         /** The heights, in inches, of every elevator level. */
-        public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 0 };
+        public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 25.6 };
     }
 
     /**
