@@ -314,6 +314,7 @@ public final class Constants {
      */
     public static final class FieldConstants {
         private FieldConstants() {}
+
         /** The {@link AprilTagFieldLayout} used for determining field constants and vision. */
         public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 
