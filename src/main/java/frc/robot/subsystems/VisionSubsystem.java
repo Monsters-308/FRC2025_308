@@ -87,7 +87,7 @@ public class VisionSubsystem extends SubsystemBase {
     /**
      * Sets the pipeline of the specified camera.
      * @param camera The index of the camera.
-     * @param mode The pipeline index to set the camera to.
+     * @param index The pipeline index to set the camera to.
      */
     public void setPipeline(int camera, int index) {
         m_cameras[camera].setPipelineIndex(index);
