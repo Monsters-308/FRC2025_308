@@ -328,7 +328,7 @@ public final class Constants {
 
         /** Auto align positions. */
         public static final Pose2d[] kAutoAlignPositions = {
-            /* Coral human player station positions */
+            /* Coral reef positions */
             // Column 1
             new Pose2d(3.198, 4.191, Rotation2d.kZero),
             new Pose2d(3.198, 3.86, Rotation2d.kZero),
