@@ -12,7 +12,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PhotonConstants;
@@ -38,7 +37,7 @@ public class VisionSubsystem extends SubsystemBase {
         for (int i = 0; i < m_cameras.length; i++) {
             m_cameras[i] = new PhotonCamera(PhotonConstants.kCameraNames[i]);
             m_photonPoseEstimators[i] = new PhotonPoseEstimator(
-                AprilTagFieldLayout.loadField(FieldConstants.kField),
+                FieldConstants.kAprilTagFieldLayout,
                 PhotonConstants.kPoseStrategy,
                 PhotonConstants.kRobotToCameraTransformations[i]
             );

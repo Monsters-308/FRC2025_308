@@ -231,7 +231,7 @@ public class DriveSubsystem extends SubsystemBase {
                 // Don't scale the heading standard deviation
                 stdDev.set(2, 0, DriveConstants.kVisionStandardDeviations.get(2));
 
-                m_odometry.addVisionMeasurement(FieldUtils.flipRed(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
+                m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds, stdDev);
             }
         }
 

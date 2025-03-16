@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,6 +36,7 @@ import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.FieldUtils;
 import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.SwerveModule;
 
@@ -312,17 +314,17 @@ public final class Constants {
      */
     public static final class FieldConstants {
         private FieldConstants() {}
-
-        /** The game field being used. */
-        public static final AprilTagFields kField = AprilTagFields.k2025ReefscapeWelded;
-
-        /** The {@link AprilTagFieldLayout} used for field constants. */
-        private static final AprilTagFieldLayout kFieldLayout = AprilTagFieldLayout.loadField(kField);
+        /** The {@link AprilTagFieldLayout} used for determining field constants and vision. */
+        public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 
         /** X axis: long side */
-        public static final double kFieldWidthMeters = kFieldLayout.getFieldLength(); // 17.548
+        public static final double kFieldWidthMeters = kAprilTagFieldLayout.getFieldLength(); // 17.548
         /** Y axis: short side */
-        public static final double kFieldHeightMeters = kFieldLayout.getFieldWidth(); // 8.052
+        public static final double kFieldHeightMeters = kAprilTagFieldLayout.getFieldWidth(); // 8.052
+
+        static {
+            kAprilTagFieldLayout.setOrigin(FieldUtils.isBlueAlliance() ? OriginPosition.kBlueAllianceWallRightSide : OriginPosition.kRedAllianceWallRightSide);
+        }
 
         /** Auto align positions. */
         public static final Pose2d[] kAutoAlignPositions = {
