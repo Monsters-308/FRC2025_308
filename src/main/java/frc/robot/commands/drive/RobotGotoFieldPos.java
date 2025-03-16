@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utils.FieldUtils;
 import frc.robot.utils.Utils;
 
 public class RobotGotoFieldPos extends Command {
@@ -38,17 +37,14 @@ public class RobotGotoFieldPos extends Command {
     private boolean m_complete = false;
 
     private final Pose2d m_desiredRobotPos;
-    private final boolean m_allianceRelative;
 
     /** 
      * Uses PID to make the robot go to a certain postion relative to the field.  
      */
-    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPos, boolean allianceRelative) {
+    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPos) {
         m_driveSubsystem = driveSubsystem;
 
         m_desiredRobotPos = desiredRobotoPos;
-
-        m_allianceRelative = allianceRelative;
 
         pidControllerX.setTolerance(DrivePIDConstants.kTranslationTolerance);
         pidControllerY.setTolerance(DrivePIDConstants.kTranslationTolerance);
@@ -62,8 +58,8 @@ public class RobotGotoFieldPos extends Command {
     /** 
      * Uses PID to make the robot go to a certain postion relative to the field.  
      */
-    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, double xPosition, double yPosition, double angle, boolean allianceRelative) {
-        this(driveSubsystem, new Pose2d(xPosition, yPosition, new Rotation2d(angle)), allianceRelative);
+    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, double xPosition, double yPosition, double angle) {
+        this(driveSubsystem, new Pose2d(xPosition, yPosition, new Rotation2d(angle)));
     }
 
     /*
@@ -76,19 +72,14 @@ public class RobotGotoFieldPos extends Command {
     @Override
     public void initialize() {
         m_complete = false;
-        pidControllerX.reset();
-        pidControllerY.reset();
-        pidControllerAngle.reset();
 
         pidControllerX.reset();
         pidControllerY.reset();
         pidControllerAngle.reset();
 
-        Pose2d m_updatedRobotPos = !m_allianceRelative ? FieldUtils.flipRed(m_desiredRobotPos) : m_desiredRobotPos;
-
-        pidControllerX.setSetpoint(m_updatedRobotPos.getX());
-        pidControllerY.setSetpoint(m_updatedRobotPos.getY());
-        pidControllerAngle.setSetpoint(Utils.angleConstrain(m_updatedRobotPos.getRotation().getDegrees()));
+        pidControllerX.setSetpoint(m_desiredRobotPos.getX());
+        pidControllerY.setSetpoint(m_desiredRobotPos.getY());
+        pidControllerAngle.setSetpoint(Utils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
     }
 
     /*

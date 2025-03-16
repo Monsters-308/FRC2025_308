@@ -20,6 +20,6 @@ public class IntakeCoral extends ParallelDeadlineGroup {
      * @param coralIntakeSubsystem The {@link CoralIntakeSubsystem} of the robot.
      */
     public IntakeCoral(ArmSubsystem armSubsystem, CoralIntakeSubsystem coralIntakeSubsystem) {
-        super(coralIntakeSubsystem.intakeCoral(true), armSubsystem.runAtSpeed(-ArmConstants.kArmIntakingSpeed));
+        super(coralIntakeSubsystem.intakeCoral(true));
     }
 }

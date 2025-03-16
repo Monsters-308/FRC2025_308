@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.WPIUtilJNI;
 
@@ -40,6 +41,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -153,8 +155,8 @@ public class DriveSubsystem extends SubsystemBase {
         
         // Configure the AutoBuilder
         AutoBuilder.configure(
-            () -> FieldUtils.flipRed(getPose()), // Robot pose supplier
-            (Pose2d newPose) -> resetOdometry(FieldUtils.flipRed(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
+            () -> FieldUtils.convertAllianceRelative(getPose()), // Robot pose supplier
+            (Pose2d newPose) -> resetOdometry(FieldUtils.convertAllianceRelative(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             AutonConstants.kPathPlannerController, // Path planner controller for holonomic drive
@@ -202,6 +204,7 @@ public class DriveSubsystem extends SubsystemBase {
         GenericEntry entry = m_swerveTab.add("StdDev", 0).getEntry();
 
         m_swerveTab.add("Angle StdDev", new CalculateStandardDeviation(this::getHeading, entry::setDouble, entry::setDouble));
+        SmartDashboard.putNumber("Pose Variation", 0);
     }
 
     @Override
@@ -215,6 +218,9 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rearLeft.getPosition(),
                 m_rearRight.getPosition()
             });
+        
+        // Save the current pose to compare it to the vision-adjusted pose
+        Pose2d oldPose = m_odometry.getEstimatedPosition();
         
         if (m_usePhotonData.getEntry().getBoolean(true)) {
             PhotonPipelineResult[] results = m_visionSubsystem.getResults();
@@ -235,8 +241,15 @@ public class DriveSubsystem extends SubsystemBase {
             }
         }
 
+        // Display variation in pose (in inches)
+        SmartDashboard.putNumber("Pose Variation", 
+            Units.metersToInches(
+                Utils.getDistancePosToPos(oldPose.getTranslation(), m_odometry.getEstimatedPosition().getTranslation())
+            )
+        );
+
         // Update field widget
-        m_field.setRobotPose(FieldUtils.flipRed(getPose()));
+        m_field.setRobotPose(FieldUtils.convertAllianceRelative(getPose())); // Convert back to global blue origin.
     }
 
     /**

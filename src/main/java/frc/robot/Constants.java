@@ -256,9 +256,9 @@ public final class Constants {
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
         /** The current limit of the driving motors in amps. */
-        public static final int kDrivingMotorCurrentLimit = 30; // amps
+        public static final int kDrivingMotorCurrentLimit = 50; // amps
         /** The current limit of the turning motors in amps. */
-        public static final int kTurningMotorCurrentLimit = 30; // amps
+        public static final int kTurningMotorCurrentLimit = 50; // amps
     }
 
     /**
@@ -435,13 +435,13 @@ public final class Constants {
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
 
         /** Current limit of the elevator motors. */
-        public static final int kElevatorCurrentLimit = 30;
+        public static final int kElevatorCurrentLimit = 60;
 
         /** Whether to invert the left elevator motor. */
         public static final boolean kElevatorLeftInverted = true;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
-        public static final double kElevatorReduction = 40;
+        public static final double kElevatorReduction = 20;
         /** The diameter of the gear/wheel that moves the elevator in inches. */
         public static final double kGearDiameter = 1;
         /** The circumference of the gear/wheel that moves the elevator. */
@@ -452,7 +452,7 @@ public final class Constants {
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The P for the elevator PID. */
-        public static final double kElevatorP = 3.2;
+        public static final double kElevatorP = 2.5;
         /** The I for the elevator PID. */
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
@@ -477,10 +477,10 @@ public final class Constants {
         public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 50;
 
         /** The physical height of the elevator in inches. */
-        public static final double kElevatorMaxHeight = 30;
+        public static final double kElevatorMaxHeight = 25.6;
 
         /** The heights, in inches, of every elevator level. */
-        public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 0 };
+        public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 25.6 };
     }
 
     /**
@@ -525,7 +525,7 @@ public final class Constants {
         private CoralIntakeConstants() {}
 
         /** The CAN ID for the intake motor. */
-        public static final int kCoralIntakeMotorCanId = 22;
+        public static final int kCoralIntakeMotorCanId = 21;
         /** Whether the coral intake is inverted */
         public static final boolean kCoralIntakeInverted = true;
         /** The idle mode of the coral intake motor. */
@@ -547,7 +547,7 @@ public final class Constants {
         private ArmConstants() {}
 
         /** The CAN ID of the arm motor. */
-        public static final int kArmMotorCanId = 21;
+        public static final int kArmMotorCanId = 22;
         /** The smart current limit for the motor */
         public static final int kSmartCurrentLimit = 30;
         /** The idle mode of the motor. */

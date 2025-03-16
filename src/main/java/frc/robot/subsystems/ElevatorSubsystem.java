@@ -229,8 +229,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void setElevatorVelocity(double velocity) {
         m_isPIDMode = false;
 
-        final double currentHeight = getElevatorHeight();
-        if (currentHeight <= 0 || currentHeight >= ElevatorConstants.kElevatorMaxHeight) return;
+        // final double currentHeight = getElevatorHeight();
+        // if (currentHeight <= 0 || currentHeight >= ElevatorConstants.kElevatorMaxHeight) return;
 
         m_elevatorLeader.set(velocity);
     }
@@ -296,18 +296,18 @@ public class ElevatorSubsystem extends SubsystemBase {
             // double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
             
             m_elevatorLeader.set(
-                m_elevatorPIDController.calculate(getElevatorHeight())
+                m_elevatorPIDController.calculate(getElevatorHeight()) + 0.01
                 // m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
             );
         }
 
-        if (currentHeight <= 0) {
-            m_elevatorLeader.set(Math.max(0, m_elevatorLeader.get()));
-            m_elevatorEncoder.setPosition(0);
-        } else if (currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
-            m_elevatorLeader.set(Math.min(0, m_elevatorLeader.get()));
-            m_elevatorEncoder.setPosition(ElevatorConstants.kElevatorMaxHeight);
-        }
+        // if (currentHeight <= 0) {
+        //     m_elevatorLeader.set(Math.max(0, m_elevatorLeader.get()));
+        //     m_elevatorEncoder.setPosition(0);
+        // } else if (currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
+        //     m_elevatorLeader.set(Math.min(0, m_elevatorLeader.get()));
+        //     m_elevatorEncoder.setPosition(ElevatorConstants.kElevatorMaxHeight);
+        // }
 
         // Prevent level in shuffleboard go to level layout from being non-integer
         // double value = m_levelNetworkTableEntry.getDouble(-1);
