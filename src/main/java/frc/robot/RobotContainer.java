@@ -19,7 +19,6 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
 import frc.robot.commands.coral.IntakeCoral;
-import frc.robot.commands.coral.SetElevatorVelocity;
 import frc.robot.commands.drive.RobotGotoAngle;
 // import frc.robot.commands.drive.AutoAlign;
 // import frc.robot.commands.drive.RobotOrbitPoint;
