@@ -100,9 +100,9 @@ public class RobotContainer {
             // Turning is controlled by the X axis of the right stick.
             new RunCommand(
                 () -> m_driveSubsystem.drive(
-                    -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                    -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                    -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+                    0.3 * -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                    0.3 * -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+                    0.3 * -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
                     true, true
                 ), m_driveSubsystem
             )
@@ -173,7 +173,7 @@ public class RobotContainer {
         //     );
 
         InputMappings.event("driver", "leftHuman")
-            .onTrue(new RobotGotoAngle(
+            .whileTrue(new RobotGotoAngle(
                 m_driveSubsystem,
                 FieldConstants.kHumanPlayerStationAngle.unaryMinus(),
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
@@ -182,7 +182,7 @@ public class RobotContainer {
             ));
 
         InputMappings.event("driver", "rightHuman")
-            .onTrue(new RobotGotoAngle(
+            .whileTrue(new RobotGotoAngle(
                 m_driveSubsystem,
                 FieldConstants.kHumanPlayerStationAngle,
                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
