@@ -10,6 +10,7 @@
             "threshold": 0.9
         },
         "rightHuman": "rightBumper",
-        "leftHuman": "leftBumper"
+        "leftHuman": "leftBumper",
+        "resetFieldRelative": "x"
     }
 }

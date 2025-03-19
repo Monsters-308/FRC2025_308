@@ -158,9 +158,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //------------------------------------------- Driver buttons -------------------------------------------
         
-        // Button for zeroing gyro
-        m_driverController.x()
-            .onTrue(new InstantCommand(m_driveSubsystem::zeroHeading));
+        // Button for reseting field relative controls
+        InputMappings.event("driver", "resetFieldRelative")
+            .onTrue(new InstantCommand(m_driveSubsystem::resetFieldRelative));
     
         // InputMappings.event("driver", "autoAlign")
         //     .whileTrue(new AutoAlign(driveSubsystem));
