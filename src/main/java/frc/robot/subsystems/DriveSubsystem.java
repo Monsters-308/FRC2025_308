@@ -364,7 +364,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Resets the field relative controls for swerve such that the current heading of the robot is considered zero.
+     * Resets the field relative controls for swerve such that the current heading of the robot is considered forward.
      */
     public void resetFieldRelative() {
         m_fieldRelativeHeadingOffset = getHeading();
