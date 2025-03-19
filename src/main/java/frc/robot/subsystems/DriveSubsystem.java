@@ -102,8 +102,9 @@ public class DriveSubsystem extends SubsystemBase {
     /** The {@link VisionSubsystem} of the robot. */
     private final VisionSubsystem m_visionSubsystem;
 
-    /** Offset for the heading to maintain field relative controls in non-field conditions. */
-    
+    /** Offset for the heading used for determining field relative controls.
+     * Allows for reseting the controls when the controls are disoriented. */
+    private double m_fieldRelativeHeadingOffset = 0;
 
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -296,7 +297,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Get the target chassis speeds relative to the robot
         final ChassisSpeeds targetVel = (fieldRelative ?
-            ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getHeading()))
+            ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getHeading() - m_fieldRelativeHeadingOffset))
                 : new ChassisSpeeds(xSpeed, ySpeed, rot)
         );
 
@@ -363,10 +364,10 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Zeroes the heading of the robot.
+     * Resets the field relative controls for swerve such that the current heading of the robot is considered zero.
      */
-    public void zeroHeading() {
-        setHeading(0);
+    public void resetFieldRelative() {
+        m_fieldRelativeHeadingOffset = getHeading();
     }
 
     /**
