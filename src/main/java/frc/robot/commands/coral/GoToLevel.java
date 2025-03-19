@@ -26,7 +26,7 @@ public class GoToLevel extends SequentialCommandGroup {
         } else {
             addCommands(
                 armSubsystem.goToLevel(index, true), 
-                new WaitUntilCommand(() -> armSubsystem.getAngle().getDegrees() < 15),
+                new WaitUntilCommand(() -> armSubsystem.getAngle().getDegrees() > 15),
                 elevatorSubsystem.goToLevel(index, false));
         }
 
