@@ -11,6 +11,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -30,7 +31,6 @@ public class RobotGotoAngle extends Command {
 
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_ySpeed;
-    private final DoubleSupplier m_driverRotation;
 
     /**
      * Uses PID to make the robot face a certain direction while still giving the driver control over the translation of the robot.
@@ -48,7 +48,6 @@ public class RobotGotoAngle extends Command {
 
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
-        m_driverRotation = driverRotation;
 
         pidController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -79,7 +78,7 @@ public class RobotGotoAngle extends Command {
     @Override
     public void execute() {
 
-        double rotation = pidController.calculate(m_driveSubsystem.getHeading());
+        double rotation = pidController.calculate(Units.degreesToRadians(m_driveSubsystem.getHeading()));
 
         rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
 
@@ -90,11 +89,7 @@ public class RobotGotoAngle extends Command {
             true, true
         );
         
-        // if(pidController.atSetpoint()){
-        //     m_complete = true;
-        // }
-
-        if (MathUtil.applyDeadband(m_driverRotation.getAsDouble(), OIConstants.kJoystickDeadband) != 0){
+        if(pidController.atSetpoint()){
             m_complete = true;
         }
     }
