@@ -102,6 +102,9 @@ public class DriveSubsystem extends SubsystemBase {
     /** The {@link VisionSubsystem} of the robot. */
     private final VisionSubsystem m_visionSubsystem;
 
+    /** Offset for the heading to maintain field relative controls in non-field conditions. */
+    
+
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
         DriveConstants.kDriveKinematics,
@@ -237,7 +240,7 @@ public class DriveSubsystem extends SubsystemBase {
                 // Don't scale the heading standard deviation
                 stdDev.set(2, 0, DriveConstants.kVisionStandardDeviations.get(2));
 
-                m_odometry.addVisionMeasurement(estimations[i].estimatedPose.toPose2d(), estimations[i].timestampSeconds, stdDev);
+                m_odometry.addVisionMeasurement(FieldUtils.convertAllianceRelative(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
             }
         }
 
