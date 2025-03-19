@@ -17,7 +17,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -36,7 +35,6 @@ import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.utils.FieldUtils;
 import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.SwerveModule;
 
@@ -323,10 +321,6 @@ public final class Constants {
         /** Y axis: short side */
         public static final double kFieldHeightMeters = kAprilTagFieldLayout.getFieldWidth(); // 8.052
 
-        static {
-            kAprilTagFieldLayout.setOrigin(FieldUtils.isBlueAlliance() ? OriginPosition.kBlueAllianceWallRightSide : OriginPosition.kRedAllianceWallRightSide);
-        }
-
         /** Auto align positions. */
         public static final Pose2d[] kAutoAlignPositions = {
             /* Coral reef positions */
@@ -594,7 +588,7 @@ public final class Constants {
             Rotation2d.kZero,
             Rotation2d.fromDegrees(32.4),
             Rotation2d.fromDegrees(32.4),
-            Rotation2d.kZero
+            Rotation2d.fromDegrees(32.4)
         };
     }
 
@@ -605,12 +599,12 @@ public final class Constants {
         private PhotonConstants() {}
 
         /** The name of the PhotonVision cameras. */
-        public static final String[] kCameraNames = { "jojo bizar" };
+        public static final String[] kCameraNames = { "Jojo Bizar" };
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
         public static final Transform3d[] kRobotToCameraTransformations = {
             new Transform3d(
-                new Translation3d(-12.125,0,21.75),
-                new Rotation3d(0, Units.degreesToRadians(-180), 0)
+                new Translation3d(Units.inchesToMeters(12), Units.inchesToMeters(11), 0),
+                new Rotation3d(0, 0, Units.degreesToRadians(15))
             )
         };
 
