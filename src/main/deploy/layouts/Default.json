@@ -160,7 +160,7 @@
             "x": 0.0,
             "y": 0.0,
             "width": 256.0,
-            "height": 384.0,
+            "height": 256.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
@@ -190,6 +190,45 @@
                   "topic": "/Shuffleboard/Input/Mappings/CoDriver",
                   "period": 0.06,
                   "sort_options": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Vibrate Controllers",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "HIDDEN"
+            },
+            "children": [
+              {
+                "title": "driver",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/Shuffleboard/Input/Vibrate Controllers/driver",
+                  "period": 0.06,
+                  "show_type": false
+                }
+              },
+              {
+                "title": "coDriver",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/Shuffleboard/Input/Vibrate Controllers/coDriver",
+                  "period": 0.06,
+                  "show_type": false
                 }
               }
             ]
