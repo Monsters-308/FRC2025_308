@@ -35,6 +35,7 @@ import frc.robot.utils.FieldUtils;
 import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.SwerveModule;
 import frc.robot.utils.Utils;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets ;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -245,6 +246,11 @@ public class DriveSubsystem extends SubsystemBase {
             }
         }
 
+        // Reset field relative offset to zero when FMS is connected
+        if (DriverStation.isFMSAttached()) {
+            m_fieldRelativeHeadingOffset = 0;
+        }
+
         // Display variation in pose (in inches)
         SmartDashboard.putNumber("Pose Variation", 
             Units.metersToInches(
@@ -365,9 +371,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * Resets the field relative controls for swerve such that the current heading of the robot is considered forward.
+     * This does nothing when FMS is connected, as on a field, the field relative control directon will always be correct.
      */
     public void resetFieldRelative() {
-        m_fieldRelativeHeadingOffset = getHeading();
+        if (!DriverStation.isFMSAttached()) {
+            m_fieldRelativeHeadingOffset = getHeading();
+        }
     }
 
     /**
