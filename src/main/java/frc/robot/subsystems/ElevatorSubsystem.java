@@ -197,7 +197,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (height == 0) {
             return runOnce(() -> setElevatorHeight(height))
             .andThen(new WaitUntilCommand(() -> m_elevatorPIDController.atGoal() | endImmediately))
-            .andThen(reZeroElevator())
+            .andThen(zeroElevator())
             .withName("Go");
         }
         
@@ -296,10 +296,11 @@ public class ElevatorSubsystem extends SubsystemBase {
      * Creates a {@link Command} Moves the elevator down until it touches the magnetic sensor.
      * @returns The runnable <code>Command</code>
      */
-    public Command reZeroElevator() {
+    public Command zeroElevator() {
         return goToVelocity(-ElevatorConstants.kElevatorManualSpeed)
             .andThen(new WaitUntilCommand(() -> m_bottomSwitch.get()))
-            .finallyDo(() -> stopElevator());
+            .finallyDo(() -> stopElevator())
+            .withTimeout(0.5);
     }
 
     @Override
