@@ -27,10 +27,13 @@ import frc.robot.utils.LoggingUtils;
 public class CoralIntakeSubsystem extends SubsystemBase {
     /** The motor controller for the coral intake motor. */
     private final SparkMax m_coralIntakeMotor = new SparkMax(CoralIntakeConstants.kCoralIntakeMotorCanId, MotorType.kBrushless);
+    /** The senser that detects whether or not coral has left the funnel. */
+    private final DigitalInput m_backSensor = new DigitalInput(CoralIntakeConstants.kBackSensorChannel);
     /** The senser that detects whether or not coral is in the intake. */
     private final DigitalInput m_sensor = new DigitalInput(CoralIntakeConstants.kSensorChannel);
-    private final ShuffleboardTab m_coralIntakeTab = Shuffleboard.getTab("Coral Intake");
 
+    /** The {@link ShuffleboardTab} used for logging coral intake sensors. */
+    private final ShuffleboardTab m_coralIntakeTab = Shuffleboard.getTab("Arm");
 
     /**
      * Constructs a {@link CoralIntakeSubsystem} that controls the coral intake.
@@ -60,7 +63,16 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     }
 
     /**
-     * This returns a true or false if the coral is detected.
+     * Gets whether or not the coral has left the funnel.
+     * @returns The boolean value.
+     */
+    public boolean hasCoralLeftFunnel() {
+        return m_backSensor.get();
+    }
+
+    /**
+     * Gets whether or not the coral is in the intake.
+     * @returns The boolean value.
      */
     public boolean isCoralDetected() {
         return !m_sensor.get();
@@ -93,7 +105,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
      */
     public Command intakeCoral(boolean stopWhenDetected) {
         return runOnce(() -> setCoralSpeed(CoralIntakeConstants.kCoralIntakeSpeed))
-            .andThen(new WaitUntilCommand(() -> isCoralDetected() || !stopWhenDetected))
+            // .andThen(new WaitUntilCommand(CoralIntakeConstants.kdelaySensorTime))
+            .andThen(new WaitUntilCommand(() -> (isCoralDetected() && hasCoralLeftFunnel()) || !stopWhenDetected))
             .finallyDo(() -> {
                 if (!stopWhenDetected) return;
                 setCoralSpeed(0);
