@@ -14,8 +14,8 @@ import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.Utils;
 
-public class RobotGotoFieldPos extends Command {
-    private final DriveSubsystem m_driveSubsystem;
+public class RobotGotoFieldPose extends Command {
+    public final DriveSubsystem m_driveSubsystem;
 
     private final PIDController pidControllerX = new PIDController(
         DrivePIDConstants.kTranslationP, 
@@ -36,15 +36,15 @@ public class RobotGotoFieldPos extends Command {
     );
     private boolean m_complete = false;
 
-    private final Pose2d m_desiredRobotPos;
+    protected Pose2d m_desiredRobotPos;
 
     /** 
      * Uses PID to make the robot go to a certain postion relative to the field.  
      */
-    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPos) {
+    public RobotGotoFieldPose(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPose) {
         m_driveSubsystem = driveSubsystem;
 
-        m_desiredRobotPos = desiredRobotoPos;
+        m_desiredRobotPos = desiredRobotoPose;
 
         pidControllerX.setTolerance(DrivePIDConstants.kTranslationTolerance);
         pidControllerY.setTolerance(DrivePIDConstants.kTranslationTolerance);
@@ -58,7 +58,7 @@ public class RobotGotoFieldPos extends Command {
     /** 
      * Uses PID to make the robot go to a certain postion relative to the field.  
      */
-    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, double xPosition, double yPosition, double angle) {
+    public RobotGotoFieldPose(DriveSubsystem driveSubsystem, double xPosition, double yPosition, double angle) {
         this(driveSubsystem, new Pose2d(xPosition, yPosition, new Rotation2d(angle)));
     }
 

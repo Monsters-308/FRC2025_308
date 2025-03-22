@@ -18,8 +18,7 @@ import frc.robot.utils.Utils;
 /**
  * Uses PID to make the robot go to the nearest auto align position.
  */
-public class AutoAlign extends Command {
-    /** The {@link DriveSubsystem} of the robot. */
+public class AutoAlignOld extends Command {
     private final DriveSubsystem m_driveSubsystem;
 
     /** The {@link PIDController} for the robot's x-coordinate. */
@@ -52,7 +51,7 @@ public class AutoAlign extends Command {
     /** 
      * Creates an {@link AutoAlign} object that uses PID to make the robot go to the nearest auto align position.
      */
-    public AutoAlign(DriveSubsystem driveSubsystem) {
+    public AutoAlignOld(DriveSubsystem driveSubsystem) {
         m_driveSubsystem = driveSubsystem;
 
         pidControllerX.setTolerance(DrivePIDConstants.kTranslationTolerance);
