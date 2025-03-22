@@ -8,7 +8,6 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.AbsoluteEncoder;
-// import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -23,7 +22,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
@@ -132,12 +130,30 @@ public class ArmSubsystem extends SubsystemBase {
     /**
      * Creates a command the moves the arm to the specified angle.
      * @param angle The angle the arm should move to as a {@link Rotation2d}.
+     * @return The runnable command.
+     */
+    public Command goToAngle(Rotation2d angle) {
+        return goToAngle(angle, false);
+    }
+
+    /**
+     * Creates a command the moves the arm to the specified angle.
+     * @param angle The angle the arm should move to as a {@link Rotation2d}.
      * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the angle.
      * @return The runnable command.
      */
     public Command goToAngle(Rotation2d angle, boolean endImmediately) {
         return runOnce(() -> setAngle(angle))
             .andThen(new WaitUntilCommand(() -> m_angleController.atGoal() || endImmediately));
+    }
+
+    /**
+     * Creates a command the moves the arm to the specified angle.
+     * @param index The index of the level the arm should move to.
+     * @return The runnable command.
+     */
+    public Command goToLevel(int index) {
+        return goToLevel(index, false);
     }
 
     /**
@@ -166,16 +182,23 @@ public class ArmSubsystem extends SubsystemBase {
         return Rotation2d.fromRotations(m_armEncoder.getVelocity());
     }
 
-    public void setSpeed(double speed) {
+    /**
+     * Sets the velocity of the arm motor.
+     * @param velocity The velocity to set the motor to from <code>-1</code> to <code>1</code>.
+     */
+    public void setVelocity(double velocity) {
         m_isPIDMode = false;
-        m_speed = speed;
+        m_speed = velocity;
         m_armMotor.set(m_speed);
     }
 
-    public Command runAtSpeed(double speed) {
-        return runOnce(() -> setSpeed(speed))
-            .andThen(run(() -> {}))
-            .finallyDo(() -> m_isPIDMode = true);
+    /**
+     * Creates a {@link Command} that takes the arm motor to the specified velocity.
+     * @param velocity The velocity the <code>Command</code> should take the arm motor to.
+     * @return The runnable <code>Command</code>.
+     */
+    public Command goToVelocity(double velocity) {
+        return runOnce(() -> setVelocity(velocity));
     }
 
     /**
