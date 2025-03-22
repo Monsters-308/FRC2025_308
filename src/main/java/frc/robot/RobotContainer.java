@@ -101,9 +101,9 @@ public class RobotContainer {
             // Turning is controlled by the X axis of the right stick.
             new RunCommand(
                 () -> m_driveSubsystem.drive(
-                    0.3 * -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                    0.3 * -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                    0.3 * -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+                    -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+                    -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+                    -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
                     true, true
                 ), m_driveSubsystem
             )
@@ -201,7 +201,8 @@ public class RobotContainer {
         //     .onTrue(m_algaeIntakeArmSubsystem.armToggle());
 
         InputMappings.event("coDriver", "coralIntake")    
-            .whileTrue(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, m_elevatorSubsystem::getElevatorHeight));
+            // .whileTrue(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, m_elevatorSubsystem::getElevatorHeight));
+            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
 
         InputMappings.event("coDriver", "coralShoot")
             .whileTrue(m_coralIntakeSubsystem.shootCoral());
@@ -237,6 +238,14 @@ public class RobotContainer {
     
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
+
+        // m_coDriverController.povUp()
+        //     .onTrue(m_armSubsystem.goToVelocity(ArmConstants.kArmIntakingSpeed))
+        //     .onFalse(m_armSubsystem.goToVelocity(0));
+
+        // m_coDriverController.povDown()
+        //     .onTrue(m_armSubsystem.goToVelocity(-ArmConstants.kArmIntakingSpeed))
+        //     .onFalse(m_armSubsystem.goToVelocity(0));
     }
 
     /**
