@@ -58,6 +58,9 @@ public class ArmSubsystem extends SubsystemBase {
     /** Whether to use PID or not. */
     private boolean m_isPIDMode = true;
 
+    /** What speed to set the arm to (when not in PID mode) */
+    private double m_armSpeed = 0;
+
     /** A {@link SuffleboardTab} to write arm properties to the dashboard. */
     private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
@@ -182,7 +185,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void setVelocity(double velocity) {
         m_isPIDMode = false;
-        m_armMotor.set(velocity);
+        m_armSpeed = velocity;
     }
 
     /**
@@ -211,6 +214,11 @@ public class ArmSubsystem extends SubsystemBase {
                 -m_angleController.calculate(getAngle().getRotations()) +
                 getAngle().getSin() * ArmConstants.kArmG
                 // m_armFeedforward.calculateWithVelocities(getAngle().getRadians(), getVelocity().getRadians(), velocitySetpoint)
+            );
+        }
+        else {
+            m_armMotor.set(
+                m_armSpeed + getAngle().getSin() * ArmConstants.kArmG
             );
         }
     }
