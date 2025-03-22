@@ -13,8 +13,16 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.PhotonConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.FieldConstants;
 
 /**
@@ -30,17 +38,38 @@ public class VisionSubsystem extends SubsystemBase {
     /** An array of results from the cameras. */
     private final PhotonPipelineResult[] m_results;
 
+    /** An {@link ShuffleboardTab} for PhotonVision. */
+    private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
+
+    private final GenericEntry[] m_tranformationX;
+    private final GenericEntry[] m_tranformationY;
+    private final GenericEntry[] m_tranformationAngle;
+
+    /**
+     * Creates a new {@link VisionSubsystem}.
+     */
     public VisionSubsystem() {
-        m_cameras = new PhotonCamera[PhotonConstants.kCameraNames.length];
+        m_cameras = new PhotonCamera[VisionConstants.kCameraNames.length];
         m_photonPoseEstimators = new PhotonPoseEstimator[m_cameras.length];
+        m_tranformationX = new GenericEntry[m_cameras.length];
+        m_tranformationY = new GenericEntry[m_cameras.length];
+        m_tranformationAngle = new GenericEntry[m_cameras.length];
 
         for (int i = 0; i < m_cameras.length; i++) {
-            m_cameras[i] = new PhotonCamera(PhotonConstants.kCameraNames[i]);
+            m_cameras[i] = new PhotonCamera(VisionConstants.kCameraNames[i]);
             m_photonPoseEstimators[i] = new PhotonPoseEstimator(
                 FieldConstants.kAprilTagFieldLayout,
-                PhotonConstants.kPoseStrategy,
-                PhotonConstants.kRobotToCameraTransformations[i]
+                VisionConstants.kPoseStrategy,
+                VisionConstants.kRobotToCameraTransformations[i]
             );
+
+            ShuffleboardLayout cameraLayout = m_visionTab.getLayout("\"" + VisionConstants.kCameraNames[i] + "\" Transformation", BuiltInLayouts.kList);
+
+            m_tranformationX[i] = cameraLayout.add("X", VisionConstants.kRobotToCameraTransformations[i].getX()).getEntry();
+            m_tranformationY[i] = cameraLayout.add("Y", VisionConstants.kRobotToCameraTransformations[i].getY()).getEntry();
+            m_tranformationAngle[i] = cameraLayout.add("Angle",
+                Units.radiansToDegrees(VisionConstants.kRobotToCameraTransformations[i].getRotation().getZ())
+            ).getEntry();
         }
 
         m_results = new PhotonPipelineResult[m_cameras.length];
@@ -108,6 +137,22 @@ public class VisionSubsystem extends SubsystemBase {
             } else {
                 m_results[i] = null;
             }
+        }
+
+        for (int i = 0; i < m_cameras.length; i++) {
+            Transform3d transform = new Transform3d(
+                m_tranformationX[i].getDouble(VisionConstants.kRobotToCameraTransformations[i].getX()),
+                m_tranformationY[i].getDouble(VisionConstants.kRobotToCameraTransformations[i].getY()),
+                0,
+                new Rotation3d(
+                    0, 0,
+                    Units.degreesToRadians(m_tranformationAngle[i].getDouble(
+                        Units.radiansToDegrees(VisionConstants.kRobotToCameraTransformations[i].getRotation().getZ())
+                    ))
+                )
+            );
+
+            m_photonPoseEstimators[i].setRobotToCameraTransform(transform);
         }
     }
 }
