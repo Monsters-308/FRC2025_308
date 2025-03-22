@@ -422,9 +422,9 @@ public final class Constants {
         public static final int kElevatorMotorCanId = 20;
 
         /** Channel of the elevator bottom limit switch. */
-        public static final int kBottomSwitchChannel = 0;
+        public static final int kBottomSwitchChannel = 1;
         /** Channel of the elevator top limit switch. */
-        public static final int kTopSwitchChannel = 1;
+        public static final int kTopSwitchChannel = 2;
 
         /** Idle mode of the elevator motors. */
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
@@ -433,7 +433,7 @@ public final class Constants {
         public static final int kElevatorCurrentLimit = 60;
 
         /** Whether to invert the left elevator motor. */
-        public static final boolean kElevatorLeftInverted = true;
+        public static final boolean kElevatorMotorInverted = true;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
         public static final double kElevatorReduction = 20;
@@ -441,13 +441,13 @@ public final class Constants {
         public static final double kGearDiameter = 1;
         /** The circumference of the gear/wheel that moves the elevator. */
         public static final double kGearCircumference = kGearDiameter * Math.PI;
-        /** The conversion factor that converts from motor rotations to inches. */
+        /** The conversion factor that converts from motor rotations to inches travelled. */
         public static final double kElevatorEncoderPositionFactor = kGearCircumference / kElevatorReduction;
-        /** The conversion factor that converts from motor rotations per minute to inches per second. */
+        /** The conversion factor that converts from motor rotations per minute to inches travelled per second. */
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The P for the elevator PID. */
-        public static final double kElevatorP = 2.5;
+        public static final double kElevatorP = 1;
         /** The I for the elevator PID. */
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
@@ -456,7 +456,7 @@ public final class Constants {
         /** The S gain for the elevator feedforward. */
         public static final double kElevatorS = 0;
         /** The gravity gain for the elevator feedforward. */
-        public static final double kElevatorG = 0;
+        public static final double kElevatorG = 0.03;
         /** The V gain for the elevator feedforward. */
         public static final double kElevatorV = 0;
         /** The A gain for the elevator feedforward. */
@@ -465,17 +465,23 @@ public final class Constants {
         /** The maximum speed the elevator can move at with full power. */
         public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
 
-        /** The maximum allowed speed the elavtor should move at. */
-        public static final double kElevatorMaxSpeedInchesPerSecond = 10;
+        /** The maximum allowed speed the elevator should move at. */
+        public static final double kElevatorMaxSpeedInchesPerSecond = kElevatorFreeSpeedMetersPerSecond;
 
         /** The maximum allowed acceleration of the elevator. */
         public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 50;
 
-        /** The physical height of the elevator in inches. */
-        public static final double kElevatorMaxHeight = 25.6;
+        /** The manual movement speed of the elevator. */
+        public static final double kElevatorManualSpeed = 0.5;
 
-        /** The heights, in inches, of every elevator level. */
-        public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 25.6 };
+        /** The physical height of the elevator in inches. */
+        public static final double kElevatorMaxHeight = 25;
+
+        /** The maximum height at which the arm should run back while intaking. */
+        public static final double kElevatorMaxArmIntakeHeight = 0.5;
+
+        /** The heights, in inches, of every reef level. */
+        public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 25 };
     }
 
     /**
@@ -581,9 +587,9 @@ public final class Constants {
         public static final double kArmA = 0;
 
         /** The speed to move the arm at while intaking. */
-        public static final double kArmIntakingSpeed = 0.8;
+        public static final double kArmIntakingSpeed = 0.2;
 
-        /** The angles of the arm for each elevator level. */
+        /** The angles of the arm for each reef level. */
         public static final Rotation2d[] kArmLevelAngles = {
             Rotation2d.kZero,
             Rotation2d.fromDegrees(32.4),
@@ -595,16 +601,16 @@ public final class Constants {
     /**
      * Describe how the {@link VisionSubsystem} should interface with PhotonVision.
      */
-    public static final class PhotonConstants {
-        private PhotonConstants() {}
+    public static final class VisionConstants {
+        private VisionConstants() {}
 
         /** The name of the PhotonVision cameras. */
         public static final String[] kCameraNames = { "Jojo Bizar" };
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
         public static final Transform3d[] kRobotToCameraTransformations = {
             new Transform3d(
-                new Translation3d(Units.inchesToMeters(12), Units.inchesToMeters(11), 0),
-                new Rotation3d(0, 0, Units.degreesToRadians(15))
+                new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), 0),
+                new Rotation3d(0, 0, Units.degreesToRadians(0))
             )
         };
 
