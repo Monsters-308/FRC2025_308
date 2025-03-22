@@ -4,7 +4,11 @@
 
 package frc.robot.commands.coral;
 
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 
@@ -12,13 +16,18 @@ import frc.robot.subsystems.CoralIntakeSubsystem;
  * Intakes coral using the coral intake and finishes when coral is detected.
  * Runs back the arm to prevent movement while intaking.
  */
-public class IntakeCoral extends ParallelDeadlineGroup {
+public class IntakeCoral extends ParallelCommandGroup {
     /**
      * Creates a new {@link IntakeCoral}.
      * @param armSubsystem The {@link ArmSubsystem} of the robot.
      * @param coralIntakeSubsystem The {@link CoralIntakeSubsystem} of the robot.
+     * @param elevatorHeightSupplier Returns the current height of the elevator.
      */
-    public IntakeCoral(ArmSubsystem armSubsystem, CoralIntakeSubsystem coralIntakeSubsystem) {
-        super(coralIntakeSubsystem.intakeCoral(true));
+    public IntakeCoral(ArmSubsystem armSubsystem, CoralIntakeSubsystem coralIntakeSubsystem, DoubleSupplier elevatorHeightSupplier) {
+        super(
+            coralIntakeSubsystem.intakeCoral(true),
+            armSubsystem.goToVelocity(-ArmConstants.kArmIntakingSpeed)
+                .onlyWhile(() -> elevatorHeightSupplier.getAsDouble() < ElevatorConstants.kElevatorMaxArmIntakeHeight)
+        );
     }
 }
