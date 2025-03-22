@@ -14,15 +14,15 @@ public class AutoAilgn extends RobotGotoFieldPose {
     @Override
     public void initialize() {
         Pose2d robotPose = m_driveSubsystem.getPose();
-        Double smallestDst = null;
+        Double smallestDistance = null;
 
         boolean flipPose = robotPose.getX() > FieldConstants.kFieldWidthMeters / 2;
 
         for (Pose2d pose : FieldConstants.kAutoAlignPositions) {
             pose = flipPose ? FieldUtils.flip(pose) : pose;
             double dst = Utils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
-            if (smallestDst == null || dst < smallestDst) {
-                smallestDst = dst;
+            if (smallestDistance == null || dst < smallestDistance) {
+                smallestDistance = dst;
                 m_desiredRobotPos = pose;
             }
         }
