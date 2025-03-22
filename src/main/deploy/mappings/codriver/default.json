@@ -17,6 +17,7 @@
         },
         "armUp": "povLeft",
         "armDown": "povRight",
+        "armDunk": "leftBumper",
         "elevatorUp": "povUp",
         "elevatorDown": "povDown",
         "toggleAlgaeIntakeArm": "",
