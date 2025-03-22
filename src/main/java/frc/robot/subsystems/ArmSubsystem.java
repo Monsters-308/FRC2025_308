@@ -17,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 // import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -62,9 +61,6 @@ public class ArmSubsystem extends SubsystemBase {
     /** A {@link SuffleboardTab} to write arm properties to the dashboard. */
     private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
-    private final GenericEntry m_gravityEntry;
-
-    private double m_speed = 0;
 
     /**
      * Constructs an {@link ArmSubsystem} that controls the coral arm of the robot.
@@ -95,8 +91,6 @@ public class ArmSubsystem extends SubsystemBase {
             Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().position), 2));
         m_armTab.addDouble("Arm Velocity Goal", () -> 
             Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().velocity), 2));
-
-        m_gravityEntry = m_armTab.addPersistent("Gravity Offset", ArmConstants.kArmG).getEntry();
 
         LoggingUtils.logSparkMax(m_armMotor);
 
@@ -188,8 +182,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void setVelocity(double velocity) {
         m_isPIDMode = false;
-        m_speed = velocity;
-        m_armMotor.set(m_speed);
+        m_armMotor.set(velocity);
     }
 
     /**
@@ -216,7 +209,7 @@ public class ArmSubsystem extends SubsystemBase {
 
             m_armMotor.set(
                 -m_angleController.calculate(getAngle().getRotations()) +
-                getAngle().getSin() * m_gravityEntry.getDouble(ArmConstants.kArmG)
+                getAngle().getSin() * ArmConstants.kArmG
                 // m_armFeedforward.calculateWithVelocities(getAngle().getRadians(), getVelocity().getRadians(), velocitySetpoint)
             );
         }
