@@ -25,8 +25,6 @@ import frc.robot.commands.drive.RobotGotoAngle;
 // import frc.robot.commands.drive.AutoAlign;
 // import frc.robot.commands.drive.RobotOrbitPoint;
 import frc.robot.commands.drive.TurningMotorsTest;
-// import frc.robot.subsystems.AlgaeIntakeArmSubsystem;
-// import frc.robot.subsystems.AlgaeIntakeRollerSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -55,11 +53,7 @@ public class RobotContainer {
     private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
     /** The {@link ArmSubsystem} of the robot. */
     private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
-    // /** The {@link AlgaeIntakeRollerSubsystem} of the robot. */
-    // private final AlgaeIntakeRollerSubsystem m_algaeIntakeRollerSubsystem = new AlgaeIntakeRollerSubsystem();
-    // /** The {@link AlgaeIntakeArmSubsystem} of the robot. */
-    // private final AlgaeIntakeArmSubsystem m_algaeIntakeArmSubsystem = new AlgaeIntakeArmSubsystem();
-    // /** The {@link CoralIntakeSubsystem} of the robot. */
+    /** The {@link CoralIntakeSubsystem} of the robot. */
     private final CoralIntakeSubsystem m_coralIntakeSubsystem = new CoralIntakeSubsystem();
 
     // Controllers
@@ -193,13 +187,6 @@ public class RobotContainer {
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
-        // InputMappings.event("coDriver", "algaeIntake")
-        //     .onTrue(m_algaeIntakeRollerSubsystem.intakeAlgae());
-        // InputMappings.event("coDriver", "algaeShoot")
-        //     .onTrue(m_algaeIntakeRollerSubsystem.shootAlgae());
-        // InputMappings.event("coDriver", "toggleAlgaeIntakeArm")
-        //     .onTrue(m_algaeIntakeArmSubsystem.armToggle());
-
         InputMappings.event("coDriver", "coralIntake")    
             // .whileTrue(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, m_elevatorSubsystem::getElevatorHeight));
             .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
@@ -252,10 +239,6 @@ public class RobotContainer {
      * Configures the {@link NamedCommands} for PathPlanner.
      */
     private void configureNamedCommands() {
-        // NamedCommands.registerCommand("algaeIntake", m_algaeIntakeRollerSubsystem.intakeAlgae().withTimeout(2));
-        // NamedCommands.registerCommand("algaeShoot", m_algaeIntakeRollerSubsystem.shootAlgae().withTimeout(2));
-        // NamedCommands.registerCommand("algaeIntakeArmIn", m_algaeIntakeArmSubsystem.armIn());
-        // NamedCommands.registerCommand("algaeIntakeArmOut", m_algaeIntakeArmSubsystem.armOut());
 
         NamedCommands.registerCommand("Intake Coral", 
             new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0)
