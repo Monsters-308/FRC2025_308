@@ -26,7 +26,7 @@ public class IntakeCoral extends ParallelCommandGroup {
     public IntakeCoral(ArmSubsystem armSubsystem, CoralIntakeSubsystem coralIntakeSubsystem, DoubleSupplier elevatorHeightSupplier) {
         super(
             coralIntakeSubsystem.intakeCoral(true),
-            armSubsystem.goToVelocity(-ArmConstants.kArmIntakingSpeed)
+            armSubsystem.goToVelocity(ArmConstants.kArmIntakingSpeed)
                 .onlyWhile(() -> elevatorHeightSupplier.getAsDouble() < ElevatorConstants.kElevatorMaxArmIntakeHeight)
         );
     }

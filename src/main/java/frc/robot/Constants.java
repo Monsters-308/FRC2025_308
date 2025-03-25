@@ -422,9 +422,9 @@ public final class Constants {
         public static final int kElevatorMotorCanId = 20;
 
         /** Channel of the elevator bottom limit switch. */
-        public static final int kBottomSwitchChannel = 1;
+        public static final int kBottomSwitchChannel = 2;
         /** Channel of the elevator top limit switch. */
-        public static final int kTopSwitchChannel = 2;
+        public static final int kTopSwitchChannel = 1;
 
         /** Idle mode of the elevator motors. */
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
@@ -447,7 +447,7 @@ public final class Constants {
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The P for the elevator PID. */
-        public static final double kElevatorP = 1;
+        public static final double kElevatorP = 1.3;
         /** The I for the elevator PID. */
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
@@ -537,8 +537,12 @@ public final class Constants {
         /** The speed the coral intake should be run at when intaking or shooting. */
         public static final double kCoralIntakeSpeed = 0.5;
 
-        /**The channel for the digital input */
+        /** The channel for the back coral sensor. */
+        public static final int kBackSensorChannel = 3;
+        /** The channel for the coral sensor. */
         public static final int kSensorChannel = 0;
+
+        public static final double kdelaySensorTime = 0.001;
     }
 
     /**
@@ -580,14 +584,14 @@ public final class Constants {
         /** The S gain for the arm feedforward. */
         public static final double kArmS = 0;
         /** The gravity gain for the arm feedforward. */
-        public static final double kArmG = 0.06;
+        public static final double kArmG = 0.1;
         /** The V gain for the arm feedforward. */
         public static final double kArmV = 0;
         /** The A gain for the arm feedforward. */
         public static final double kArmA = 0;
 
         /** The speed to move the arm at while intaking. */
-        public static final double kArmIntakingSpeed = 0.2;
+        public static final double kArmIntakingSpeed = 0.1;
 
         /** The angles of the arm for each reef level. */
         public static final Rotation2d[] kArmLevelAngles = {
@@ -605,13 +609,14 @@ public final class Constants {
         private VisionConstants() {}
 
         /** The name of the PhotonVision cameras. */
-        public static final String[] kCameraNames = { "Jojo Bizar" };
+        public static final String[] kCameraNames = { "Jojo Bizar", "Stevenson" };
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
         public static final Transform3d[] kRobotToCameraTransformations = {
             new Transform3d(
                 new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), 0),
                 new Rotation3d(0, 0, Units.degreesToRadians(0))
-            )
+            ),
+            Transform3d.kZero
         };
 
         /** How PhotonVision should use april tag data to determine position. */
