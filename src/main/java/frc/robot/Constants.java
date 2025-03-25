@@ -422,9 +422,9 @@ public final class Constants {
         public static final int kElevatorMotorCanId = 20;
 
         /** Channel of the elevator bottom limit switch. */
-        public static final int kBottomSwitchChannel = 2;
-        /** Channel of the elevator top limit switch. */
-        public static final int kTopSwitchChannel = 1;
+        public static final int kBottomSwitchChannel = 1;
+        /** Channel of the elevator backup bottom limit switch. */
+        public static final int kBackupBottomSwitchChannel = 2;
 
         /** Idle mode of the elevator motors. */
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;

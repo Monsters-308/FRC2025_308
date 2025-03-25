@@ -63,11 +63,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     //     ElevatorConstants.kElevatorA
     // );
 
-    /** A limit switch that trigger when the elevator reaches the bottom. */
+    /** A limit switch that triggers when the elevator reaches the bottom. */
     private final DigitalInput m_bottomSwitch = new DigitalInput(ElevatorConstants.kBottomSwitchChannel);
 
-    /** A limit switch that trigger when the elevator reaches the top. */
-    private final DigitalInput m_topSwitch = new DigitalInput(ElevatorConstants.kTopSwitchChannel);
+    /** A backup limit switch that triggers when the elevator reaches the bottom. */
+    private final DigitalInput m_backupBottomSwitch = new DigitalInput(ElevatorConstants.kBackupBottomSwitchChannel);
 
     /** A {@link ShuffleboardTab} to write elevator properties to the dashboard. */
     private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
@@ -127,8 +127,8 @@ public class ElevatorSubsystem extends SubsystemBase {
             }
         );
 
-        m_elevatorTab.addBoolean("Bottom Limit Switch", () -> m_bottomSwitch.get());
-        m_elevatorTab.addBoolean("Top Limit Switch", () -> m_topSwitch.get());
+        m_elevatorTab.addBoolean("Bottom Limit Switch", () -> isAtBottom());
+        m_elevatorTab.addBoolean("Top Limit Switch", () -> m_backupBottomSwitch.get());
     }
 
     /**
@@ -234,7 +234,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         velocity += ElevatorConstants.kElevatorG;
 
-        if (m_bottomSwitch.get()) {
+        if (isAtBottom()) {
             // Prevent the elevator from going down when it reaches the bottom
             // by preventing the speed from being negative
             velocity = Math.max(0, velocity);
@@ -298,9 +298,17 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public Command zeroElevator() {
         return goToVelocity(-ElevatorConstants.kElevatorManualSpeed)
-            .andThen(new WaitUntilCommand(() -> m_bottomSwitch.get()))
+            .andThen(new WaitUntilCommand(() -> isAtBottom()))
             .finallyDo(() -> stopElevator())
             .withTimeout(0.5);
+    }
+
+    /**
+     * Gets whether or not the elevator is at its lowest point.
+     * @return The boolean value.
+     */
+    public boolean isAtBottom() {
+        return m_bottomSwitch.get() || m_backupBottomSwitch.get();
     }
 
     @Override
@@ -316,7 +324,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             );
         }
 
-        if (m_bottomSwitch.get()) {
+        if (isAtBottom()) {
             // Prevent the elevator from going down when it reaches the bottom
             // by preventing the speed from being negative
             m_elevatorMotor.set(Math.max(0, m_elevatorMotor.get()));
