@@ -13,24 +13,23 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DrivePIDConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class RobotGotoAngle extends Command {
 
-    private final DriveSubsystem m_driveSubsystem;
+    protected final DriveSubsystem m_driveSubsystem;
 
-    private final PIDController pidController = new PIDController (  
+    protected final PIDController angleController = new PIDController (  
         DrivePIDConstants.kRotationP, 
         DrivePIDConstants.kRotationI, 
         DrivePIDConstants.kRotationD);
 
-    private boolean m_complete = false;
+    protected boolean m_complete = false;
 
-    private final double m_desiredAngle;
+    protected final double m_desiredAngle;
 
-    private final DoubleSupplier m_xSpeed;
-    private final DoubleSupplier m_ySpeed;
+    protected final DoubleSupplier m_xSpeed;
+    protected final DoubleSupplier m_ySpeed;
 
     /**
      * Uses PID to make the robot face a certain direction while still giving the driver control over the translation of the robot.
@@ -49,7 +48,7 @@ public class RobotGotoAngle extends Command {
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
 
-        pidController.enableContinuousInput(-Math.PI, Math.PI);
+        angleController.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(m_driveSubsystem);
     }
@@ -65,8 +64,8 @@ public class RobotGotoAngle extends Command {
     public void initialize() {
         m_complete = false;
 
-        pidController.reset();
-        pidController.setSetpoint(m_desiredAngle);
+        angleController.reset();
+        angleController.setSetpoint(m_desiredAngle);
     }
 
     /*
@@ -77,19 +76,17 @@ public class RobotGotoAngle extends Command {
     // When not overridden, this function is blank.
     @Override
     public void execute() {
-
-        double rotation = pidController.calculate(Units.degreesToRadians(m_driveSubsystem.getHeading()));
-
+        double rotation = angleController.calculate(Units.degreesToRadians(m_driveSubsystem.getHeading()));
         rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
 
         m_driveSubsystem.drive(
-            -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
-            -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kJoystickDeadband),
+            m_xSpeed.getAsDouble(),
+            m_ySpeed.getAsDouble(),
             rotation,
             true, true
         );
         
-        if(pidController.atSetpoint()){
+        if(angleController.atSetpoint()){
             m_complete = true;
         }
     }
