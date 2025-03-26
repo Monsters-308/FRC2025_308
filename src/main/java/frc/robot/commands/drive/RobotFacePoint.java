@@ -81,7 +81,7 @@ public class RobotFacePoint extends Command {
         
         double robotHeading = m_driveSubsystem.getHeading();
 
-        double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
+        double rotation = angleController.calculate(Units.degreesToRadians(robotHeading)); //speed needed to rotate robot to set point
         
         m_driveSubsystem.drive(
             m_xSpeed.getAsDouble(),
