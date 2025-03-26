@@ -6,11 +6,11 @@ package frc.robot.commands.drive;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -21,10 +21,14 @@ public class RobotFacePoint extends Command {
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final DriveSubsystem m_driveSubsystem;
      
-    protected final PIDController angleController = new PIDController(
+    protected final ProfiledPIDController angleController = new ProfiledPIDController(
         DrivePIDConstants.kRotationP, 
         DrivePIDConstants.kRotationI, 
-        DrivePIDConstants.kRotationD
+        DrivePIDConstants.kRotationD,
+        new Constraints(
+            DrivePIDConstants.kRotationMaxSpeed,
+            DrivePIDConstants.kRotationMaxAcceleration
+        )
     );
     
     //If you want to control whether or not the command has ended, you should store it in some sort of variable:
@@ -60,7 +64,7 @@ public class RobotFacePoint extends Command {
     //When not overridden, this function is blank.
     @Override
     public void initialize() {
-        angleController.reset();
+        angleController.reset(Units.degreesToRadians(m_driveSubsystem.getHeading()));
         m_complete = false;
     }
 
@@ -69,18 +73,15 @@ public class RobotFacePoint extends Command {
      */
     @Override
     public void execute() {
-        Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = m_point; // 2D point on field
-        Rotation2d angleToTarget = Utils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
+        Translation2d currentPose = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
+        Rotation2d angleToTarget = Utils.anglePoseToPose(currentPose, m_point); // Angle to make robot face point
 
         // Set pid controller to angle to make robot face point
-        angleController.setSetpoint(angleToTarget.getDegrees());
+        angleController.setGoal(angleToTarget.getRadians());
         
-        double robotHeading = m_driveSubsystem.getHeading(); //navx
+        double robotHeading = m_driveSubsystem.getHeading();
 
         double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
-
-        rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput); // clamp value (speed limiter)
         
         m_driveSubsystem.drive(
             m_xSpeed.getAsDouble(),
@@ -89,9 +90,7 @@ public class RobotFacePoint extends Command {
             true, true
         );
 
-        if (angleController.atSetpoint()) {
-            m_complete = true;
-        }
+        m_complete = angleController.atGoal();
     }
 
     @Override

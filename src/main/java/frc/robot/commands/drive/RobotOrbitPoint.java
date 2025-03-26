@@ -6,11 +6,8 @@ package frc.robot.commands.drive;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
-import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.Utils;
 
@@ -28,23 +25,23 @@ public class RobotOrbitPoint extends RobotFacePoint {
      */
     @Override
     public void execute() {
-        Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = m_point; // 2D point on field
-        Rotation2d angleToTarget = Utils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
+        Translation2d currentPose = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
+        Rotation2d angleToTarget = Utils.anglePoseToPose(currentPose, m_point); // Angle to make robot face point
 
         // Set pid controller to angle to make robot face point
-        angleController.setSetpoint(angleToTarget.getRadians());
+        angleController.setGoal(angleToTarget.getRadians());
         
-        double robotHeading = Units.degreesToRadians(m_driveSubsystem.getHeading());
-        double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
+        double robotHeading = m_driveSubsystem.getHeading();
 
-        rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput); // clamp value (speed limiter)
+        double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
         
         m_driveSubsystem.drive(
             m_xSpeed.getAsDouble(),
             m_ySpeed.getAsDouble(),
             rotation,
             false, true
-        );   
+        );
+
+        m_complete = angleController.atGoal();
     }
 }
