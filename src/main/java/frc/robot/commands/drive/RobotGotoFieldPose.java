@@ -6,51 +6,64 @@ package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.Utils;
 
 public class RobotGotoFieldPose extends Command {
-    public final DriveSubsystem m_driveSubsystem;
+    protected final DriveSubsystem m_driveSubsystem;
 
-    private final PIDController pidControllerX = new PIDController(
+    protected final ProfiledPIDController controllerX = new ProfiledPIDController(  
         DrivePIDConstants.kTranslationP, 
         DrivePIDConstants.kTranslationI, 
-        DrivePIDConstants.kTranslationD
+        DrivePIDConstants.kTranslationD, 
+        new Constraints(
+            DrivePIDConstants.kTranslationMaxSpeed,
+            DrivePIDConstants.kTranslationMaxAcceleration
+        )
     );
 
-    private final PIDController pidControllerY = new PIDController(
+    protected final ProfiledPIDController controllerY = new ProfiledPIDController(  
         DrivePIDConstants.kTranslationP, 
         DrivePIDConstants.kTranslationI, 
-        DrivePIDConstants.kTranslationD
+        DrivePIDConstants.kTranslationD, 
+        new Constraints(
+            DrivePIDConstants.kTranslationMaxSpeed,
+            DrivePIDConstants.kTranslationMaxAcceleration
+        )
     );
 
-    private final PIDController pidControllerAngle = new PIDController(
+    protected final ProfiledPIDController angleController = new ProfiledPIDController(  
         DrivePIDConstants.kRotationP, 
         DrivePIDConstants.kRotationI, 
-        DrivePIDConstants.kRotationD
+        DrivePIDConstants.kRotationD, 
+        new Constraints(
+            DrivePIDConstants.kRotationMaxSpeed,
+            DrivePIDConstants.kRotationMaxAcceleration
+        )
     );
-    private boolean m_complete = false;
 
-    protected Pose2d m_desiredRobotPos;
+    protected boolean m_complete = false;
+
+    protected Pose2d m_desiredRobotPose;
 
     /** 
      * Uses PID to make the robot go to a certain postion relative to the field.  
      */
-    public RobotGotoFieldPose(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPose) {
+    public RobotGotoFieldPose(DriveSubsystem driveSubsystem, Pose2d desiredRobotPose) {
         m_driveSubsystem = driveSubsystem;
 
-        m_desiredRobotPos = desiredRobotoPose;
+        m_desiredRobotPose = desiredRobotPose;
 
-        pidControllerX.setTolerance(DrivePIDConstants.kTranslationTolerance);
-        pidControllerY.setTolerance(DrivePIDConstants.kTranslationTolerance);
-        pidControllerAngle.setTolerance(DrivePIDConstants.kRotationTolerance);
+        controllerX.setTolerance(DrivePIDConstants.kTranslationTolerance);
+        controllerY.setTolerance(DrivePIDConstants.kTranslationTolerance);
+        angleController.setTolerance(DrivePIDConstants.kRotationTolerance);
 
-        pidControllerAngle.enableContinuousInput(-Math.PI, Math.PI);
+        angleController.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(m_driveSubsystem);
     }
@@ -62,43 +75,30 @@ public class RobotGotoFieldPose extends Command {
         this(driveSubsystem, new Pose2d(xPosition, yPosition, new Rotation2d(angle)));
     }
 
-    /*
-     * This function is called once when the command is schedueled.
-     * If you are overriding "isFinished()", you should probably use this to set
-     * m_complete to false so the command doesn't
-     * instantly end.
-     */
     // When not overridden, this function is blank.
     @Override
     public void initialize() {
         m_complete = false;
 
-        pidControllerX.reset();
-        pidControllerY.reset();
-        pidControllerAngle.reset();
+        Pose2d currentPose = m_driveSubsystem.getPose();
 
-        pidControllerX.setSetpoint(m_desiredRobotPos.getX());
-        pidControllerY.setSetpoint(m_desiredRobotPos.getY());
-        pidControllerAngle.setSetpoint(Utils.angleConstrain(m_desiredRobotPos.getRotation().getDegrees()));
+        controllerX.reset(currentPose.getX());
+        controllerY.reset(currentPose.getY());
+        angleController.reset(currentPose.getRotation().getRadians());
+
+        controllerX.setGoal(m_desiredRobotPose.getX());
+        controllerY.setGoal(m_desiredRobotPose.getY());
+        angleController.setGoal(Utils.angleConstrain(m_desiredRobotPose.getRotation().getDegrees()));
     }
 
-    /*
-     * This function is called repeatedly when the schedueler's "run()" function is
-     * called.
-     * Once you want the function to end, you should set m_complete to true.
-     */
     // When not overridden, this function is blank.
     @Override
     public void execute() {
         Pose2d currentPos = m_driveSubsystem.getPose();
 
-        double xSpeed = pidControllerX.calculate(currentPos.getTranslation().getX());
-        double ySpeed = pidControllerY.calculate(currentPos.getTranslation().getY());
-        double angleSpeed = pidControllerAngle.calculate(m_driveSubsystem.getHeading());
-
-        xSpeed = MathUtil.clamp(xSpeed, -DrivePIDConstants.kTranslationMaxOutput, DrivePIDConstants.kTranslationMaxOutput);
-        ySpeed = MathUtil.clamp(ySpeed, -DrivePIDConstants.kTranslationMaxOutput, DrivePIDConstants.kTranslationMaxOutput);
-        angleSpeed = MathUtil.clamp(angleSpeed, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
+        double xSpeed = controllerX.calculate(currentPos.getTranslation().getX());
+        double ySpeed = controllerY.calculate(currentPos.getTranslation().getY());
+        double angleSpeed = angleController.calculate(m_driveSubsystem.getHeading());
 
 
         m_driveSubsystem.drive(
@@ -108,33 +108,15 @@ public class RobotGotoFieldPose extends Command {
             true, false
         );
         
-        if(pidControllerX.atSetpoint() && pidControllerY.atSetpoint() && pidControllerAngle.atSetpoint()){
-            m_complete = true;
-        }
+        m_complete = controllerX.atGoal() && controllerY.atGoal() && angleController.atGoal();
     }
 
-    /*
-     * This function is called once when the command ends.
-     * A command ends either when you tell it to end with the "isFinished()"
-     * function below, or when it is interupted.
-     * Whether a command is interrupted or not is determined by
-     * "boolean interrupted."
-     * Things initialized in "initialize()" should be closed here.
-     */
     // When not overridden, this function is blank.
     @Override
     public void end(boolean interrupted) {
         m_driveSubsystem.drive(0, 0, 0, false, false);
     }
 
-    /*
-     * This fuction is used to tell the robot when the command has ended.
-     * This function is called after each time the "execute()" function is ran.
-     * Once this function returns true, "end(boolean interrupted)" is ran and the
-     * command ends.
-     * It is recommended that you don't use this for commands that should run
-     * continuously, such as drive commands.
-     */
     // When not overridden, this function returns false.
     @Override
     public boolean isFinished() {
