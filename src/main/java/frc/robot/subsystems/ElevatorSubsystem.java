@@ -96,6 +96,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
             .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
+        leaderMotorConfig.limitSwitch.forwardLimitSwitchEnabled(false);
+        leaderMotorConfig.limitSwitch.reverseLimitSwitchEnabled(false);
+
         m_elevatorMotor.configure(leaderMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         LoggingUtils.logSparkMax(m_elevatorMotor);
 
