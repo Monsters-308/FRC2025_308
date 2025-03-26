@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -19,10 +19,15 @@ public class RobotGotoAngle extends Command {
 
     protected final DriveSubsystem m_driveSubsystem;
 
-    protected final PIDController angleController = new PIDController (  
+    protected final ProfiledPIDController angleController = new ProfiledPIDController(  
         DrivePIDConstants.kRotationP, 
         DrivePIDConstants.kRotationI, 
-        DrivePIDConstants.kRotationD);
+        DrivePIDConstants.kRotationD, 
+        new Constraints(
+            DrivePIDConstants.kRotationMaxSpeed,
+            DrivePIDConstants.kRotationMaxAcceleration
+        )
+    );
 
     protected boolean m_complete = false;
 
@@ -43,12 +48,13 @@ public class RobotGotoAngle extends Command {
     public RobotGotoAngle(DriveSubsystem driveSubsystem, Rotation2d angle, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier driverRotation) {
         m_driveSubsystem = driveSubsystem;
 
-        m_desiredAngle = angle.getDegrees();
+        m_desiredAngle = angle.getRadians();
 
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
 
         angleController.enableContinuousInput(-Math.PI, Math.PI);
+        angleController.setTolerance(DrivePIDConstants.kRotationTolerance);
 
         addRequirements(m_driveSubsystem);
     }
@@ -64,8 +70,8 @@ public class RobotGotoAngle extends Command {
     public void initialize() {
         m_complete = false;
 
-        angleController.reset();
-        angleController.setSetpoint(m_desiredAngle);
+        angleController.reset(Units.degreesToRadians(m_driveSubsystem.getHeading()));
+        angleController.setGoal(m_desiredAngle);
     }
 
     /*
@@ -77,7 +83,7 @@ public class RobotGotoAngle extends Command {
     @Override
     public void execute() {
         double rotation = angleController.calculate(Units.degreesToRadians(m_driveSubsystem.getHeading()));
-        rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
+        // rotation = MathUtil.clamp(rotation, -DrivePIDConstants.kRotationMaxOutput, DrivePIDConstants.kRotationMaxOutput);
 
         m_driveSubsystem.drive(
             m_xSpeed.getAsDouble(),
@@ -86,7 +92,7 @@ public class RobotGotoAngle extends Command {
             true, true
         );
         
-        if(angleController.atSetpoint()){
+        if (angleController.atGoal()){
             m_complete = true;
         }
     }
