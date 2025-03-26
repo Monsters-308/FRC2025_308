@@ -69,6 +69,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** A backup limit switch that triggers when the elevator reaches the bottom. */
     private final DigitalInput m_backupBottomSwitch = new DigitalInput(ElevatorConstants.kBackupBottomSwitchChannel);
 
+    private final DigitalInput m_topSwitch = new DigitalInput(ElevatorConstants.kTopSwitchChannel);
+
     /** A {@link ShuffleboardTab} to write elevator properties to the dashboard. */
     private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
     /** A {@link ShuffleboardLayout} that holds the go to level command. */
@@ -127,8 +129,8 @@ public class ElevatorSubsystem extends SubsystemBase {
             }
         );
 
-        m_elevatorTab.addBoolean("Bottom Limit Switch", () -> isAtBottom());
-        m_elevatorTab.addBoolean("Top Limit Switch", () -> m_backupBottomSwitch.get());
+        m_elevatorTab.addBoolean("Is At Bottom", () -> isAtBottom());
+        m_elevatorTab.addBoolean("Is At Top", () -> m_topSwitch.get());
     }
 
     /**
