@@ -105,7 +105,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     /** Offset for the heading used for determining field relative controls.
      * Allows for reseting the controls when the controls are disoriented. */
-    private double m_fieldRelativeHeadingOffset = 0;
+    // private double m_fieldRelativeHeadingOffset = 0;
 
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -248,7 +248,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Reset field relative offset to zero when FMS is connected
         if (DriverStation.isFMSAttached()) {
-            m_fieldRelativeHeadingOffset = 0;
+            // m_fieldRelativeHeadingOffset = 0;
         }
 
         // Display variation in pose (in inches)
@@ -303,7 +303,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Get the target chassis speeds relative to the robot
         final ChassisSpeeds targetVel = (fieldRelative ?
-            ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getHeading() - m_fieldRelativeHeadingOffset))
+            ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getHeading()))
                 : new ChassisSpeeds(xSpeed, ySpeed, rot)
         );
 
@@ -374,9 +374,7 @@ public class DriveSubsystem extends SubsystemBase {
      * This does nothing when FMS is connected, as on a field, the field relative control directon will always be correct.
      */
     public void resetFieldRelative() {
-        if (!DriverStation.isFMSAttached()) {
-            m_fieldRelativeHeadingOffset = getHeading();
-        }
+        setHeading(0);
     }
 
     /**
