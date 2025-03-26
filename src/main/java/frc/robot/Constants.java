@@ -268,15 +268,19 @@ public final class Constants {
         // This is used for making the robot face a certain direction
 
         /** The P for the PID making the robot rotate to certain angles. */
-        public static final double kRotationP = 5;
+        public static final double kRotationP = 2;
         /** The I for the PID making the robot rotate to certain angles. */
         public static final double kRotationI = 0;
         /** The D for the PID making the robot rotate to certain angles. */
         public static final double kRotationD = 0;
         /** The maximum output of the PID making the robot rotate to certain angles. */
         public static final double kRotationMaxOutput = 0.8; // Percent
+        /** The maximum speed ogf the PID controller in radians per second. */
+        public static final double kRotationMaxSpeed = Units.degreesToRadians(540);
+        /** The maximum acceleration ogf the PID controller in radians per second squared. */
+        public static final double kRotationMaxAcceleration = Units.degreesToRadians(450);
         /** The acceptable error in angle to the desired angle. */
-        public static final double kRotationTolerance = Units.degreesToRadians(1); // Radians
+        public static final double kRotationTolerance = Units.degreesToRadians(0.5); // Radians
 
         /** The P for the PID making the robot move to certain positions. */
         public static final double kTranslationP = 5;
@@ -456,7 +460,7 @@ public final class Constants {
         /** The S gain for the elevator feedforward. */
         public static final double kElevatorS = 0;
         /** The gravity gain for the elevator feedforward. */
-        public static final double kElevatorG = 0.03;
+        public static final double kElevatorG = 0.02;
         /** The V gain for the elevator feedforward. */
         public static final double kElevatorV = 0;
         /** The A gain for the elevator feedforward. */
@@ -481,7 +485,7 @@ public final class Constants {
         public static final double kElevatorMaxArmIntakeHeight = 0.5;
 
         /** The heights, in inches, of every reef level. */
-        public static final double[] kElevatorLevelHeights = { 0, 8, 15.08, 25 };
+        public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 25 };
     }
 
     /**
@@ -575,7 +579,7 @@ public final class Constants {
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
-        public static final double kArmP = 1;
+        public static final double kArmP = 2.5;
         /** The I for the arm PID controller. */
         public static final double kArmI = 0;
         /** The D for the arm PID controller. */
@@ -584,7 +588,7 @@ public final class Constants {
         /** The S gain for the arm feedforward. */
         public static final double kArmS = 0;
         /** The gravity gain for the arm feedforward. */
-        public static final double kArmG = 0.1;
+        public static final double kArmG = 0.02;
         /** The V gain for the arm feedforward. */
         public static final double kArmV = 0;
         /** The A gain for the arm feedforward. */
