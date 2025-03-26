@@ -42,7 +42,5 @@ public class RobotOrbitPoint extends RobotFacePoint {
             rotation,
             false, true
         );
-
-        m_complete = angleController.atGoal();
     }
 }
