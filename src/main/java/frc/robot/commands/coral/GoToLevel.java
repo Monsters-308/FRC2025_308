@@ -21,15 +21,10 @@ public class GoToLevel extends SequentialCommandGroup {
      * @param index The index of the level to move the elevator and arm to.
      */
     public GoToLevel(ArmSubsystem armSubsystem, ElevatorSubsystem elevatorSubsystem, int index) {
-        if (index == 0) {
-            addCommands(elevatorSubsystem.goToLevel(index), armSubsystem.goToLevel(index));
-        } else {
-            addCommands(
-                armSubsystem.goToLevel(index, true), 
-                new WaitUntilCommand(() -> armSubsystem.getAngle().getDegrees() > 15),
-                elevatorSubsystem.goToLevel(index)
-            );
-        }
-
+        addCommands(
+            armSubsystem.goToLevel(index, true), 
+            new WaitUntilCommand(() -> armSubsystem.getAngle().getDegrees() > 15),
+            elevatorSubsystem.goToLevel(index)
+        );
     }
 }
