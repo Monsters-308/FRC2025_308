@@ -21,18 +21,18 @@ public class RobotFacePoint extends Command {
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final DriveSubsystem m_driveSubsystem;
      
-    private final PIDController angleController = new PIDController(
+    protected final PIDController angleController = new PIDController(
         DrivePIDConstants.kRotationP, 
         DrivePIDConstants.kRotationI, 
         DrivePIDConstants.kRotationD
     );
     
     //If you want to control whether or not the command has ended, you should store it in some sort of variable:
-    private boolean m_complete = false;
-    private final DoubleSupplier m_xSpeed;
-    private final DoubleSupplier m_ySpeed;
+    protected boolean m_complete = false;
+    protected final DoubleSupplier m_xSpeed;
+    protected final DoubleSupplier m_ySpeed;
 
-    private final Translation2d m_point;
+    protected final Translation2d m_point;
 
     /**
      * This command rotates the robot in space using the pose estimation compared to a given point on the field.
@@ -69,7 +69,6 @@ public class RobotFacePoint extends Command {
      */
     @Override
     public void execute() {
-        
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
         Translation2d pos2 = m_point; // 2D point on field
         Rotation2d angleToTarget = Utils.anglePoseToPose(pos1, pos2); // Angle to make robot face point
@@ -89,7 +88,10 @@ public class RobotFacePoint extends Command {
             rotation,
             true, true
         );
-            
+
+        if (angleController.atSetpoint()) {
+            m_complete = true;
+        }
     }
 
     @Override
