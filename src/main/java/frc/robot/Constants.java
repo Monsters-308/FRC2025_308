@@ -260,12 +260,10 @@ public final class Constants {
     }
 
     /**
-     * Describe how the robot should move to certain position and angle setpoints.
+     * Describe how the robot should move to certain position and angle goals automatically.
      */
     public static final class DrivePIDConstants {
         private DrivePIDConstants() {}
-
-        // This is used for making the robot face a certain direction
 
         /** The P for the PID making the robot rotate to certain angles. */
         public static final double kRotationP = 2;
@@ -273,8 +271,6 @@ public final class Constants {
         public static final double kRotationI = 0;
         /** The D for the PID making the robot rotate to certain angles. */
         public static final double kRotationD = 0;
-        /** The maximum output of the PID making the robot rotate to certain angles. */
-        public static final double kRotationMaxOutput = 0.8; // Percent
         /** The maximum speed ogf the PID controller in radians per second. */
         public static final double kRotationMaxSpeed = Units.degreesToRadians(540);
         /** The maximum acceleration ogf the PID controller in radians per second squared. */
@@ -288,10 +284,12 @@ public final class Constants {
         public static final double kTranslationI = 0;
         /** The D for the PID making the robot move to certain positions. */
         public static final double kTranslationD = 0;
-        /** The maximum output of the PID making the robot move to certain positions. */
-        public static final double kTranslationMaxOutput = 1; // Percent 
-        /** The acceptable error in position to the desired position. */
-        public static final double kTranslationTolerance = Units.inchesToMeters(1); // Meters
+        /** The maximum speed of the PID controller in meters per second. */
+        public static final double kTranslationMaxSpeed = 1;
+        /** The maximum acceleration of the PID controller in meters per second squared. */
+        public static final double kTranslationMaxAcceleration = 1;
+        /** The acceptable error from actual position to the desired position in meters. */
+        public static final double kTranslationTolerance = Units.inchesToMeters(1);
     }
 
     /**
