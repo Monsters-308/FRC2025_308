@@ -242,11 +242,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (isAtBottom()) {
             // Prevent the elevator from going down when it reaches the bottom
             // by preventing the speed from being negative
-            velocity = Math.max(0, velocity);
-        } else if (getElevatorHeight() >= ElevatorConstants.kElevatorMaxHeight) {
-            // Prevent the elevator from going up when it reaches the top
+                velocity = Math.max(0, velocity);
+        } else if (m_topSwitch.get()) {
+            // Prevent the elevator from going doupwn when it reaches the top
             // by preventing the speed from being positive
-            velocity = Math.min(0, velocity);
+            velocity = Math.min(0, m_elevatorMotor.get());
         }
 
         m_elevatorMotor.set(velocity);
@@ -332,13 +332,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (isAtBottom()) {
             // Prevent the elevator from going down when it reaches the bottom
             // by preventing the speed from being negative
-            m_elevatorMotor.set(Math.max(0, m_elevatorMotor.get()));
+            m_elevatorMotor.set(Math.max(ElevatorConstants.kElevatorG, m_elevatorMotor.get()));
             m_elevatorEncoder.setPosition(0);
-        } else if (currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
-            // Prevent the elevator from going up when it reaches the top
-            // by preventing the speed from being positive
+        } else if (m_topSwitch.get()) {
             m_elevatorMotor.set(Math.min(0, m_elevatorMotor.get()));
-            m_elevatorEncoder.setPosition(ElevatorConstants.kElevatorMaxHeight);
         }
     }
 }
