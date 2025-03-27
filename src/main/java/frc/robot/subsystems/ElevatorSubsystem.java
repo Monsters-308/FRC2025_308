@@ -335,6 +335,8 @@ public class ElevatorSubsystem extends SubsystemBase {
             m_elevatorMotor.set(Math.max(ElevatorConstants.kElevatorG, m_elevatorMotor.get()));
             m_elevatorEncoder.setPosition(0);
         } else if (m_topSwitch.get()) {
+            // Prevent the elevator from going doupwn when it reaches the top
+            // by preventing the speed from being positive
             m_elevatorMotor.set(Math.min(0, m_elevatorMotor.get()));
         }
     }
