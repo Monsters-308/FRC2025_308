@@ -20,7 +20,6 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
-import frc.robot.commands.coral.IntakeCoral;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
@@ -224,24 +223,19 @@ public class RobotContainer {
     
         InputMappings.event("coDriver", "coralL4")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
-
-        // m_coDriverController.povUp()
-        //     .onTrue(m_armSubsystem.goToVelocity(ArmConstants.kArmIntakingSpeed))
-        //     .onFalse(m_armSubsystem.goToVelocity(0));
-
-        // m_coDriverController.povDown()
-        //     .onTrue(m_armSubsystem.goToVelocity(-ArmConstants.kArmIntakingSpeed))
-        //     .onFalse(m_armSubsystem.goToVelocity(0));
     }
 
     /**
      * Configures the {@link NamedCommands} for PathPlanner.
      */
     private void configureNamedCommands() {
+        NamedCommands.registerCommand("Go To Bottom", 
+            new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0)
+        );
 
         NamedCommands.registerCommand("Intake Coral", 
             new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0)
-                .andThen(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, m_elevatorSubsystem::getElevatorHeight))
+                .andThen(m_coralIntakeSubsystem.intakeCoral(true))
         );
 
         NamedCommands.registerCommand("Shoot Coral", new DeferredCommand(() -> {

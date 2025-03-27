@@ -28,6 +28,12 @@
           "data": {
             "name": "Shoot Coral"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
         }
       ]
     }
