@@ -468,19 +468,19 @@ public final class Constants {
         public static final double kElevatorMaxSpeedInchesPerSecond = kElevatorFreeSpeedMetersPerSecond;
 
         /** The maximum allowed acceleration of the elevator. */
-        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 50;
+        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 30;
 
         /** The manual movement speed of the elevator. */
         public static final double kElevatorManualSpeed = 0.5;
 
         /** The physical height of the elevator in inches. */
-        public static final double kElevatorMaxHeight = 24;
+        public static final double kElevatorMaxHeight = 23.55;
 
         /** The maximum height at which the arm should run back while intaking. */
         public static final double kElevatorMaxArmIntakeHeight = 0.5;
 
         /** The heights, in inches, of every reef level. */
-        public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 24 };
+        public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 23.55 };
     }
 
     /**
