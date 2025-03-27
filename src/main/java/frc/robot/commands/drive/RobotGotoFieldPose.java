@@ -13,7 +13,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utils.Utils;
 
 public class RobotGotoFieldPose extends Command {
     protected final DriveSubsystem m_driveSubsystem;

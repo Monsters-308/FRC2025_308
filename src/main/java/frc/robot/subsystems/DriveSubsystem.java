@@ -213,15 +213,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_swerveTab.add("Angle StdDev", new CalculateStandardDeviation(this::getHeading, entry::setDouble, entry::setDouble));
         SmartDashboard.putNumber("Pose Variation", 0);
-
-        ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
-
-        // for (int i = 0; i < VisionConstants.kCameraNames.length; i++) {
-        //     m_distances[i] = visionTab.add("Distance to \"" + VisionConstants.kCameraNames[i] +"\"", 0).getEntry();
-        // }
-
-        // m_stdDevX = visionTab.add("StdDev X", VisionConstants.kVisionStandardDeviations[0].get(0)).getEntry();
-        // m_stdDevY = visionTab.add("StdDev Y", VisionConstants.kVisionStandardDeviations[0].get(1)).getEntry();
     }
 
     @Override
@@ -248,16 +239,11 @@ public class DriveSubsystem extends SubsystemBase {
 
                 double dstToAprilTag = results[i].getBestTarget().getBestCameraToTarget().getTranslation().getDistance(Translation3d.kZero);
 
-                // m_distances[i].setDouble(Utils.roundToNearest(dstToAprilTag, 2));
-
                 Vector<N3> stdDev = VecBuilder.fill(
                     DriveConstants.kVisionStandardDeviationMultipler * (0.987 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
                     DriveConstants.kVisionStandardDeviationMultipler * (0.997 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
                     VisionConstants.kVisionStandardDeviations[i].get(2)
                 );
-
-                // Don't scale the heading standard deviation
-                // stdDev.set(2, 0, VisionConstants.kVisionStandardDeviations[i].get(2));
 
                 m_odometry.addVisionMeasurement(FieldUtils.convertAllianceRelative(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
             }
