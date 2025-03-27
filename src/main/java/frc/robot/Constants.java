@@ -138,10 +138,6 @@ public final class Constants {
          * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians. */
         public static final Vector<N3> kStateStandardDeviations = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
 
-        /** Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
-         * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians. */
-        public static final Vector<N3> kVisionStandardDeviations = VecBuilder.fill(2, 2, 3);
-
         /** A multipler that controls how much the distance should scale the {@link DriveConstants#kVisionStandardDeviations}. */
         public static final double kVisionStandardDeviationMultipler = 1;
 
@@ -276,7 +272,7 @@ public final class Constants {
         /** The maximum acceleration ogf the PID controller in radians per second squared. */
         public static final double kRotationMaxAcceleration = Units.degreesToRadians(450);
         /** The acceptable error in angle to the desired angle. */
-        public static final double kRotationTolerance = Units.degreesToRadians(0.5); // Radians
+        public static final double kRotationTolerance = Units.degreesToRadians(0.1); // Radians
 
         /** The P for the PID making the robot move to certain positions. */
         public static final double kTranslationP = 5;
@@ -285,11 +281,11 @@ public final class Constants {
         /** The D for the PID making the robot move to certain positions. */
         public static final double kTranslationD = 0;
         /** The maximum speed of the PID controller in meters per second. */
-        public static final double kTranslationMaxSpeed = 1;
+        public static final double kTranslationMaxSpeed = 3;
         /** The maximum acceleration of the PID controller in meters per second squared. */
-        public static final double kTranslationMaxAcceleration = 1;
+        public static final double kTranslationMaxAcceleration = 3;
         /** The acceptable error from actual position to the desired position in meters. */
-        public static final double kTranslationTolerance = Units.inchesToMeters(1);
+        public static final double kTranslationTolerance = Units.inchesToMeters(0.1);
     }
 
     /**
@@ -478,13 +474,13 @@ public final class Constants {
         public static final double kElevatorManualSpeed = 0.5;
 
         /** The physical height of the elevator in inches. */
-        public static final double kElevatorMaxHeight = 25;
+        public static final double kElevatorMaxHeight = 24;
 
         /** The maximum height at which the arm should run back while intaking. */
         public static final double kElevatorMaxArmIntakeHeight = 0.5;
 
         /** The heights, in inches, of every reef level. */
-        public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 25 };
+        public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 24 };
     }
 
     /**
@@ -537,8 +533,12 @@ public final class Constants {
         /** The current limit for the coral intake motor. */
         public static final int kSmartCurrentLimit = 20;
         
-        /** The speed the coral intake should be run at when intaking or shooting. */
+        /** The speed the coral intake should be run at when intaking. */
         public static final double kCoralIntakeSpeed = 0.5;
+        /** The speed the coral intake should be run at when reversing. */
+        public static final double kCoralReverseSpeed = 0.3;
+        /** The speed the coral intake should be run at when shooting. */
+        public static final double kCoralShootSpeed = 0.8;
 
         /** The channel for the back coral sensor. */
         public static final int kBackSensorChannel = 3;
@@ -616,10 +616,20 @@ public final class Constants {
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
         public static final Transform3d[] kRobotToCameraTransformations = {
             new Transform3d(
-                new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), 0),
-                new Rotation3d(0, 0, Units.degreesToRadians(0))
+                new Translation3d(0.195, -0.3, 0),
+                new Rotation3d(0, 0, Units.degreesToRadians(11))
             ),
-            Transform3d.kZero
+            new Transform3d(
+                new Translation3d(-0.23, -0.15, 0),
+                new Rotation3d(0, 0, Units.degreesToRadians(180))
+            )
+        };
+
+        /** Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
+         * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians. */
+        public static final Vector<?>[] kVisionStandardDeviations = {
+            VecBuilder.fill(0.1, 0.1, 10),
+            VecBuilder.fill(0.1, 0.1, 10)
         };
 
         /** How PhotonVision should use april tag data to determine position. */
