@@ -83,7 +83,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
      * @return The <code>Command</code> object.
      */
     public Command shootCoral() {
-        return runOnce(() -> setCoralSpeed(CoralIntakeConstants.kCoralIntakeSpeed))
+        return runOnce(() -> setCoralSpeed(CoralIntakeConstants.kCoralShootSpeed))
             .andThen(run(() -> {}))
             .finallyDo(() -> setCoralSpeed(0));
     }
