@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DrivePIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.Utils;
@@ -88,7 +89,7 @@ public class RobotGotoFieldPose extends Command {
 
         controllerX.setGoal(m_desiredRobotPose.getX());
         controllerY.setGoal(m_desiredRobotPose.getY());
-        angleController.setGoal(Utils.angleConstrain(m_desiredRobotPose.getRotation().getDegrees()));
+        angleController.setGoal(m_desiredRobotPose.getRotation().getRadians());
     }
 
     // When not overridden, this function is blank.
@@ -98,7 +99,7 @@ public class RobotGotoFieldPose extends Command {
 
         double xSpeed = controllerX.calculate(currentPos.getTranslation().getX());
         double ySpeed = controllerY.calculate(currentPos.getTranslation().getY());
-        double angleSpeed = angleController.calculate(m_driveSubsystem.getHeading());
+        double angleSpeed = angleController.calculate(Units.degreesToRadians(m_driveSubsystem.getHeading()));
 
 
         m_driveSubsystem.drive(
