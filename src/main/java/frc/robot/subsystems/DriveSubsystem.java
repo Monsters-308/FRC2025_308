@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -30,6 +31,7 @@ import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.calculation.CalculateStandardDeviation;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.LoggingUtils;
@@ -105,9 +107,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     /** Offset for the heading used for determining field relative controls.
      * Allows for reseting the controls when the controls are disoriented. */
-    // private double m_fieldRelativeHeadingOffset = 0;
+    private double m_fieldRelativeHeadingOffset = 0;
 
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
+    @SuppressWarnings("unchecked")
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
         DriveConstants.kDriveKinematics,
         Rotation2d.fromDegrees(getGyroAngle()),
@@ -123,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
             Rotation2d.fromDegrees(180)
         ),
         DriveConstants.kStateStandardDeviations,
-        DriveConstants.kVisionStandardDeviations
+        (Vector<N3>)VisionConstants.kVisionStandardDeviations[0]
     );
 
     /**
@@ -210,6 +213,15 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_swerveTab.add("Angle StdDev", new CalculateStandardDeviation(this::getHeading, entry::setDouble, entry::setDouble));
         SmartDashboard.putNumber("Pose Variation", 0);
+
+        ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
+
+        // for (int i = 0; i < VisionConstants.kCameraNames.length; i++) {
+        //     m_distances[i] = visionTab.add("Distance to \"" + VisionConstants.kCameraNames[i] +"\"", 0).getEntry();
+        // }
+
+        // m_stdDevX = visionTab.add("StdDev X", VisionConstants.kVisionStandardDeviations[0].get(0)).getEntry();
+        // m_stdDevY = visionTab.add("StdDev Y", VisionConstants.kVisionStandardDeviations[0].get(1)).getEntry();
     }
 
     @Override
@@ -234,13 +246,18 @@ public class DriveSubsystem extends SubsystemBase {
             for (int i = 0; i < estimations.length; i++) {
                 if (estimations[i] == null) continue;
 
-                Vector<N3> stdDev = DriveConstants.kVisionStandardDeviations.times(
-                    DriveConstants.kVisionStandardDeviationMultipler *
-                    results[i].getBestTarget().getBestCameraToTarget().getTranslation().getDistance(Translation3d.kZero)
+                double dstToAprilTag = results[i].getBestTarget().getBestCameraToTarget().getTranslation().getDistance(Translation3d.kZero);
+
+                // m_distances[i].setDouble(Utils.roundToNearest(dstToAprilTag, 2));
+
+                Vector<N3> stdDev = VecBuilder.fill(
+                    DriveConstants.kVisionStandardDeviationMultipler * (0.987 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
+                    DriveConstants.kVisionStandardDeviationMultipler * (0.997 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
+                    VisionConstants.kVisionStandardDeviations[i].get(2)
                 );
 
                 // Don't scale the heading standard deviation
-                stdDev.set(2, 0, DriveConstants.kVisionStandardDeviations.get(2));
+                // stdDev.set(2, 0, VisionConstants.kVisionStandardDeviations[i].get(2));
 
                 m_odometry.addVisionMeasurement(FieldUtils.convertAllianceRelative(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
             }
@@ -248,7 +265,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Reset field relative offset to zero when FMS is connected
         if (DriverStation.isFMSAttached()) {
-            // m_fieldRelativeHeadingOffset = 0;
+            m_fieldRelativeHeadingOffset = 0;
         }
 
         // Display variation in pose (in inches)
@@ -303,7 +320,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Get the target chassis speeds relative to the robot
         final ChassisSpeeds targetVel = (fieldRelative ?
-            ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getHeading()))
+            ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getHeading() - m_fieldRelativeHeadingOffset))
                 : new ChassisSpeeds(xSpeed, ySpeed, rot)
         );
 
@@ -374,7 +391,9 @@ public class DriveSubsystem extends SubsystemBase {
      * This does nothing when FMS is connected, as on a field, the field relative control directon will always be correct.
      */
     public void resetFieldRelative() {
-        setHeading(0);
+        if (!DriverStation.isFMSAttached()) {
+            m_fieldRelativeHeadingOffset = getHeading();
+        }
     }
 
     /**
