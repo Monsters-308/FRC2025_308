@@ -7,8 +7,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.Utils;
 
-public class AutoAilgn extends RobotGotoFieldPose {
-    public AutoAilgn(DriveSubsystem m_driveSubsystem) {
+public class AutoAlign extends RobotGotoFieldPose {
+    public AutoAlign(DriveSubsystem m_driveSubsystem) {
         super(m_driveSubsystem, null);
     }
 
