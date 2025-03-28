@@ -316,30 +316,24 @@ public final class Constants {
         /** Y axis: short side */
         public static final double kFieldHeightMeters = kAprilTagFieldLayout.getFieldWidth(); // 8.052
 
-        /** Auto align positions. */
-        public static final Pose2d[] kAutoAlignPositions = {
-            /* Coral reef positions */
-            // Column 1
+        /** Positions that corresponde to the left reef postiions on the reef, relative to the robot. */
+        public static final Pose2d[] kLeftReefPositions = {
             new Pose2d(3.198, 4.191, Rotation2d.kZero),
-            new Pose2d(3.198, 3.86, Rotation2d.kZero),
-            // Column 2
-            new Pose2d(3.685, 5.07, Rotation2d.fromDegrees(-60)),
             new Pose2d(3.685, 2.98, Rotation2d.fromDegrees(60)),
-            // Column 3
             new Pose2d(3.968, 5.24, Rotation2d.fromDegrees(-60)),
-            new Pose2d(3.968, 2.81, Rotation2d.fromDegrees(60)),
-            // Column 4
-            new Pose2d(5, 5.24, Rotation2d.fromDegrees(-120)),
             new Pose2d(5, 2.81, Rotation2d.fromDegrees(120)),
-            // Column 5
             new Pose2d(5.29, 5.07, Rotation2d.fromDegrees(-120)),
-            new Pose2d(5.29, 2.98, Rotation2d.fromDegrees(120)),
-            // Column 6
-            new Pose2d(5.8, 4.191, Rotation2d.fromDegrees(180)),
-            new Pose2d(5.8, 3.86, Rotation2d.fromDegrees(180)),
+            new Pose2d(5.8, 3.86, Rotation2d.fromDegrees(180))
+        };
 
-            // Processor position
-            new Pose2d(5.985, 0.51, Rotation2d.fromDegrees(90)),
+        /** Positions that corresponde to the right reef postiions on the reef, relative to the robot. */
+        public static final Pose2d[] kRightReefPositions = {
+            new Pose2d(3.198, 3.86, Rotation2d.kZero),
+            new Pose2d(3.685, 5.07, Rotation2d.fromDegrees(-60)),
+            new Pose2d(3.968, 2.81, Rotation2d.fromDegrees(60)),
+            new Pose2d(5, 5.24, Rotation2d.fromDegrees(-120)),
+            new Pose2d(5.29, 2.98, Rotation2d.fromDegrees(120)),
+            new Pose2d(5.8, 4.191, Rotation2d.fromDegrees(180))
         };
 
         /** Reef position for orbital controls. */
@@ -604,7 +598,7 @@ public final class Constants {
         private VisionConstants() {}
 
         /** The name of the PhotonVision cameras. */
-        public static final String[] kCameraNames = { "Jojo Bizar", /* "Stevenson" */ };
+        public static final String[] kCameraNames = { "Jojo Bizar", "Stevenson" };
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
         public static final Transform3d[] kRobotToCameraTransformations = {
             new Transform3d(

@@ -156,8 +156,11 @@ public class RobotContainer {
         InputMappings.event("driver", "resetFieldRelative")
             .onTrue(new InstantCommand(m_driveSubsystem::resetFieldRelative).ignoringDisable(true));
     
-        InputMappings.event("driver", "autoAlign")
-            .whileTrue(new AutoAlign(m_driveSubsystem));
+        InputMappings.event("driver", "leftReefAlign")
+            .whileTrue(new AutoAlign(m_driveSubsystem, FieldConstants.kLeftReefPositions));
+
+        InputMappings.event("driver", "rightReefAlign")
+            .whileTrue(new AutoAlign(m_driveSubsystem, FieldConstants.kRightReefPositions));
 
         // InputMappings.event("driver", "orbitReef")
         //     .whileTrue(new RobotOrbitPoint(driveSubsystem,

@@ -8,8 +8,11 @@ import frc.robot.utils.FieldUtils;
 import frc.robot.utils.Utils;
 
 public class AutoAlign extends RobotGotoFieldPose {
-    public AutoAlign(DriveSubsystem m_driveSubsystem) {
+    private Pose2d[] m_autoAlignPositions;
+
+    public AutoAlign(DriveSubsystem m_driveSubsystem, Pose2d[] autoAlignPositions) {
         super(m_driveSubsystem, null);
+        m_autoAlignPositions = autoAlignPositions;
     }
 
     @Override
@@ -19,7 +22,7 @@ public class AutoAlign extends RobotGotoFieldPose {
 
         boolean flipPose = robotPose.getX() > FieldConstants.kFieldWidthMeters / 2;
 
-        for (Pose2d pose : FieldConstants.kAutoAlignPositions) {
+        for (Pose2d pose : m_autoAlignPositions) {
             pose = flipPose ? FieldUtils.flip(pose) : pose;
             double dst = Utils.getDistancePosToPos(robotPose.getTranslation(), pose.getTranslation());
             if (smallestDistance == null || dst < smallestDistance) {

@@ -1,12 +1,12 @@
 {
     "displayName": "Default",
     "events": {
-        "orbitReef": {
-            "button": "rightTrigger",
+        "leftReefAlign": {
+            "button": "leftTrigger",
             "threshold": 0.9
         },
-        "autoAlign": {
-            "button": "leftTrigger",
+        "rightReefAlign": {
+            "button": "rightTrigger",
             "threshold": 0.9
         },
         "rightHuman": "rightBumper",
