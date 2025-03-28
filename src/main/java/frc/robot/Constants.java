@@ -355,11 +355,6 @@ public final class Constants {
     public static final class AutonConstants {
         private AutonConstants() {}
 
-        /** The maximum speed PathPlanner will drive the robot in meters per second. */
-        public static final double kAutoMaxSpeedMetersPerSecond = 3;
-        /** The maximum speed PathPlanner will turn the robot wheels in radians per second. */
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-
         /** A {@link PIDConstants} object that describes the PID constants PathPlanner should use move the robot. */
         public static final PIDConstants kAutoTranslationPID = new PIDConstants(
             DrivePIDConstants.kTranslationP, 
