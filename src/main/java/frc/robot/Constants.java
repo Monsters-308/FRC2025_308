@@ -138,9 +138,6 @@ public final class Constants {
          * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians. */
         public static final Vector<N3> kStateStandardDeviations = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
 
-        /** A multipler that controls how much the distance should scale the {@link DriveConstants#kVisionStandardDeviations}. */
-        public static final double kVisionStandardDeviationMultipler = 1;
-
         /** Whether or not to reverse the gyro to make it CCW positive. */
         public static final boolean kGyroReversed = true;
     }
@@ -468,7 +465,7 @@ public final class Constants {
         public static final double kElevatorMaxSpeedInchesPerSecond = kElevatorFreeSpeedMetersPerSecond;
 
         /** The maximum allowed acceleration of the elevator. */
-        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 30;
+        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 10;
 
         /** The manual movement speed of the elevator. */
         public static final double kElevatorManualSpeed = 0.5;
@@ -570,9 +567,9 @@ public final class Constants {
         /** The velocity conversion factor of the arm encoder. */
         public static final double kVelocityEncoderConversionFactor = 1 / kGearReduction / 60;
         /** The maximum speed of the arm in rotations per second. */
-        public static final double kArmMaxSpeedRPS = 1;
+        public static final double kArmMaxSpeedRPS = 0.5;
         /** The maximum acceleration of the arm in rotations per second squared. */
-        public static final double kArmMaxAccelerationRPSSquared = 2;
+        public static final double kArmMaxAccelerationRPSSquared = 0.5;
 
         /** The angle offset for the motor encoder such that when the encoder returns 0 the arm is parallel to the floor. */
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
@@ -612,7 +609,7 @@ public final class Constants {
         private VisionConstants() {}
 
         /** The name of the PhotonVision cameras. */
-        public static final String[] kCameraNames = { "Jojo Bizar", "Stevenson" };
+        public static final String[] kCameraNames = { "Jojo Bizar", /* "Stevenson" */ };
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
         public static final Transform3d[] kRobotToCameraTransformations = {
             new Transform3d(
@@ -625,12 +622,11 @@ public final class Constants {
             )
         };
 
-        /** Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
-         * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians. */
-        public static final Vector<?>[] kVisionStandardDeviations = {
-            VecBuilder.fill(0.1, 0.1, 10),
-            VecBuilder.fill(0.1, 0.1, 10)
-        };
+        /** Standard deviations of the angle vision measurements. Increase these numbers to trust global measurements from vision less. */
+        public static final double[] kVisionAngleStandardDeviations = { 10, 10 };
+
+        /** The multiplers for the cameras' standard deviations. */
+        public static final double[] kVisionStandardDeviationMultiplers = { 1, 5 }; 
 
         /** How PhotonVision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
