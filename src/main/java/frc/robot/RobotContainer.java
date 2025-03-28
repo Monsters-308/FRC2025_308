@@ -162,13 +162,6 @@ public class RobotContainer {
         InputMappings.event("driver", "rightReefAlign")
             .whileTrue(new AutoAlign(m_driveSubsystem, FieldConstants.kRightReefPositions));
 
-        // InputMappings.event("driver", "orbitReef")
-        //     .whileTrue(new RobotOrbitPoint(driveSubsystem,
-        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-        //         () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-        //         FieldConstants.kReefPosition)
-        //     );
-
         InputMappings.event("driver", "leftHuman")
             .whileTrue(new RobotGotoAngle(
                 m_driveSubsystem,
