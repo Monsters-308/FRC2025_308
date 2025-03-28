@@ -76,7 +76,7 @@ public final class Constants {
         // the robot, rather the allowed maximum speeds
 
         /** The highest allowed speed of the drive train. */
-        public static final double kMaxSpeedMetersPerSecond = 4.6;
+        public static final double kMaxSpeedMetersPerSecond = 4.47;
 
         /** The highest allowed rotational speed of the drive train. */
         public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
