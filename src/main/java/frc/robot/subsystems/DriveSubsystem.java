@@ -110,7 +110,6 @@ public class DriveSubsystem extends SubsystemBase {
     private double m_fieldRelativeHeadingOffset = 0;
 
     /** A {@link SwerveDrivePoseEstimator} for estimating the position of the robot. */
-    @SuppressWarnings("unchecked")
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
         DriveConstants.kDriveKinematics,
         Rotation2d.fromDegrees(getGyroAngle()),
@@ -126,7 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
             Rotation2d.fromDegrees(180)
         ),
         DriveConstants.kStateStandardDeviations,
-        (Vector<N3>)VisionConstants.kVisionStandardDeviations[0]
+        VecBuilder.fill(0, 0, 0)
     );
 
     /**
@@ -240,9 +239,9 @@ public class DriveSubsystem extends SubsystemBase {
                 double dstToAprilTag = results[i].getBestTarget().getBestCameraToTarget().getTranslation().getDistance(Translation3d.kZero);
 
                 Vector<N3> stdDev = VecBuilder.fill(
-                    DriveConstants.kVisionStandardDeviationMultipler * (0.987 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
-                    DriveConstants.kVisionStandardDeviationMultipler * (0.997 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
-                    VisionConstants.kVisionStandardDeviations[i].get(2)
+                    VisionConstants.kVisionStandardDeviationMultiplers[i] * (0.987 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
+                    VisionConstants.kVisionStandardDeviationMultiplers[i] * (0.997 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
+                    VisionConstants.kVisionAngleStandardDeviations[i]
                 );
 
                 m_odometry.addVisionMeasurement(FieldUtils.convertAllianceRelative(estimations[i].estimatedPose.toPose2d()), estimations[i].timestampSeconds, stdDev);
