@@ -458,14 +458,12 @@ public class DriveSubsystem extends SubsystemBase {
      * @param speeds The velocities to move the chassis at as a {@link ChassisSpeeds} object.
      */
     private void driveRobotRelative(ChassisSpeeds speeds) {
-        // Use the DriveKinematics to calculate the module states
-        SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
-
-        // Set the modules to their desired states
-        m_frontLeft.setDesiredState(swerveModuleStates[0]);
-        m_frontRight.setDesiredState(swerveModuleStates[1]);
-        m_rearLeft.setDesiredState(swerveModuleStates[2]);
-        m_rearRight.setDesiredState(swerveModuleStates[3]);
+        // This takes the velocities and converts them into precentages (-1 to 1)
+        drive((speeds.vxMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond), 
+            (speeds.vyMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond), 
+            speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed, 
+            false, 
+            false);
     }
 
     /**
