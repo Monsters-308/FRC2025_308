@@ -20,6 +20,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToLevel;
+import frc.robot.commands.coral.IntakeCoral;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
@@ -185,9 +186,8 @@ public class RobotContainer {
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
-        InputMappings.event("coDriver", "coralIntake")    
-            // .whileTrue(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, m_elevatorSubsystem::getElevatorHeight));
-            .whileTrue(m_coralIntakeSubsystem.intakeCoral(true));
+        InputMappings.event("coDriver", "coralIntake")
+            .whileTrue(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, m_elevatorSubsystem::getElevatorHeight));
 
         InputMappings.event("coDriver", "coralShoot")
             .whileTrue(m_coralIntakeSubsystem.shootCoral());
@@ -235,7 +235,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Intake Coral", 
             new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0)
-                .andThen(m_coralIntakeSubsystem.intakeCoral(true))
+                .andThen(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, null))
         );
 
         NamedCommands.registerCommand("Shoot Coral", new DeferredCommand(() -> {
@@ -250,7 +250,7 @@ public class RobotContainer {
 
             return m_coralIntakeSubsystem.shootCoral().withTimeout(0.5);
         }, new HashSet<>(Arrays.asList(m_armSubsystem, m_coralIntakeSubsystem))));
-
+ 
         NamedCommands.registerCommand("1st Coral", 
             new DeferredCommand(() -> new GoToLevel(
                 m_armSubsystem,
