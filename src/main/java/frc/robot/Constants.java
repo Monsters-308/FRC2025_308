@@ -76,7 +76,7 @@ public final class Constants {
         // the robot, rather the allowed maximum speeds
 
         /** The highest allowed speed of the drive train. */
-        public static final double kMaxSpeedMetersPerSecond = 4.47;
+        public static final double kMaxSpeedMetersPerSecond = 1.5;
 
         /** The highest allowed rotational speed of the drive train. */
         public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
@@ -451,22 +451,22 @@ public final class Constants {
         public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
 
         /** The maximum allowed speed the elevator should move at. */
-        public static final double kElevatorMaxSpeedInchesPerSecond = kElevatorFreeSpeedMetersPerSecond;
+        public static final double kElevatorMaxSpeedInchesPerSecond = 10;
 
         /** The maximum allowed acceleration of the elevator. */
-        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 30;
+        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 10;
 
         /** The manual movement speed of the elevator. */
-        public static final double kElevatorManualSpeed = 0.5;
+        public static final double kElevatorManualSpeed = 0.2;
 
         /** The physical height of the elevator in inches. */
-        public static final double kElevatorMaxHeight = 28;
+        public static final double kElevatorMaxHeight = 15;
 
         /** The maximum height at which the arm should run back while intaking. */
         public static final double kElevatorMaxArmIntakeHeight = 0.03;
 
         /** The heights, in inches, of every reef level. */
-        public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 23.55 };
+        public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 15 };
     }
 
     /**
@@ -520,11 +520,11 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 20;
         
         /** The speed the coral intake should be run at when intaking. */
-        public static final double kCoralIntakeSpeed = 0.4;
+        public static final double kCoralIntakeSpeed = 0.3;
         /** The speed the coral intake should be run at when reversing. */
         public static final double kCoralReverseSpeed = 0.3;
         /** The speed the coral intake should be run at when shooting. */
-        public static final double kCoralShootSpeed = 0.8;
+        public static final double kCoralShootSpeed = 0.5;
 
         /** The channel for the back coral sensor. */
         public static final int kBackSensorChannel = 3;
