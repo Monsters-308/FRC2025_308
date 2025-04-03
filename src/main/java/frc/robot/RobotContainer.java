@@ -218,8 +218,8 @@ public class RobotContainer {
         InputMappings.event("coDriver", "coralL3")
             .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 2));
     
-        InputMappings.event("coDriver", "coralL4")
-            .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
+        // InputMappings.event("coDriver", "coralL4")
+        //     .onTrue(new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 3));
     }
 
     /**
@@ -294,13 +294,15 @@ public class RobotContainer {
      * @return The command to run in autonomous.
      */
     public Command getAutonomousCommand() {
-        Command selectedManually = m_manualAuton.getSelected();
+        // Command selectedManually = m_manualAuton.getSelected();
 
-        if (selectedManually != null) {
-            return selectedManually;
-        }
+        // if (selectedManually != null) {
+        //     return selectedManually;
+        // }
 
-        return AutoBuilder.buildAuto(m_autonNumCorals.getSelected() + " " + m_autonStartPose.getSelected());
+        // return AutoBuilder.buildAuto(m_autonNumCorals.getSelected() + " " + m_autonStartPose.getSelected());
+
+        return null;
     }
 
     /**
