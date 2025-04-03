@@ -338,7 +338,6 @@ public class ElevatorSubsystem extends SubsystemBase {
             // Prevent the elevator from going up when it reaches the top
             // by preventing the speed from being positive
             m_elevatorMotor.set(Math.min(ElevatorConstants.kElevatorG, m_elevatorMotor.get()));
-            m_elevatorEncoder.setPosition(ElevatorConstants.kElevatorMaxHeight);
         }
     }
 }

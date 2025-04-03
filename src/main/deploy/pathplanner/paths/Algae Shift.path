@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.576,
-        "y": 4.026
+        "x": 5.2,
+        "y": 4.191
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.339917022985122,
-        "y": 4.108248574235622
+        "x": 5.2,
+        "y": 3.941
       },
       "isLocked": false,
-      "linkedName": "Center Start"
+      "linkedName": "1st Center Coral"
     },
     {
       "anchor": {
-        "x": 5.8,
-        "y": 4.191
+        "x": 5.923125,
+        "y": 3.3220028409090907
       },
       "prevControl": {
-        "x": 6.501720506173147,
-        "y": 4.191
+        "x": 6.06852521069932,
+        "y": 3.64915331498256
       },
       "nextControl": {
-        "x": 5.4306394689832755,
-        "y": 4.191
+        "x": 5.821590383486638,
+        "y": 3.0935499537540267
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.2,
-        "y": 4.191
+        "x": 5.1553125,
+        "y": 2.9031960227272724
       },
       "prevControl": {
-        "x": 5.45,
-        "y": 4.191
+        "x": 5.38465909090909,
+        "y": 3.0029119318181814
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "1st Center Coral"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -58,10 +58,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": "Start To 1st Coral",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

@@ -269,32 +269,6 @@
             }
           },
           {
-            "title": "First Coral Level",
-            "x": 0.0,
-            "y": 256.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "ComboBox Chooser",
-            "properties": {
-              "topic": "/Shuffleboard/Autonomous/First Coral Level",
-              "period": 0.06,
-              "sort_options": false
-            }
-          },
-          {
-            "title": "Second Coral Level",
-            "x": 0.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "ComboBox Chooser",
-            "properties": {
-              "topic": "/Shuffleboard/Autonomous/Second Coral Level",
-              "period": 0.06,
-              "sort_options": false
-            }
-          },
-          {
             "title": "Start Position",
             "x": 0.0,
             "y": 0.0,
@@ -306,6 +280,32 @@
               "period": 0.06,
               "sort_options": false
             }
+          },
+          {
+            "title": "1st Coral Level",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/Shuffleboard/Autonomous/1st Coral Level",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "2nd Coral Level",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/Shuffleboard/Autonomous/2nd Coral Level",
+              "period": 0.06,
+              "sort_options": false
+            }
           }
         ]
       }
@@ -313,86 +313,7 @@
     {
       "name": "Arm",
       "grid_layout": {
-        "layouts": [
-          {
-            "title": "Arm SysID",
-            "x": 512.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 448.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "HIDDEN"
-            },
-            "children": [
-              {
-                "title": "Quasistatic Forward",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/Shuffleboard/Arm/Arm SysID/Quasistatic Forward",
-                  "period": 0.06,
-                  "show_type": false
-                }
-              },
-              {
-                "title": "Quasistatic Backward",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/Shuffleboard/Arm/Arm SysID/Quasistatic Backward",
-                  "period": 0.06,
-                  "show_type": false
-                }
-              },
-              {
-                "title": "Dynamic Forward",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/Shuffleboard/Arm/Arm SysID/Dynamic Forward",
-                  "period": 0.06,
-                  "show_type": false
-                }
-              },
-              {
-                "title": "Dynamic Backward",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/Shuffleboard/Arm/Arm SysID/Dynamic Backward",
-                  "period": 0.06,
-                  "show_type": false
-                }
-              },
-              {
-                "title": "Run All",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/Shuffleboard/Arm/Arm SysID/Run All",
-                  "period": 0.06,
-                  "show_type": false
-                }
-              }
-            ]
-          }
-        ],
+        "layouts": [],
         "containers": [
           {
             "title": "Arm Angle",
@@ -410,27 +331,13 @@
           },
           {
             "title": "Arm Velocity",
-            "x": 832.0,
+            "x": 128.0,
             "y": 128.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
               "topic": "/Shuffleboard/Arm/Arm Velocity",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Gravity Value",
-            "x": 896.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Shuffleboard/Arm/Gravity Value",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": false
@@ -815,7 +722,7 @@
           },
           {
             "title": "Spark #21",
-            "x": 896.0,
+            "x": 1024.0,
             "y": 192.0,
             "width": 128.0,
             "height": 128.0,
@@ -832,7 +739,7 @@
           },
           {
             "title": "Spark #22",
-            "x": 896.0,
+            "x": 1024.0,
             "y": 320.0,
             "width": 128.0,
             "height": 128.0,
@@ -846,8 +753,160 @@
               "true_icon": "None",
               "false_icon": "None"
             }
+          },
+          {
+            "title": "Spark #20",
+            "x": 896.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Faults/Spark #20",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Jojo Bizar",
+            "x": 1216.0,
+            "y": 192.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Faults/Jojo Bizar",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
           }
         ]
+      }
+    },
+    {
+      "name": "Vision",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "\"Jojo Bizar\" Transformation",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "X",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Vision/\"Jojo Bizar\" Transformation/X",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Y",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Vision/\"Jojo Bizar\" Transformation/Y",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Vision/\"Jojo Bizar\" Transformation/Angle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "\"Stevenson\" Transformation",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Vision/\"Stevenson\" Transformation/Angle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "X",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Vision/\"Stevenson\" Transformation/X",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Y",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Vision/\"Stevenson\" Transformation/Y",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          }
+        ],
+        "containers": []
       }
     }
   ]

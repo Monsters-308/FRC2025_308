@@ -14,6 +14,8 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import java.util.function.BooleanSupplier;
 // import java.util.stream.Collectors;
 
+import org.photonvision.PhotonCamera;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -29,7 +31,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 // import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.PDHConstants;
 // import frc.robot.utils.Elastic.Notification;
-// import frc.robot.utils.Elastic.Notification.NotificationLevel;
+// import frc.robot.utils.Elastic.Notification.NotificationLevel;]
 
 /** 
  * Utilities to help us with logging important information to networktables and 
@@ -41,7 +43,7 @@ import frc.robot.Constants.PDHConstants;
 public class LoggingUtils {
     private LoggingUtils() {}
 
-    public static final ShuffleboardTab loggingTab = Shuffleboard.getTab("Faults");
+    private static final ShuffleboardTab m_loggingTab = Shuffleboard.getTab("Faults");
 
     /**
      * Turns off unused telemetry on the spark max to reduce canbus usage.
@@ -77,7 +79,7 @@ public class LoggingUtils {
         BooleanSupplier hasNoFaults = () -> !sparkMax.hasActiveFault() && !sparkMax.hasActiveWarning();
 
         // Log faults and warnings
-        loggingTab.addBoolean("Spark #" + sparkMax.getDeviceId(), hasNoFaults);
+        m_loggingTab.addBoolean("Spark #" + sparkMax.getDeviceId(), hasNoFaults);
 
         // new Trigger(hasNoFaults).onFalse(new InstantCommand(() -> {
         //     Faults sparkFaults = sparkMax.getFaults();
@@ -130,7 +132,7 @@ public class LoggingUtils {
             !canCoder.getFault_Undervoltage(false).getValue() &&
             !canCoder.getFault_UnlicensedFeatureInUse(false).getValue();
 
-        loggingTab.addBoolean("CANcoder #" + canCoder.getDeviceID(), hasNoFaults);
+        m_loggingTab.addBoolean("CANcoder #" + canCoder.getDeviceID(), hasNoFaults);
 
         // new Trigger(hasNoFaults).onFalse(new InstantCommand(() -> {
         //     ArrayList<String> faultList = new ArrayList<>();
@@ -198,7 +200,7 @@ public class LoggingUtils {
         };
         
         // Log if the pdh is having any faults
-        loggingTab.addBoolean("PDH", hasNoPDHFaults);
+        m_loggingTab.addBoolean("PDH", hasNoPDHFaults);
 
         // new Trigger(hasNoPDHFaults).onFalse(new InstantCommand(() -> {
         //     PowerDistributionFaults faults = pdh.getFaults();
@@ -245,7 +247,7 @@ public class LoggingUtils {
      * @param navX The NavX
      */
     public static void logNavX(AHRS navX) {
-        loggingTab.addBoolean("NavX", navX::isConnected);
+        m_loggingTab.addBoolean("NavX", navX::isConnected);
 
         // new Trigger(navX::isConnected).debounce(2).onFalse(new InstantCommand(() -> {
         //     Notification notification = new Notification()
@@ -256,6 +258,10 @@ public class LoggingUtils {
             
         //     Elastic.sendNotification(notification);
         // }));
+    }
+
+    public static void logCamera(PhotonCamera camera) {
+        m_loggingTab.addBoolean(camera.getName(), camera::isConnected);
     }
 
     /**

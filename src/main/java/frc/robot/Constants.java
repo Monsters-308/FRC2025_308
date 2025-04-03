@@ -247,9 +247,9 @@ public final class Constants {
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
         /** The current limit of the driving motors in amps. */
-        public static final int kDrivingMotorCurrentLimit = 50; // amps
+        public static final int kDrivingMotorCurrentLimit = 40; // amps
         /** The current limit of the turning motors in amps. */
-        public static final int kTurningMotorCurrentLimit = 50; // amps
+        public static final int kTurningMotorCurrentLimit = 35; // amps
     }
 
     /**
@@ -454,16 +454,16 @@ public final class Constants {
         public static final double kElevatorMaxSpeedInchesPerSecond = kElevatorFreeSpeedMetersPerSecond;
 
         /** The maximum allowed acceleration of the elevator. */
-        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 10;
+        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 30;
 
         /** The manual movement speed of the elevator. */
         public static final double kElevatorManualSpeed = 0.5;
 
         /** The physical height of the elevator in inches. */
-        public static final double kElevatorMaxHeight = 23.55;
+        public static final double kElevatorMaxHeight = 28;
 
         /** The maximum height at which the arm should run back while intaking. */
-        public static final double kElevatorMaxArmIntakeHeight = 0.5;
+        public static final double kElevatorMaxArmIntakeHeight = 0.03;
 
         /** The heights, in inches, of every reef level. */
         public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 23.55 };
@@ -520,7 +520,7 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 20;
         
         /** The speed the coral intake should be run at when intaking. */
-        public static final double kCoralIntakeSpeed = 0.5;
+        public static final double kCoralIntakeSpeed = 0.4;
         /** The speed the coral intake should be run at when reversing. */
         public static final double kCoralReverseSpeed = 0.3;
         /** The speed the coral intake should be run at when shooting. */
@@ -558,7 +558,7 @@ public final class Constants {
         /** The maximum speed of the arm in rotations per second. */
         public static final double kArmMaxSpeedRPS = 0.5;
         /** The maximum acceleration of the arm in rotations per second squared. */
-        public static final double kArmMaxAccelerationRPSSquared = 0.5;
+        public static final double kArmMaxAccelerationRPSSquared = 1;
 
         /** The angle offset for the motor encoder such that when the encoder returns 0 the arm is parallel to the floor. */
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
@@ -598,12 +598,12 @@ public final class Constants {
         private VisionConstants() {}
 
         /** The name of the PhotonVision cameras. */
-        public static final String[] kCameraNames = { "Jojo Bizar", "Stevenson" };
+        public static final String[] kCameraNames = { "Jojo Bizar", /* "Stevenson" */ };
         /** The transformations that describe how to move from the center of the robot to the PhotonVision cameras. */
         public static final Transform3d[] kRobotToCameraTransformations = {
             new Transform3d(
                 new Translation3d(0.195, -0.3, 0),
-                new Rotation3d(0, 0, Units.degreesToRadians(11))
+                new Rotation3d(0, 0, Units.degreesToRadians(16))
             ),
             new Transform3d(
                 new Translation3d(-0.23, -0.15, 0),
@@ -611,11 +611,14 @@ public final class Constants {
             )
         };
 
-        /** Standard deviations of the angle vision measurements. Increase these numbers to trust global measurements from vision less. */
+        /** Standard deviations of the angle vision measurements. */
         public static final double[] kVisionAngleStandardDeviations = { 10, 10 };
 
         /** The multiplers for the cameras' standard deviations. */
-        public static final double[] kVisionStandardDeviationMultiplers = { 1, 5 }; 
+        public static final double[] kVisionStandardDeviationMultiplers = { 1, 5 };
+
+        /** Standard deviations of the angle vision measurements when the gyro gets disconnected. */
+        public static final double[] kVisionNoGyroAngleStandardDeviations = { 0.1, 0.5 };
 
         /** How PhotonVision should use april tag data to determine position. */
         public static final PoseStrategy kPoseStrategy = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;

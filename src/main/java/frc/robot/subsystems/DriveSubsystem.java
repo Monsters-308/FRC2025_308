@@ -241,6 +241,7 @@ public class DriveSubsystem extends SubsystemBase {
                 Vector<N3> stdDev = VecBuilder.fill(
                     VisionConstants.kVisionStandardDeviationMultiplers[i] * (0.987 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
                     VisionConstants.kVisionStandardDeviationMultiplers[i] * (0.997 - 2.23 * dstToAprilTag + 1.32 * Math.pow(dstToAprilTag, 2)),
+                    // m_gyro.isConnected() ? VisionConstants.kVisionAngleStandardDeviations[i] : VisionConstants.kVisionNoGyroAngleStandardDeviations[i]
                     VisionConstants.kVisionAngleStandardDeviations[i]
                 );
 

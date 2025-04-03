@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.utils.LoggingUtils;
 import frc.robot.Constants.FieldConstants;
 
 /**
@@ -70,6 +71,8 @@ public class VisionSubsystem extends SubsystemBase {
             m_tranformationAngle[i] = cameraLayout.add("Angle",
                 Units.radiansToDegrees(VisionConstants.kRobotToCameraTransformations[i].getRotation().getZ())
             ).getEntry();
+
+            LoggingUtils.logCamera(m_cameras[i]);
         }
 
         m_results = new PhotonPipelineResult[m_cameras.length];

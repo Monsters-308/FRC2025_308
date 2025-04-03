@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.968,
-        "y": 2.81
+        "x": 3.1709659090909086,
+        "y": 3.830553977272727
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6162020974890163,
-        "y": 1.5820660132865343
+        "x": 2.7969502752085837,
+        "y": 1.7647000178491004
       },
       "isLocked": false,
       "linkedName": "2nd Right Coral"
@@ -20,8 +20,8 @@
         "y": 0.71
       },
       "prevControl": {
-        "x": 2.7453028078969752,
-        "y": 1.7049838543662372
+        "x": 2.226083587405996,
+        "y": 1.587107349130312
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.6,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -48,7 +48,7 @@
   "folder": "2nd Coral To HP",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -105,8 +105,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
      */
     public Command intakeCoral(boolean stopWhenDetected) {
         return runOnce(() -> setCoralSpeed(CoralIntakeConstants.kCoralIntakeSpeed))
-            // .andThen(new WaitUntilCommand(CoralIntakeConstants.kdelaySensorTime))
             .andThen(new WaitUntilCommand(() -> (isCoralDetected() && hasCoralLeftFunnel()) || !stopWhenDetected))
+            .andThen(reverseCoral().withTimeout(0.06))
             .finallyDo(() -> {
                 if (!stopWhenDetected) return;
                 setCoralSpeed(0);

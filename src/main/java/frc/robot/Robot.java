@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.utils.LoggingUtils;
 
 /**
@@ -105,6 +106,8 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+
+        m_robotContainer.getElevatorSubsystem().setElevatorVelocity(-ElevatorConstants.kElevatorG); // Disable elevator PID
     }
 
     @Override

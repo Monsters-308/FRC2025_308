@@ -19,6 +19,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.coral.GoToHeight;
 import frc.robot.commands.coral.GoToLevel;
 import frc.robot.commands.coral.IntakeCoral;
 import frc.robot.commands.drive.AutoAlign;
@@ -193,11 +194,11 @@ public class RobotContainer {
 
         InputMappings.event("coDriver", "elevatorUp")
             .onTrue(m_elevatorSubsystem.goToVelocity(ElevatorConstants.kElevatorManualSpeed))
-            .onFalse(new InstantCommand(m_elevatorSubsystem::stopElevator));
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
 
         InputMappings.event("coDriver", "elevatorDown")
             .onTrue(m_elevatorSubsystem.goToVelocity(-ElevatorConstants.kElevatorManualSpeed))
-            .onFalse(new InstantCommand(m_elevatorSubsystem::stopElevator));
+            .onFalse(new InstantCommand(() -> m_elevatorSubsystem.setElevatorVelocity(0)));
 
         InputMappings.event("coDriver", "armUp")
             .onTrue(m_armSubsystem.goToAngle(ArmConstants.kArmLevelAngles[0]));
@@ -229,9 +230,33 @@ public class RobotContainer {
             new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0)
         );
 
+        NamedCommands.registerCommand("Arm Dunk", m_armSubsystem.goToAngle(Rotation2d.fromDegrees(90)));
+
+        NamedCommands.registerCommand("Algae Remove", m_elevatorSubsystem.goToHeight(ElevatorConstants.kElevatorLevelHeights[2] - 15));
+
+        NamedCommands.registerCommand("1st Start Elevator", new DeferredCommand(() -> {
+            if (m_autonFirstCoralLevel.getSelected() >= 2) {
+                return new GoToHeight(m_armSubsystem, m_elevatorSubsystem,
+                    (ElevatorConstants.kElevatorLevelHeights[1] + ElevatorConstants.kElevatorLevelHeights[2]) / 2
+                );
+            }
+            
+            return new GoToLevel(m_armSubsystem, m_elevatorSubsystem, m_autonFirstCoralLevel.getSelected());
+        }, new HashSet<>(Arrays.asList(m_armSubsystem, m_elevatorSubsystem))));
+
+        NamedCommands.registerCommand("2nd Start Elevator", new DeferredCommand(() -> {
+            if (m_autonSecondCoralLevel.getSelected() >= 2) {
+                return new GoToHeight(m_armSubsystem, m_elevatorSubsystem,
+                    (ElevatorConstants.kElevatorLevelHeights[1] + ElevatorConstants.kElevatorLevelHeights[2]) / 2
+                );
+            }
+            
+            return new GoToLevel(m_armSubsystem, m_elevatorSubsystem, m_autonSecondCoralLevel.getSelected());
+        }, new HashSet<>(Arrays.asList(m_armSubsystem, m_elevatorSubsystem))));
+
         NamedCommands.registerCommand("Intake Coral", 
             new GoToLevel(m_armSubsystem, m_elevatorSubsystem, 0)
-                .andThen(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, null))
+                .andThen(new IntakeCoral(m_armSubsystem, m_coralIntakeSubsystem, m_elevatorSubsystem::getElevatorHeight))
         );
 
         NamedCommands.registerCommand("Shoot Coral", new DeferredCommand(() -> {
@@ -284,5 +309,13 @@ public class RobotContainer {
      */
     public DriveSubsystem getDriveSubsystem() {
         return m_driveSubsystem;
+    }
+
+    /**
+     * Gets the {@link ElevatorSubsystem} of the container.
+     * @return The <code>ElevatorSubsystem</code>.
+     */
+    public ElevatorSubsystem getElevatorSubsystem() {
+        return m_elevatorSubsystem;
     }
 }

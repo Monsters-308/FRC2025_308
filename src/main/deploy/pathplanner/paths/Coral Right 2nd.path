@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.910495209108508,
-        "y": 1.805629777270287
+        "x": 2.0756771413822603,
+        "y": 1.6426772998623158
       },
       "isLocked": false,
       "linkedName": "Right HP"
     },
     {
       "anchor": {
-        "x": 3.968,
-        "y": 2.81
+        "x": 3.1709659090909086,
+        "y": 3.830553977272727
       },
       "prevControl": {
-        "x": 2.65933336691364,
-        "y": 1.6822598402928994
+        "x": 2.4744569081542065,
+        "y": 2.3741407070723377
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "HP To 2nd Coral",
