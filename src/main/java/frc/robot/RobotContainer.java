@@ -17,13 +17,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.coral.GoToHeight;
 import frc.robot.commands.coral.GoToLevel;
 import frc.robot.commands.coral.IntakeCoral;
-import frc.robot.commands.drive.AutoAlign;
-import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
@@ -157,29 +154,29 @@ public class RobotContainer {
         InputMappings.event("driver", "resetFieldRelative")
             .onTrue(new InstantCommand(m_driveSubsystem::resetFieldRelative).ignoringDisable(true));
     
-        InputMappings.event("driver", "leftReefAlign")
-            .whileTrue(new AutoAlign(m_driveSubsystem, FieldConstants.kLeftReefPositions));
+        // InputMappings.event("driver", "leftReefAlign")
+        //     .whileTrue(new AutoAlign(m_driveSubsystem, FieldConstants.kLeftReefPositions));
 
-        InputMappings.event("driver", "rightReefAlign")
-            .whileTrue(new AutoAlign(m_driveSubsystem, FieldConstants.kRightReefPositions));
+        // InputMappings.event("driver", "rightReefAlign")
+        //     .whileTrue(new AutoAlign(m_driveSubsystem, FieldConstants.kRightReefPositions));
 
-        InputMappings.event("driver", "leftHuman")
-            .whileTrue(new RobotGotoAngle(
-                m_driveSubsystem,
-                FieldConstants.kHumanPlayerStationAngle.unaryMinus(),
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
-            ));
+        // InputMappings.event("driver", "leftHuman")
+        //     .whileTrue(new RobotGotoAngle(
+        //         m_driveSubsystem,
+        //         FieldConstants.kHumanPlayerStationAngle.unaryMinus(),
+        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+        //         () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
+        //     ));
 
-        InputMappings.event("driver", "rightHuman")
-            .whileTrue(new RobotGotoAngle(
-                m_driveSubsystem,
-                FieldConstants.kHumanPlayerStationAngle,
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
-            ));
+        // InputMappings.event("driver", "rightHuman")
+        //     .whileTrue(new RobotGotoAngle(
+        //         m_driveSubsystem,
+        //         FieldConstants.kHumanPlayerStationAngle,
+        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+        //         () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+        //         () -> -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband)
+        //     ));
 
         //------------------------------------------- coDriver buttons -------------------------------------------
 
