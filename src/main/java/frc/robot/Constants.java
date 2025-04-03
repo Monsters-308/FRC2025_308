@@ -76,7 +76,7 @@ public final class Constants {
         // the robot, rather the allowed maximum speeds
 
         /** The highest allowed speed of the drive train. */
-        public static final double kMaxSpeedMetersPerSecond = 1.5;
+        public static final double kMaxSpeedMetersPerSecond = 0.5;
 
         /** The highest allowed rotational speed of the drive train. */
         public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
@@ -454,10 +454,10 @@ public final class Constants {
         public static final double kElevatorMaxSpeedInchesPerSecond = 10;
 
         /** The maximum allowed acceleration of the elevator. */
-        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 10;
+        public static final double kElevatorMaxAccelerationInchesPerSecondSquared = 15;
 
         /** The manual movement speed of the elevator. */
-        public static final double kElevatorManualSpeed = 0.2;
+        public static final double kElevatorManualSpeed = 0.3;
 
         /** The physical height of the elevator in inches. */
         public static final double kElevatorMaxHeight = 15;
@@ -520,9 +520,9 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 20;
         
         /** The speed the coral intake should be run at when intaking. */
-        public static final double kCoralIntakeSpeed = 0.3;
+        public static final double kCoralIntakeSpeed = 0.5;
         /** The speed the coral intake should be run at when reversing. */
-        public static final double kCoralReverseSpeed = 0.3;
+        public static final double kCoralReverseSpeed = 0.4;
         /** The speed the coral intake should be run at when shooting. */
         public static final double kCoralShootSpeed = 0.5;
 
